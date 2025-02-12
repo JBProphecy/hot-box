@@ -22,14 +22,14 @@
 
 * { box-sizing: border-box; }
 
-html { font-size: 24px; }
-
-body {
-	margin: 0;
+html {
+	font-size: 24px;
 	font-family: calibri, sans-serif;
 	background-color: rgb(12, 12, 12);
-	color: white;
+	color: rgb(192, 192, 192);
 }
+
+body { margin: 0; }
 
 h1 { line-height: var(--h1-line-height); font-size: var(--h1-font-size) }
 h2 { line-height: var(--h2-line-height); font-size: var(--h2-font-size) }

@@ -7,7 +7,9 @@
 export default function App() {
   try {
     return (
-      <></>
+      <>
+        <h1>hello</h1>
+      </>
     )
   }
   catch (object: unknown) {
