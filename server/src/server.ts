@@ -7,8 +7,8 @@ import cookieParser from "cookie-parser"
 
 import serverConfig from "@/config/env"
 import logger from "@/config/logger"
-import { loggingHandler } from "@/middleware/loggingHandler"
-import { routeNotFound } from "@/middleware/routeNotFound"
+import loggingHandler from "@/middleware/loggingHandler"
+import routeNotFound from "@/middleware/routeNotFound"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -25,7 +25,7 @@ export const Main = () => {
   // Start Logs
   logger.start()
 
-  logger.info("Initializing API")
+  logger.attempt("Initializing API")
 
   // Some Middleware
   application.use(cors({
@@ -49,7 +49,7 @@ export const Main = () => {
 
   // Start Server
   const port = 3000
-  logger.info("Starting Server")
+  logger.attempt("Starting Server")
   httpServer = http.createServer(application)
   httpServer.listen(port, () => {
     logger.success("Successfully Started Server")
@@ -70,8 +70,5 @@ export const shutdown = (callback?: any) => {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Main()
-setTimeout(() => {
-  shutdown()
-}, 5000)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
