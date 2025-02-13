@@ -12,7 +12,7 @@ import { VariableStyles, toPixelString } from "@/utils/styles"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const handleClick = async () => {
-  const response: Response = await fetch(`${clientConfig.API.URL}/hello`, {
+  const response: Response = await fetch(`${clientConfig.API_URL}/hello`, {
     method: "GET",
     headers: { "Content-Type": "application/json" }
   })

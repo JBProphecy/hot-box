@@ -8,7 +8,7 @@ import serverConfig from "@/config/env"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const JWT_SECRET: string = serverConfig.security.JWT_SECRET
+const JWT_SECRET: string = serverConfig.secrets.JWT_SECRET
 const ACCOUNT_ACCESS_TOKEN_DURATION: number = serverConfig.tokens.account.ACCESS_TOKEN_DURATION
 const ACCOUNT_REFRESH_TOKEN_DURATION: number = serverConfig.tokens.account.REFRESH_TOKEN_DURATION
 

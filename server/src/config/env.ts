@@ -4,7 +4,7 @@ import dotenv from "dotenv"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import globalConfig from "shared/config/env"
+import { globalConfig, GlobalConfig } from "shared/config/env"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -15,92 +15,48 @@ if (envFile?.trim() === "development") { dotenv.config({ path: ".env.development
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const processRequiredVariable = (name: string): string => {
-  try {
-    const value: string | undefined = process.env[name]
-    if (!value) { throw new Error(`${name} is Required and Undefined`) }
-    return value
-  }
-  catch (object: unknown) { throw object }
+function processString(key: string): string {
+  const value: string | undefined = process.env[key]
+  if (typeof value === "undefined") { throw new Error(`${key} is Required and Undefined`) }
+  return value
 }
-/*
-const processNumber = (name: string): number => {
-  try {
-    const value: string | undefined = process.env[name]
-    if (typeof value === "undefined") { throw new Error(`${name} is Required and Undefined`) }
-    const number = parseInt(value)
-    if (isNaN(number)) { throw new Error(`${number} is Not a Number`) }
-    return number
-  }
-  catch (object: unknown) { throw object }
-}
-*/
-const processTokenDuration = (name: string): number => {
-  const value: string | undefined = process.env[name]
-  const duration: number = value ? parseInt(value) : 0
-  return duration
+
+function processNumber(key: string): number {
+  const value: string | undefined = process.env[key]
+  if (typeof value === "undefined") { throw new Error(`${key} is Required and Undefined`) }
+  const number = parseInt(value)
+  if (isNaN(number)) { throw new Error(`${number} is Not a Number`) }
+  return number
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-type ServerConfiguration = {
-  app: {
-    NAME: string
-  },
-  client: {
-    ORIGIN: string
-  },
-  security: {
-    CRYPTO_KEY: string,
-    JWT_SECRET: string
-  }
-  tokens: {
-    account: {
-      ACCESS_TOKEN_DURATION: number,
-      REFRESH_TOKEN_DURATION: number,
-      REFRESH_TOKEN_KEY: string
-    },
-    profile: {
-      ACCESS_TOKEN_DURATION: number,
-      REFRESH_TOKEN_DURATION: number,
-      REFRESH_TOKEN_KEY: string
-    }
-  }
+type ServerEnvironment = {
+  CLIENT_ORIGIN: string,
+  CRYPTO_KEY: string,
+  JWT_SECRET: string,
+  ACCOUNT_ACCESS_TOKEN_DURATION: number,
+  ACCOUNT_REFRESH_TOKEN_DURATION: number,
+  PROFILE_ACCESS_TOKEN_DURATION: number,
+  PROFILE_REFRESH_TOKEN_DURATION: number,
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function generateServerConfiguration(): ServerConfiguration {
+function processServerEnvironment(): ServerEnvironment {
   try {
-    const serverConfig: ServerConfiguration = {
-      app: {
-        NAME: globalConfig.app.NAME
-      },
-      client: {
-        ORIGIN: processRequiredVariable("CLIENT_ORIGIN")
-      },
-      security: {
-        CRYPTO_KEY: processRequiredVariable("CRYPTO_KEY"),
-        JWT_SECRET: processRequiredVariable("JWT_SECRET")
-      },
-      tokens: {
-        account: {
-          ACCESS_TOKEN_DURATION: processTokenDuration("ACCOUNT_ACCESS_TOKEN_DURATION"),
-          REFRESH_TOKEN_DURATION: processTokenDuration("ACCOUNT_REFRESH_TOKEN_DURATION"),
-          REFRESH_TOKEN_KEY: `${globalConfig.app.NAME}_currentAccount_refreshToken`
-        },
-        profile: {
-          ACCESS_TOKEN_DURATION: processTokenDuration("PROFILE_ACCESS_TOKEN_DURATION"),
-          REFRESH_TOKEN_DURATION: processTokenDuration("PROFILE_REFRESH_TOKEN_DURATION"),
-          REFRESH_TOKEN_KEY: `${globalConfig.app.NAME}_currentProfile_refreshToken`
-        }
-      }
+    const serverEnvironment: ServerEnvironment = {
+      CLIENT_ORIGIN: processString("CLIENT_ORIGIN"),
+      CRYPTO_KEY: processString("CRYPTO_KEY"),
+      JWT_SECRET: processString("JWT_SECRET"),
+      ACCOUNT_ACCESS_TOKEN_DURATION: processNumber("ACCOUNT_ACCESS_TOKEN_DURATION"),
+      ACCOUNT_REFRESH_TOKEN_DURATION: processNumber("ACCOUNT_REFRESH_TOKEN_DURATION"),
+      PROFILE_ACCESS_TOKEN_DURATION: processNumber("PROFILE_ACCESS_TOKEN_DURATION"),
+      PROFILE_REFRESH_TOKEN_DURATION: processNumber("PROFILE_REFRESH_TOKEN_DURATION"),
     }
-    return serverConfig
+    return serverEnvironment
   }
   catch (object: unknown) {
     const error = object as Error
-    console.error("Server Configuration Error")
+    console.log("Error Processing Server Environment")
     console.log(error)
     throw error
   }
@@ -108,7 +64,75 @@ function generateServerConfiguration(): ServerConfiguration {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const serverConfig: ServerConfiguration = generateServerConfiguration()
+type ServerConfig = {
+  app: {
+    NAME: string
+  },
+  client: {
+    ORIGIN: string
+  },
+  secrets: {
+    CRYPTO_KEY: string,
+    JWT_SECRET: string
+  }
+  token: {
+    duration: {
+      ACCOUNT_ACCESS_TOKEN_DURATION: number,
+      ACCOUNT_REFRESH_TOKEN_DURATION: number,
+      PROFILE_ACCESS_TOKEN_DURATION: number,
+      PROFILE_REFRESH_TOKEN_DURATION: number
+    },
+    keys: {
+      CURRENT_ACCOUNT_ACCESS_TOKEN_KEY: string,
+      CURRENT_ACCOUNT_REFRESH_TOKEN_KEY: string
+      CURRENT_PROFILE_ACCESS_TOKEN_KEY: string,
+      CURRENT_PROFILE_REFRESH_TOKEN_KEY: string
+    }
+  }
+}
+
+function generateServerConfig(globalConfig: GlobalConfig): ServerConfig {
+  try {
+    const serverEnvironment: ServerEnvironment = processServerEnvironment()
+    const serverConfig: ServerConfig = {
+      app: {
+        NAME: globalConfig.APP_NAME
+      },
+      client: {
+        ORIGIN: serverEnvironment.CLIENT_ORIGIN
+      },
+      secrets: {
+        CRYPTO_KEY: serverEnvironment.CRYPTO_KEY,
+        JWT_SECRET: serverEnvironment.JWT_SECRET
+      },
+      token: {
+        duration: {
+          ACCOUNT_ACCESS_TOKEN_DURATION: serverEnvironment.ACCOUNT_ACCESS_TOKEN_DURATION,
+          ACCOUNT_REFRESH_TOKEN_DURATION: serverEnvironment.ACCOUNT_REFRESH_TOKEN_DURATION,
+          PROFILE_ACCESS_TOKEN_DURATION: serverEnvironment.PROFILE_ACCESS_TOKEN_DURATION,
+          PROFILE_REFRESH_TOKEN_DURATION: serverEnvironment.PROFILE_REFRESH_TOKEN_DURATION
+        },
+        keys: {
+          CURRENT_ACCOUNT_ACCESS_TOKEN_KEY: globalConfig.CURRENT_ACCOUNT_ACCESS_TOKEN_KEY,
+          CURRENT_ACCOUNT_REFRESH_TOKEN_KEY: globalConfig.CURRENT_ACCOUNT_REFRESH_TOKEN_KEY,
+          CURRENT_PROFILE_ACCESS_TOKEN_KEY: globalConfig.CURRENT_PROFILE_ACCESS_TOKEN_KEY,
+          CURRENT_PROFILE_REFRESH_TOKEN_KEY: globalConfig.CURRENT_PROFILE_REFRESH_TOKEN_KEY
+        }
+      }
+    }
+    return serverConfig
+  }
+  catch (object: unknown) {
+    const error = object as Error
+    console.log("Error Generating Server Config")
+    console.log(error)
+    throw error
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const serverConfig: ServerConfig = generateServerConfig(globalConfig)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

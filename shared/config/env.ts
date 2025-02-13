@@ -1,46 +1,29 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { Environment, processString } from "shared/utils/environment"
+type GlobalEnvironment = {
+  APP_NAME: string
+}
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-const globalEnvironment: Environment = {
-  APP_NAME: "HotBaux", // NO SPACES
+const globalEnvironment: GlobalEnvironment = {
+  APP_NAME: "HotBaux" // No Spaces
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-type GlobalConfiguration = {
-  app: {
-    NAME: string
-  }
+export type GlobalConfig = {
+  APP_NAME: string,
+  CURRENT_ACCOUNT_ACCESS_TOKEN_KEY: string,
+  CURRENT_ACCOUNT_REFRESH_TOKEN_KEY: string
+  CURRENT_PROFILE_ACCESS_TOKEN_KEY: string,
+  CURRENT_PROFILE_REFRESH_TOKEN_KEY: string
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function generateGlobalConfiguration(): GlobalConfiguration {
-  try {
-    const globalConfig: GlobalConfiguration = {
-      app: {
-        NAME: processString(globalEnvironment, "APP_NAME")
-      }
-    }
-    return globalConfig
-  }
-  catch (object: unknown) {
-    const error = object as Error
-    console.error("Global Configuration Error")
-    console.log(error)
-    throw error
-  }
+export const globalConfig: GlobalConfig = {
+  APP_NAME: globalEnvironment.APP_NAME,
+  CURRENT_ACCOUNT_ACCESS_TOKEN_KEY: `${globalEnvironment.APP_NAME}_currentAccount_accessToken`,
+  CURRENT_ACCOUNT_REFRESH_TOKEN_KEY: `${globalEnvironment.APP_NAME}_currentAccount_refreshToken`,
+  CURRENT_PROFILE_ACCESS_TOKEN_KEY: `${globalEnvironment.APP_NAME}_currentProfile_accessToken`,
+  CURRENT_PROFILE_REFRESH_TOKEN_KEY: `${globalEnvironment.APP_NAME}_currentProfile_refreshToken`
 }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-const globalConfig: GlobalConfiguration = generateGlobalConfiguration()
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export default globalConfig
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
