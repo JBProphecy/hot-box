@@ -12,14 +12,15 @@ import routeNotFound from "@/middleware/routeNotFound"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// TEMPORARY IMPORTS
+import runTests from "@/test/test"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export const application = express()
 export let httpServer: ReturnType<typeof http.createServer>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-const handleTestRoute = async (req: Request, res: Response, next: NextFunction) => {
-  return res.status(200).json({ message: "hello world" })
-}
 
 export const Main = () => {
   // Start Logs
@@ -38,8 +39,8 @@ export const Main = () => {
   application.use(loggingHandler)
 
   // Define Routes
-  application.get("/main/healthcheck", async (req: Request, res: Response, next: NextFunction) => {
-    await handleTestRoute(req, res, next)
+  application.get("/api/hello", (req: Request, res: Response, next: NextFunction) => {
+    res.status(200).json({ message: "hello world" })
   })
   // Route Not Found
   application.use(routeNotFound)
@@ -53,6 +54,7 @@ export const Main = () => {
   httpServer = http.createServer(application)
   httpServer.listen(port, () => {
     logger.success("Successfully Started Server")
+    logger.line()
     logger.info(`Server Running on Port ${port}`)
     logger.line()
   })
@@ -70,5 +72,6 @@ export const shutdown = (callback?: any) => {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Main()
+//runTests()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
