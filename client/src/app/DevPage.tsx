@@ -31,6 +31,7 @@ export default function DevPage() {
     "--pageWidth": toPixelString(pageWidth),
     "--pageHeight": toPixelString(pageHeight)
   }
+
   return (
     <div ref={pageRef} className={localStyles.page} style={variableStyles}>
       <input type="button" value="hello API" onClick={handleClick} />

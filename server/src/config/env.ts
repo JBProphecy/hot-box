@@ -23,7 +23,18 @@ const processRequiredVariable = (name: string): string => {
   }
   catch (object: unknown) { throw object }
 }
-
+/*
+const processNumber = (name: string): number => {
+  try {
+    const value: string | undefined = process.env[name]
+    if (typeof value === "undefined") { throw new Error(`${name} is Required and Undefined`) }
+    const number = parseInt(value)
+    if (isNaN(number)) { throw new Error(`${number} is Not a Number`) }
+    return number
+  }
+  catch (object: unknown) { throw object }
+}
+*/
 const processTokenDuration = (name: string): number => {
   const value: string | undefined = process.env[name]
   const duration: number = value ? parseInt(value) : 0
@@ -38,12 +49,6 @@ type ServerConfiguration = {
   },
   client: {
     ORIGIN: string
-  },
-  db: {
-    HOST: string,
-    USER: string,
-    PASSWORD: string,
-    DATABASE: string
   },
   security: {
     CRYPTO_KEY: string,
@@ -73,12 +78,6 @@ function generateServerConfiguration(): ServerConfiguration {
       },
       client: {
         ORIGIN: processRequiredVariable("CLIENT_ORIGIN")
-      },
-      db: {
-        HOST: processRequiredVariable("DB_HOST"),
-        USER: processRequiredVariable("DB_USER"),
-        PASSWORD: processRequiredVariable("DB_PASS"),
-        DATABASE: processRequiredVariable("DB_NAME")
       },
       security: {
         CRYPTO_KEY: processRequiredVariable("CRYPTO_KEY"),

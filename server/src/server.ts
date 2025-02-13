@@ -14,6 +14,8 @@ import routeNotFound from "@/middleware/routeNotFound"
 
 // TEMPORARY IMPORTS
 import runTests from "@/test/test"
+import prisma from "@/config/db"
+if (prisma) console.log(true)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
