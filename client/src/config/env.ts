@@ -14,7 +14,7 @@ function processNumber(key: string): number {
   const value: string | undefined = import.meta.env[key]
   if (typeof value === "undefined") { throw new Error(`${key} is Required and Undefined`) }
   const number = parseInt(value)
-  if (isNaN(number)) { throw new Error(`${number} is Not a Number`) }
+  if (isNaN(number)) { throw new Error(`${key} is Not a Number`) }
   return number
 }
 */

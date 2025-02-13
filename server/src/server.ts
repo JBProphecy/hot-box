@@ -25,41 +25,49 @@ export let httpServer: ReturnType<typeof http.createServer>
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const Main = () => {
-  // Start Logs
-  logger.start()
+  try {
+    // Start Logs
+    logger.start()
 
-  logger.attempt("Initializing API")
+    logger.attempt("Initializing API")
 
-  // Some Middleware
-  application.use(cors({
-    origin: [serverConfig.client.ORIGIN],
-    credentials: true
-  }))
-  application.use(express.urlencoded({ extended: true }))
-  application.use(express.json())
-  application.use(cookieParser())
-  application.use(loggingHandler)
+    // Some Middleware
+    application.use(cors({
+      origin: [serverConfig.client.ORIGIN],
+      credentials: true
+    }))
+    application.use(express.urlencoded({ extended: true }))
+    application.use(express.json())
+    application.use(cookieParser())
+    application.use(loggingHandler)
 
-  // Define Routes
-  application.get("/api/hello", (req: Request, res: Response, next: NextFunction) => {
-    res.status(200).json({ message: "hello world" })
-  })
-  // Route Not Found
-  application.use(routeNotFound)
+    // Define Routes
+    application.get("/api/hello", (req: Request, res: Response, next: NextFunction) => {
+      res.status(200).json({ message: "hello world" })
+    })
+    // Route Not Found
+    application.use(routeNotFound)
 
-  logger.success("Successfully Initialized API")
-  logger.line()
-
-  // Start Server
-  const port = 3000
-  logger.attempt("Starting Server")
-  httpServer = http.createServer(application)
-  httpServer.listen(port, () => {
-    logger.success("Successfully Started Server")
+    logger.success("Successfully Initialized API")
     logger.line()
-    logger.info(`Server Running on Port ${port}`)
-    logger.line()
-  })
+
+    // Start Server
+    const port = 3000
+    logger.attempt("Starting Server")
+    httpServer = http.createServer(application)
+    httpServer.listen(port, () => {
+      logger.success("Successfully Started Server")
+      logger.line()
+      logger.info(`Server Running on Port ${port}`)
+      logger.line()
+    })
+  }
+  catch (object: unknown) {
+    const error = object as Error
+    console.log("Main Server Error")
+    console.log(error)
+    process.exit(0)
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

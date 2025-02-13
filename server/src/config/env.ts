@@ -5,6 +5,7 @@ import dotenv from "dotenv"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import { globalConfig, GlobalConfig } from "shared/config/env"
+import logger from "@/config/logger"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -25,7 +26,7 @@ function processNumber(key: string): number {
   const value: string | undefined = process.env[key]
   if (typeof value === "undefined") { throw new Error(`${key} is Required and Undefined`) }
   const number = parseInt(value)
-  if (isNaN(number)) { throw new Error(`${number} is Not a Number`) }
+  if (isNaN(number)) { throw new Error(`${key} is Not a Number`) }
   return number
 }
 
@@ -56,8 +57,9 @@ function processServerEnvironment(): ServerEnvironment {
   }
   catch (object: unknown) {
     const error = object as Error
-    console.log("Error Processing Server Environment")
-    console.log(error)
+    logger.error("Error Processing Server Environment")
+    logger.trace(error)
+    logger.line()
     throw error
   }
 }
@@ -124,15 +126,18 @@ function generateServerConfig(globalConfig: GlobalConfig): ServerConfig {
   }
   catch (object: unknown) {
     const error = object as Error
-    console.log("Error Generating Server Config")
-    console.log(error)
+    logger.error("Error Generating Server Config")
+    logger.trace(error)
+    logger.line()
     throw error
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const serverConfig: ServerConfig = generateServerConfig(globalConfig)
+let serverConfig: ServerConfig
+try { serverConfig = generateServerConfig(globalConfig) }
+catch (object: unknown) { process.exit(0) }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

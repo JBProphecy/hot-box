@@ -37,11 +37,11 @@ function error(object?: any, ...optionalParams: any[]) {
 function trace(error: Error, ...optionalParams: any[]) {
   console.log(
     `[${new Date().toLocaleString()}]`,
-    `[${ansi.styles.bold + ansi.fgc.blue}TRACE${ansi.reset}] =>`,
-    `${error + ansi.reset}`,
+    `[${ansi.styles.bold + ansi.fgc.orange}TRACE${ansi.reset}] =>`,
+    `${error.message + ansi.reset}`,
     ...optionalParams
   )
-  console.log(error.stack)
+  console.log(error)
 }
 
 function attempt(object?: any, ...optionalParams: any[]) {
