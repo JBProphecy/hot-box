@@ -4,20 +4,30 @@ import { globalConfig, GlobalConfig } from "shared/config/env"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function processString(key: string): string {
+function processString(key: string, required: true): string
+function processString(key: string, required?: false): string | undefined
+function processString(key: string, required?: boolean): string | undefined {
   const value: string | undefined = import.meta.env[key]
-  if (typeof value === "undefined") { throw new Error(`${key} is Required and Undefined`) }
-  return value
+  if (typeof value !== "undefined") { return value }
+  if (!required) { return undefined }
+  throw new Error(`${key} is Required and Undefined`)
 }
+
 /*
-function processNumber(key: string): number {
+function processNumber(key: string, required: true): number
+function processNumber(key: string, required?: false): number | undefined
+function processNumber(key: string, required?: boolean): number | undefined {
   const value: string | undefined = import.meta.env[key]
-  if (typeof value === "undefined") { throw new Error(`${key} is Required and Undefined`) }
-  const number = parseInt(value)
-  if (isNaN(number)) { throw new Error(`${key} is Not a Number`) }
-  return number
+  if (typeof value !== "undefined") {
+    const number = parseInt(value, 10)
+    if (!isNaN(number)) { return number }
+    throw new Error(`${key} = "${value}" and "${value}" is Not a Number`)
+  }
+  if (!required) { return undefined }
+  throw new Error(`${key} is Required and Undefined`)
 }
 */
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 type ClientEnvironment = {
@@ -27,7 +37,7 @@ type ClientEnvironment = {
 function processClientEnvironment(): ClientEnvironment {
   try {
     const clientEnvironment: ClientEnvironment = {
-      VITE_API_URL: processString("VITE_API_URL")
+      VITE_API_URL: processString("VITE_API_URL", true)
     }
     return clientEnvironment
   }

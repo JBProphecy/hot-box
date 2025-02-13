@@ -5,29 +5,40 @@ import dotenv from "dotenv"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import { globalConfig, GlobalConfig } from "shared/config/env"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import logger from "@/config/logger"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 dotenv.config()
-const envFile: string | undefined = process.env.NODE_ENV
-if (envFile?.trim() === "production") { dotenv.config({ path: ".env.production" }) }
-if (envFile?.trim() === "development") { dotenv.config({ path: ".env.development" }) }
+const NODE_ENV: string | undefined = process.env.NODE_ENV
+if (NODE_ENV?.trim() === "production") { dotenv.config({ path: ".env.production" }) }
+if (NODE_ENV?.trim() === "development") { dotenv.config({ path: ".env.development" }) }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function processString(key: string): string {
+function processString(key: string, required: true): string
+function processString(key: string, required?: false): string | undefined
+function processString(key: string, required?: boolean): string | undefined {
   const value: string | undefined = process.env[key]
-  if (typeof value === "undefined") { throw new Error(`${key} is Required and Undefined`) }
-  return value
+  if (typeof value !== "undefined") { return value }
+  if (!required) { return undefined }
+  throw new Error(`${key} is Required and Undefined`)
 }
 
-function processNumber(key: string): number {
+function processNumber(key: string, required: true): number
+function processNumber(key: string, required?: false): number | undefined
+function processNumber(key: string, required?: boolean): number | undefined {
   const value: string | undefined = process.env[key]
-  if (typeof value === "undefined") { throw new Error(`${key} is Required and Undefined`) }
-  const number = parseInt(value)
-  if (isNaN(number)) { throw new Error(`${key} is Not a Number`) }
-  return number
+  if (typeof value !== "undefined") {
+    const number = parseInt(value, 10)
+    if (!isNaN(number)) { return number }
+    throw new Error(`${key} = "${value}" and "${value}" is Not a Number`)
+  }
+  if (!required) { return undefined }
+  throw new Error(`${key} is Required and Undefined`)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,13 +56,13 @@ type ServerEnvironment = {
 function processServerEnvironment(): ServerEnvironment {
   try {
     const serverEnvironment: ServerEnvironment = {
-      CLIENT_ORIGIN: processString("CLIENT_ORIGIN"),
-      CRYPTO_KEY: processString("CRYPTO_KEY"),
-      JWT_SECRET: processString("JWT_SECRET"),
-      ACCOUNT_ACCESS_TOKEN_DURATION: processNumber("ACCOUNT_ACCESS_TOKEN_DURATION"),
-      ACCOUNT_REFRESH_TOKEN_DURATION: processNumber("ACCOUNT_REFRESH_TOKEN_DURATION"),
-      PROFILE_ACCESS_TOKEN_DURATION: processNumber("PROFILE_ACCESS_TOKEN_DURATION"),
-      PROFILE_REFRESH_TOKEN_DURATION: processNumber("PROFILE_REFRESH_TOKEN_DURATION"),
+      CLIENT_ORIGIN: processString("CLIENT_ORIGIN", true),
+      CRYPTO_KEY: processString("CRYPTO_KEY", true),
+      JWT_SECRET: processString("JWT_SECRET", true),
+      ACCOUNT_ACCESS_TOKEN_DURATION: processNumber("ACCOUNT_ACCESS_TOKEN_DURATION", true),
+      ACCOUNT_REFRESH_TOKEN_DURATION: processNumber("ACCOUNT_REFRESH_TOKEN_DURATION", true),
+      PROFILE_ACCESS_TOKEN_DURATION: processNumber("PROFILE_ACCESS_TOKEN_DURATION", true),
+      PROFILE_REFRESH_TOKEN_DURATION: processNumber("PROFILE_REFRESH_TOKEN_DURATION", true),
     }
     return serverEnvironment
   }
