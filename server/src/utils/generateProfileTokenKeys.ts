@@ -1,15 +1,14 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import serverConfig from "@/config/env"
+import ProfileTokenKeys from "@/types/ProfileTokenKeys"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export type GeneratedProfileTokenKeys = { profileAccessTokenKey: string, profileRefreshTokenKey: string }
-
-export function generateProfileTokenKeys(profileID: string): GeneratedProfileTokenKeys {
+export default function generateProfileTokenKeys(profileID: string): ProfileTokenKeys {
   const profileAccessTokenKey: string = `${serverConfig.app.NAME}_profile${profileID}_accessToken`
   const profileRefreshTokenKey: string = `${serverConfig.app.NAME}_profile${profileID}_refreshToken`
-  return { profileAccessTokenKey, profileRefreshTokenKey } as GeneratedProfileTokenKeys
+  return { profileAccessTokenKey, profileRefreshTokenKey } as ProfileTokenKeys
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

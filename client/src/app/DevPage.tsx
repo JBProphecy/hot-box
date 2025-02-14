@@ -11,7 +11,11 @@ import { VariableStyles, toPixelString } from "@/utils/styles"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const handleClick = async () => {
+import requestProcessDeviceToken from "@/api/requestProcessDeviceToken"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+async function requestHello() {
   const response: Response = await fetch(`${clientConfig.API_URL}/hello`, {
     method: "GET",
     headers: { "Content-Type": "application/json" }
@@ -22,6 +26,19 @@ const handleClick = async () => {
   else if (response.status >= 500 && response.status < 600) { throw new Error(result.message) }
   else throw new Error("Unhandled Response")
   return result
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const handleClick = async () => {
+  try {
+    await requestProcessDeviceToken()
+  }
+  catch (object: unknown) {
+    const error = object as Error
+    console.error("Error Handling Click")
+    console.error(error)
+  }
 }
 
 export default function DevPage() {

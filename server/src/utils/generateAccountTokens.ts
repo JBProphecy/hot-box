@@ -5,6 +5,8 @@ import jwt from "jsonwebtoken"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import serverConfig from "@/config/env"
+import AccountTokenPayload from "@/types/AccountTokenPayload"
+import AccountTokens from "@/types/AccountTokens"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -13,8 +15,6 @@ const ACCOUNT_ACCESS_TOKEN_DURATION: number = serverConfig.tokens.ACCOUNT_ACCESS
 const ACCOUNT_REFRESH_TOKEN_DURATION: number = serverConfig.tokens.ACCOUNT_REFRESH_TOKEN_DURATION
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export type AccountTokenPayload = { deviceID: string, accountID: string, version: number }
 
 function generateAccountAccessToken(payload: AccountTokenPayload): string {
   const options = { expiresIn: ACCOUNT_ACCESS_TOKEN_DURATION }
@@ -26,12 +26,10 @@ function generateAccountRefreshToken(payload: AccountTokenPayload): string {
   return jwt.sign(payload, JWT_SECRET, options)
 }
 
-export type GeneratedAccountTokens = { accountAccessToken: string, accountRefreshToken: string }
-
-export function generateAccountTokens(payload: AccountTokenPayload): GeneratedAccountTokens {
+export default function generateAccountTokens(payload: AccountTokenPayload): AccountTokens {
   const accountAccessToken: string = generateAccountAccessToken(payload)
   const accountRefreshToken: string = generateAccountRefreshToken(payload)
-  return { accountAccessToken, accountRefreshToken } as GeneratedAccountTokens
+  return { accountAccessToken, accountRefreshToken } as AccountTokens
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

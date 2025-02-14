@@ -12,10 +12,14 @@ import routeNotFound from "@/middleware/routeNotFound"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// Route Handlers
+import handleProcessDeviceToken from "@/api/handleProcessDeviceToken"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // TEMPORARY IMPORTS
-import runTests from "@/test/test"
 import prisma from "@/config/db"
-if (prisma) console.log(true)
+import testTokens from "@/test/testTokens"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -43,7 +47,11 @@ export const Main = () => {
 
     // Define Routes
     application.get("/api/hello", (req: Request, res: Response, next: NextFunction) => {
+      testTokens()
       res.status(200).json({ message: "hello world" })
+    })
+    application.post("/api/processDeviceToken", async (request: Request, response: Response, next: NextFunction) => {
+      await handleProcessDeviceToken(request, response)
     })
     // Route Not Found
     application.use(routeNotFound)
@@ -58,7 +66,7 @@ export const Main = () => {
     httpServer.listen(port, () => {
       logger.success("Successfully Started Server")
       logger.line()
-      logger.info(`Server Running on Port ${port}`)
+      logger.message(`Server Running on Port ${port}`)
       logger.line()
     })
   }
@@ -82,6 +90,5 @@ export const shutdown = (callback?: any) => {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Main()
-//runTests()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -68,9 +68,9 @@ function processServerEnvironment(): ServerEnvironment {
   }
   catch (object: unknown) {
     const error = object as Error
-    logger.error("Error Processing Server Environment")
+    logger.failure("Error Processing Server Environment")
+    logger.error(error)
     logger.trace(error)
-    logger.line()
     throw error
   }
 }
@@ -89,6 +89,7 @@ type ServerConfig = {
     JWT_SECRET: string
   },
   tokens: {
+    DEVICE_TOKEN_KEY: string,
     ACCOUNT_ACCESS_TOKEN_DURATION: number,
     ACCOUNT_REFRESH_TOKEN_DURATION: number,
     PROFILE_ACCESS_TOKEN_DURATION: number,
@@ -111,6 +112,7 @@ function generateServerConfig(globalConfig: GlobalConfig): ServerConfig {
         JWT_SECRET: serverEnvironment.JWT_SECRET
       },
       tokens: {
+        DEVICE_TOKEN_KEY: `${globalConfig.APP_NAME}_deviceToken`,
         ACCOUNT_ACCESS_TOKEN_DURATION: serverEnvironment.ACCOUNT_ACCESS_TOKEN_DURATION,
         ACCOUNT_REFRESH_TOKEN_DURATION: serverEnvironment.ACCOUNT_REFRESH_TOKEN_DURATION,
         PROFILE_ACCESS_TOKEN_DURATION: serverEnvironment.PROFILE_ACCESS_TOKEN_DURATION,
@@ -121,9 +123,9 @@ function generateServerConfig(globalConfig: GlobalConfig): ServerConfig {
   }
   catch (object: unknown) {
     const error = object as Error
-    logger.error("Error Generating Server Config")
+    logger.failure("Error Generating Server Config")
+    logger.error(error)
     logger.trace(error)
-    logger.line()
     throw error
   }
 }

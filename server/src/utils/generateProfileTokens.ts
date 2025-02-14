@@ -5,6 +5,8 @@ import jwt from "jsonwebtoken"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import serverConfig from "@/config/env"
+import ProfileTokenPayload from "@/types/ProfileTokenPayload"
+import ProfileTokens from "@/types/ProfileTokens"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -13,8 +15,6 @@ const PROFILE_ACCESS_TOKEN_DURATION: number = serverConfig.tokens.PROFILE_ACCESS
 const PROFILE_REFRESH_TOKEN_DURATION: number = serverConfig.tokens.PROFILE_REFRESH_TOKEN_DURATION
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export type ProfileTokenPayload = { deviceID: string, profileID: string, version: number }
 
 function generateProfileAccessToken(payload: ProfileTokenPayload): string {
   const options = { expiresIn: PROFILE_ACCESS_TOKEN_DURATION }
@@ -26,12 +26,10 @@ function generateProfileRefreshToken(payload: ProfileTokenPayload): string {
   return jwt.sign(payload, JWT_SECRET, options)
 }
 
-export type GeneratedProfileTokens = { profileAccessToken: string, profileRefreshToken: string }
-
-export function generateProfileTokens(payload: ProfileTokenPayload): GeneratedProfileTokens {
+export default function generateProfileTokens(payload: ProfileTokenPayload): ProfileTokens {
   const profileAccessToken: string = generateProfileAccessToken(payload)
   const profileRefreshToken: string = generateProfileRefreshToken(payload)
-  return { profileAccessToken, profileRefreshToken } as GeneratedProfileTokens
+  return { profileAccessToken, profileRefreshToken } as ProfileTokens
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
