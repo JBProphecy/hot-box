@@ -11,10 +11,6 @@ import { VariableStyles, toPixelString } from "@/utils/styles"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import requestProcessDeviceToken from "@/api/requestProcessDeviceToken"
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 async function requestHello() {
   const response: Response = await fetch(`${clientConfig.API_URL}/hello`, {
     method: "GET",
@@ -32,7 +28,7 @@ async function requestHello() {
 
 const handleClick = async () => {
   try {
-    await requestProcessDeviceToken()
+    await requestHello()
   }
   catch (object: unknown) {
     const error = object as Error

@@ -14,6 +14,8 @@ import routeNotFound from "@/middleware/routeNotFound"
 
 // Route Handlers
 import handleProcessDeviceToken from "@/api/handleProcessDeviceToken"
+import handleCreateAccount from "@/api/handleCreateAccount"
+import handleSignInAccount from "@/api/handleSignInAccount"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -52,6 +54,12 @@ export const Main = () => {
     })
     application.post("/api/processDeviceToken", async (request: Request, response: Response, next: NextFunction) => {
       await handleProcessDeviceToken(request, response)
+    })
+    application.post("/api/createAccount", async (request: Request, response: Response, next: NextFunction) => {
+      await handleCreateAccount(request, response)
+    })
+    application.post("/api/signInAccount", async (request: Request, response: Response, next: NextFunction) => {
+      await handleSignInAccount(request, response)
     })
     // Route Not Found
     application.use(routeNotFound)
