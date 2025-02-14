@@ -87,20 +87,12 @@ type ServerConfig = {
   secrets: {
     CRYPTO_KEY: string,
     JWT_SECRET: string
-  }
-  token: {
-    duration: {
-      ACCOUNT_ACCESS_TOKEN_DURATION: number,
-      ACCOUNT_REFRESH_TOKEN_DURATION: number,
-      PROFILE_ACCESS_TOKEN_DURATION: number,
-      PROFILE_REFRESH_TOKEN_DURATION: number
-    },
-    keys: {
-      CURRENT_ACCOUNT_ACCESS_TOKEN_KEY: string,
-      CURRENT_ACCOUNT_REFRESH_TOKEN_KEY: string
-      CURRENT_PROFILE_ACCESS_TOKEN_KEY: string,
-      CURRENT_PROFILE_REFRESH_TOKEN_KEY: string
-    }
+  },
+  tokens: {
+    ACCOUNT_ACCESS_TOKEN_DURATION: number,
+    ACCOUNT_REFRESH_TOKEN_DURATION: number,
+    PROFILE_ACCESS_TOKEN_DURATION: number,
+    PROFILE_REFRESH_TOKEN_DURATION: number
   }
 }
 
@@ -118,19 +110,11 @@ function generateServerConfig(globalConfig: GlobalConfig): ServerConfig {
         CRYPTO_KEY: serverEnvironment.CRYPTO_KEY,
         JWT_SECRET: serverEnvironment.JWT_SECRET
       },
-      token: {
-        duration: {
-          ACCOUNT_ACCESS_TOKEN_DURATION: serverEnvironment.ACCOUNT_ACCESS_TOKEN_DURATION,
-          ACCOUNT_REFRESH_TOKEN_DURATION: serverEnvironment.ACCOUNT_REFRESH_TOKEN_DURATION,
-          PROFILE_ACCESS_TOKEN_DURATION: serverEnvironment.PROFILE_ACCESS_TOKEN_DURATION,
-          PROFILE_REFRESH_TOKEN_DURATION: serverEnvironment.PROFILE_REFRESH_TOKEN_DURATION
-        },
-        keys: {
-          CURRENT_ACCOUNT_ACCESS_TOKEN_KEY: globalConfig.CURRENT_ACCOUNT_ACCESS_TOKEN_KEY,
-          CURRENT_ACCOUNT_REFRESH_TOKEN_KEY: globalConfig.CURRENT_ACCOUNT_REFRESH_TOKEN_KEY,
-          CURRENT_PROFILE_ACCESS_TOKEN_KEY: globalConfig.CURRENT_PROFILE_ACCESS_TOKEN_KEY,
-          CURRENT_PROFILE_REFRESH_TOKEN_KEY: globalConfig.CURRENT_PROFILE_REFRESH_TOKEN_KEY
-        }
+      tokens: {
+        ACCOUNT_ACCESS_TOKEN_DURATION: serverEnvironment.ACCOUNT_ACCESS_TOKEN_DURATION,
+        ACCOUNT_REFRESH_TOKEN_DURATION: serverEnvironment.ACCOUNT_REFRESH_TOKEN_DURATION,
+        PROFILE_ACCESS_TOKEN_DURATION: serverEnvironment.PROFILE_ACCESS_TOKEN_DURATION,
+        PROFILE_REFRESH_TOKEN_DURATION: serverEnvironment.PROFILE_REFRESH_TOKEN_DURATION
       }
     }
     return serverConfig

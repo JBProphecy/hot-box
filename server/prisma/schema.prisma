@@ -11,10 +11,18 @@ datasource db {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+model DeviceAccounts {
+  deviceID String
+  accountID String
+  version Int
+  @@id([deviceID, accountID])
+}
+
+model DeviceProfiles {
+  deviceID String
+  profileID String
+  version Int
+  @@id([deviceID, profileID])
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

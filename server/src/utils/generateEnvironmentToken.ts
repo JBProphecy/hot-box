@@ -13,10 +13,9 @@ const JWT_SECRET: string = serverConfig.secrets.JWT_SECRET
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-type EnvironmentTokenPayload = { uuid: UUID }
+export type EnvironmentTokenPayload = { uuid: UUID }
 
-export default function generateEnvironmentToken(uuid: UUID): string {
-  const payload: EnvironmentTokenPayload = { uuid }
+export function generateEnvironmentToken(payload: EnvironmentTokenPayload): string {
   return jwt.sign(payload, JWT_SECRET)
 }
 

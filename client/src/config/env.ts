@@ -53,11 +53,7 @@ function processClientEnvironment(): ClientEnvironment {
 
 type ClientConfig = {
   API_URL: string,
-  APP_NAME: string,
-  CURRENT_ACCOUNT_ACCESS_TOKEN_KEY: string,
-  CURRENT_ACCOUNT_REFRESH_TOKEN_KEY: string
-  CURRENT_PROFILE_ACCESS_TOKEN_KEY: string,
-  CURRENT_PROFILE_REFRESH_TOKEN_KEY: string
+  APP_NAME: string
 }
 
 function generateClientConfig(globalConfig: GlobalConfig): ClientConfig {
@@ -65,11 +61,7 @@ function generateClientConfig(globalConfig: GlobalConfig): ClientConfig {
     const clientEnvironment: ClientEnvironment = processClientEnvironment()
     const clientConfig: ClientConfig = {
       API_URL: clientEnvironment.VITE_API_URL,
-      APP_NAME: globalConfig.APP_NAME,
-      CURRENT_ACCOUNT_ACCESS_TOKEN_KEY: globalConfig.CURRENT_ACCOUNT_ACCESS_TOKEN_KEY,
-      CURRENT_ACCOUNT_REFRESH_TOKEN_KEY: globalConfig.CURRENT_ACCOUNT_REFRESH_TOKEN_KEY,
-      CURRENT_PROFILE_ACCESS_TOKEN_KEY: globalConfig.CURRENT_PROFILE_ACCESS_TOKEN_KEY,
-      CURRENT_PROFILE_REFRESH_TOKEN_KEY: globalConfig.CURRENT_PROFILE_REFRESH_TOKEN_KEY
+      APP_NAME: globalConfig.APP_NAME
     }
     return clientConfig
   }

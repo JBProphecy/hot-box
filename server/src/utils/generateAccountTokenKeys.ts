@@ -1,0 +1,15 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import serverConfig from "@/config/env"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type GeneratedAccountTokenKeys = { accountAccessTokenKey: string, accountRefreshTokenKey: string }
+
+export function generateAccountTokenKeys(accountID: string): GeneratedAccountTokenKeys {
+  const accountAccessTokenKey: string = `${serverConfig.app.NAME}_account${accountID}_accessToken`
+  const accountRefreshTokenKey: string = `${serverConfig.app.NAME}_account${accountID}_refreshToken`
+  return { accountAccessTokenKey, accountRefreshTokenKey } as GeneratedAccountTokenKeys
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
