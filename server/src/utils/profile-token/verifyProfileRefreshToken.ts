@@ -4,25 +4,25 @@ import logger from "@/library/logger"
 import serverConfig from "@/config/env"
 
 import verifyToken from "@/utils/verifyToken"
-import AccountTokenPayload from "@/types/account-token/AccountTokenPayload"
+import ProfileTokenPayload from "@/types/profile-token/ProfileTokenPayload"
 
 import { JwtPayload } from "jsonwebtoken"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const ACCOUNT_TOKEN_SECRET: string = serverConfig.secrets.ACCOUNT_TOKEN_SECRET
+const PROFILE_TOKEN_SECRET: string = serverConfig.secrets.PROFILE_TOKEN_SECRET
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default function verifyAccountToken(accountToken: string): AccountTokenPayload | "expired" | "invalid" {
+export default function verifyProfileRefreshToken(token: string): ProfileTokenPayload | "expired" | "invalid" {
   try {
-    const payload: JwtPayload | "expired" | "invalid" = verifyToken(accountToken, ACCOUNT_TOKEN_SECRET)
-    if (payload !== "expired" && payload !== "invalid") { return payload as AccountTokenPayload }
+    const payload: JwtPayload | "expired" | "invalid" = verifyToken(token, PROFILE_TOKEN_SECRET)
+    if (payload !== "expired" && payload !== "invalid") { return payload as ProfileTokenPayload }
     return payload
   }
   catch (object: unknown) {
     const error = object as Error
-    logger.failure("Error Verifying Account Token")
+    logger.failure("Error Verifying Profile Refresh Token")
     logger.error(error)
     logger.trace(error)
     throw error

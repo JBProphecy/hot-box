@@ -6,7 +6,8 @@ import { SignInAccountBody, SignInAccountResult } from "shared/temp/SignInAccoun
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Simpler
-import setAccountTokenCookies from "@/utils/account-token/setAccountTokenCookies"
+import setAccountAccessTokenCookie from "@/utils/account-token/setAccountAccessTokenCookie"
+import setAccountRefreshTokenCookie from "@/utils/account-token/setAccountRefreshTokenCookie"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -81,13 +82,8 @@ export default async function handleSignInAccount(request: Request, response: Re
     const accountTokenPayload: AccountTokenPayload = { accountID }
     const { accountAccessToken, accountRefreshToken }: AccountTokens = generateAccountTokens(accountTokenPayload)
     const { accountAccessTokenKey, accountRefreshTokenKey}: AccountTokenKeys = generateAccountTokenKeys(accountID)
-    setAccountTokenCookies({
-      response,
-      accountAccessTokenKey,
-      accountRefreshTokenKey,
-      accountAccessToken,
-      accountRefreshToken
-    })
+    setAccountAccessTokenCookie(response, accountAccessTokenKey, accountAccessToken)
+    setAccountRefreshTokenCookie(response, accountRefreshTokenKey, accountRefreshToken)
     logger.success("Successfully Processed Account Tokens")
 
     logger.success(successMessage)

@@ -6,7 +6,8 @@ import { CreateProfileBody, CreateProfileResult } from "shared/temp/CreateProfil
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Simpler
-import setAccountTokenCookies from "@/utils/account-token/setAccountTokenCookies"
+import setAccountAccessTokenCookie from "@/utils/account-token/setAccountAccessTokenCookie"
+import setAccountRefreshTokenCookie from "@/utils/account-token/setAccountRefreshTokenCookie"
 
 import prisma from "@/config/db"
 import logger from "@/library/logger"
@@ -15,8 +16,7 @@ import AccountTokenKeys from "@/types/account-token/AccountTokenKeys"
 
 import generateAccountTokenKeys from "@/utils/account-token/generateAccountTokenKeys"
 import hashPassword from "@/utils/hashPassword"
-import refreshAccountTokens from "@/utils/account-token/refreshAccountTokens"
-import verifyAccountToken from "@/utils/account-token/verifyAccountToken"
+import verifyAccountAccessToken from "@/utils/account-token/verifyAccountAccessToken"
 import AccountTokenPayload from "@/types/account-token/AccountTokenPayload"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -66,13 +66,14 @@ export default async function handleCreateProfile(request: Request, response: Re
     const { accountAccessTokenKey, accountRefreshTokenKey }: AccountTokenKeys = generateAccountTokenKeys(body.accountID)
     const accountAccessToken: string | undefined = request.cookies[accountAccessTokenKey]
     if (typeof accountAccessToken === "undefined") { throw new Error("Missing Account Access Token") }
-    const accountAccessTokenPayload: AccountTokenPayload | "expired" | "invalid" = verifyAccountToken(accountAccessToken)
+    const accountAccessTokenPayload: AccountTokenPayload | "expired" | "invalid" = verifyAccountAccessToken(accountAccessToken)
     if (accountAccessTokenPayload === "invalid") {
       logger.failure("Device Token is Invalid")
       // needs work
     }
     if (accountAccessTokenPayload === "expired") {
       logger.warning("Account Access Token is Expired")
+      /* hold up
       const accountRefreshToken: string | undefined = request.cookies[accountRefreshTokenKey]
       if (typeof accountRefreshToken === "undefined") { throw new Error("Missing Account Refresh Token") }
       const { refreshed, accountTokens } = refreshAccountTokens(accountRefreshToken)
@@ -84,13 +85,9 @@ export default async function handleCreateProfile(request: Request, response: Re
         return response.status(403).json(result)
       }
       if (typeof accountTokens === "undefined") { throw new Error("Missing Account Tokens") }
-      setAccountTokenCookies({
-        response,
-        accountAccessTokenKey,
-        accountRefreshTokenKey,
-        accountAccessToken: accountTokens.accountAccessToken,
-        accountRefreshToken: accountTokens.accountRefreshToken
-      })
+      setAccountAccessTokenCookie(response, accountAccessTokenKey, accountTokens.accountAccessToken)
+      setAccountRefreshTokenCookie(response, accountRefreshTokenKey, accountTokens.accountRefreshToken)
+      */
     }
     logger.success("Successfully Processed Account Tokens")
 
