@@ -1,21 +1,22 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+import prisma from "@/config/db"
 import logger from "@/library/logger"
-import jwt, { JwtPayload } from "jsonwebtoken"
+
+import { Profile } from "@prisma/client"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default function verifyToken(token: string, secret: string): JwtPayload | "expired" | "invalid" {
+export default async function getProfileByUsername(username: string): Promise<Profile | null> {
   try {
-    const payload: JwtPayload | string = jwt.verify(token, secret)
-    if (typeof payload === "string") { throw new Error("payload is a string (idk)") }
-    return payload
+    const profile: Profile | null = await prisma.profile.findUnique({
+      where: { username: username }
+    })
+    return profile
   }
   catch (object: unknown) {
     const error = object as Error
-    if (error.name === "TokenExpiredError") { return "expired" }
-    if (error.name === "JsonWebTokenError") { return "invalid" }
-    logger.failure("Error Verifying Token")
+    logger.failure("Error Fetching Profile")
     logger.error(error)
     logger.trace(error)
     throw error

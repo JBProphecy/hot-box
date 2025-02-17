@@ -1,21 +1,27 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import logger from "@/library/logger"
-import jwt, { JwtPayload } from "jsonwebtoken"
+import prisma from "@/config/db"
+
+import { DeviceProfile } from "@prisma/client"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default function verifyToken(token: string, secret: string): JwtPayload | "expired" | "invalid" {
+export default async function registerDeviceProfile(deviceID: string, profileID: string): Promise<DeviceProfile> {
   try {
-    const payload: JwtPayload | string = jwt.verify(token, secret)
-    if (typeof payload === "string") { throw new Error("payload is a string (idk)") }
-    return payload
+    logger.attempt("Registering Device Profile")
+    const deviceProfile: DeviceProfile = await prisma.deviceProfile.create({
+      data: {
+        deviceID: deviceID,
+        profileID: profileID
+      }
+    })
+    logger.success("Successfully Registered Device Profile")
+    return deviceProfile
   }
   catch (object: unknown) {
     const error = object as Error
-    if (error.name === "TokenExpiredError") { return "expired" }
-    if (error.name === "JsonWebTokenError") { return "invalid" }
-    logger.failure("Error Verifying Token")
+    logger.failure("Error Registering Device Profile")
     logger.error(error)
     logger.trace(error)
     throw error

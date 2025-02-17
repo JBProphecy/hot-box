@@ -1,6 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-type CreateAccountBody = {
+export type CreateAccountRequestBody = {
+  name?: string
+  email?: string
+  password?: string
+}
+
+export type CreateAccountValidBody = {
   name: string,
   email: string,
   password: string
@@ -8,6 +14,17 @@ type CreateAccountBody = {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default CreateAccountBody
+export type CreateAccountResponseData = {
+  type: "success" | "failure" | "error"
+  message: string
+} | {
+  type: "invalid body"
+  messages: string[]
+}
+
+export type CreateAccountResult = {
+  status: number,
+  data: CreateAccountResponseData
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

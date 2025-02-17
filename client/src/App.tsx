@@ -10,18 +10,23 @@ import EntryPage from "@/app/EntryPage"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import requestProcessDeviceToken from "@/api/requestProcessDeviceToken"
+import requestEnsureDeviceToken from "./api/requestEnsureDeviceToken"
 import requestCreateAccount from "@/api/requestCreateAccount"
 import requestSignInAccount from "@/api/requestSignInAccount"
+
+import requestCreateProfile from "@/api/requestCreateProfile"
+import requestAddProfile from "@/api/requestAddProfile"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export default function App() {
   useEffect(() => {
     const sendRequests = async () => {
-      await requestProcessDeviceToken()
-      await requestCreateAccount({ name: "Jack", email: "dkdkdk@gmail.com", password: "yomama" })
-      await requestSignInAccount({ email: "dk@gmail.com", password: "omama" })
+      await requestEnsureDeviceToken()
+      await requestCreateAccount({ name: "Jack", email: "fj@gmail.com", password: "yomama" })
+      await requestSignInAccount({ email: "fj@gmail.com", password: "yomama" })
+      await requestCreateProfile({ name: "Jack", username: "Yo Mama 9", password: "yomama", accountID: "cm77optde00008nfoog5vwmkk" })
+      await requestAddProfile({ username: "Yo Mama 9", password: "yomama" })
     }
     sendRequests()
   }, [])

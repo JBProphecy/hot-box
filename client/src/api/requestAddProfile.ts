@@ -1,13 +1,13 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import clientConfig from "@/config/env"
-import { CreateAccountRequestBody, CreateAccountResponseData, CreateAccountResult } from "shared/types/CreateAccountTypes"
+import { AddProfileRequestBody, AddProfileResponseData, AddProfileResult } from "shared/types/AddProfileTypes"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default async function requestCreateAccount(body: CreateAccountRequestBody) {
+export default async function requestAddProfile(body: AddProfileRequestBody) {
   try {
-    const response: Response = await fetch(`${clientConfig.API_URL}/createAccount`, {
+    const response: Response = await fetch(`${clientConfig.API_URL}/addProfile`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -15,8 +15,8 @@ export default async function requestCreateAccount(body: CreateAccountRequestBod
       credentials: "include",
       body: JSON.stringify(body)
     })
-    const result: CreateAccountResult = await response.json()
-    const data = result.data as CreateAccountResponseData
+    const result: AddProfileResult = await response.json()
+    const data = result.data as AddProfileResponseData
     switch (data.type) {
       case "invalid body":
         for (const message of data.messages) { console.warn(message) }
@@ -29,7 +29,7 @@ export default async function requestCreateAccount(body: CreateAccountRequestBod
   }
   catch (object: unknown) {
     const error = object as Error
-    console.error("Error Creating Account")
+    console.error("Error Adding Profile to Your Device")
     console.error(error)
     throw error
   }

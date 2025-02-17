@@ -1,21 +1,23 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import verifyToken from "@/utils/verifyToken"
-import DeviceTokenPayload from "@/types/DeviceTokenPayload"
+import logger from "@/library/logger"
+
+import { randomUUID, UUID } from "crypto"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default function verifyDeviceToken(deviceToken: string) {
+export default function generateDeviceID(): UUID {
   try {
-    const data = verifyToken(deviceToken)
-    if (data === "expired") { return "expired" }
-    return data as DeviceTokenPayload
+    logger.attempt("Generating Device ID")
+    const deviceID: UUID = randomUUID()
+    logger.success("Successfully Generated Device ID")
+    return deviceID
   }
   catch (object: unknown) {
     const error = object as Error
-    if (error.name === "TokenExpiredError") { return "expired" }
-    console.error("Error Verifying Device Token")
-    console.error(error)
+    logger.failure("Error Generating Device ID")
+    logger.error(error)
+    logger.trace(error)
     throw error
   }
 }

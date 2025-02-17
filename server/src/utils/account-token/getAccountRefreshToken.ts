@@ -1,21 +1,20 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import logger from "@/library/logger"
-import jwt, { JwtPayload } from "jsonwebtoken"
+
+import { Request } from "express"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default function verifyToken(token: string, secret: string): JwtPayload | "expired" | "invalid" {
+export default function getAccountRefreshToken(request: Request, name: string): string | undefined {
   try {
-    const payload: JwtPayload | string = jwt.verify(token, secret)
-    if (typeof payload === "string") { throw new Error("payload is a string (idk)") }
-    return payload
+    const token: any = request.cookies[name]
+    if (typeof token === "string" || typeof token === "undefined") { return token }
+    throw new Error("Type of Account Refresh Token is Invalid")
   }
   catch (object: unknown) {
     const error = object as Error
-    if (error.name === "TokenExpiredError") { return "expired" }
-    if (error.name === "JsonWebTokenError") { return "invalid" }
-    logger.failure("Error Verifying Token")
+    logger.failure("Error Getting Account Refresh Token")
     logger.error(error)
     logger.trace(error)
     throw error

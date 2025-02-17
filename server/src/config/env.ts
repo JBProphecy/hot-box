@@ -1,14 +1,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import dotenv from "dotenv"
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+import logger from "@/library/logger"
 
 import { globalConfig, GlobalConfig } from "shared/config/env"
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-import logger from "@/config/logger"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -44,26 +39,30 @@ function processNumber(key: string, required?: boolean): number | undefined {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 type ServerEnvironment = {
-  CLIENT_ORIGIN: string,
-  CRYPTO_KEY: string,
-  JWT_SECRET: string,
-  ACCOUNT_ACCESS_TOKEN_DURATION: number,
-  ACCOUNT_REFRESH_TOKEN_DURATION: number,
-  PROFILE_ACCESS_TOKEN_DURATION: number,
-  PROFILE_REFRESH_TOKEN_DURATION: number,
+  CLIENT_ORIGIN: string
+  DEVICE_TOKEN_SECRET: string
+  ACCOUNT_TOKEN_SECRET: string
+  PROFILE_TOKEN_SECRET: string
+  ACCOUNT_ACCESS_TOKEN_DURATION: number
+  ACCOUNT_REFRESH_TOKEN_DURATION: number
+  PROFILE_ACCESS_TOKEN_DURATION: number
+  PROFILE_REFRESH_TOKEN_DURATION: number
 }
 
 function processServerEnvironment(): ServerEnvironment {
   try {
+    logger.attempt("Processing Server Environment")
     const serverEnvironment: ServerEnvironment = {
       CLIENT_ORIGIN: processString("CLIENT_ORIGIN", true),
-      CRYPTO_KEY: processString("CRYPTO_KEY", true),
-      JWT_SECRET: processString("JWT_SECRET", true),
+      DEVICE_TOKEN_SECRET: processString("DEVICE_TOKEN_SECRET", true),
+      ACCOUNT_TOKEN_SECRET: processString("ACCOUNT_TOKEN_SECRET", true),
+      PROFILE_TOKEN_SECRET: processString("PROFILE_TOKEN_SECRET", true),
       ACCOUNT_ACCESS_TOKEN_DURATION: processNumber("ACCOUNT_ACCESS_TOKEN_DURATION", true),
       ACCOUNT_REFRESH_TOKEN_DURATION: processNumber("ACCOUNT_REFRESH_TOKEN_DURATION", true),
       PROFILE_ACCESS_TOKEN_DURATION: processNumber("PROFILE_ACCESS_TOKEN_DURATION", true),
       PROFILE_REFRESH_TOKEN_DURATION: processNumber("PROFILE_REFRESH_TOKEN_DURATION", true),
     }
+    logger.success("Successfully Processed Server Environment")
     return serverEnvironment
   }
   catch (object: unknown) {
@@ -80,25 +79,27 @@ function processServerEnvironment(): ServerEnvironment {
 type ServerConfig = {
   app: {
     NAME: string
-  },
+  }
   client: {
     ORIGIN: string
-  },
+  }
   secrets: {
-    CRYPTO_KEY: string,
-    JWT_SECRET: string
-  },
+    DEVICE_TOKEN_SECRET: string
+    ACCOUNT_TOKEN_SECRET: string
+    PROFILE_TOKEN_SECRET: string
+  }
   tokens: {
-    DEVICE_TOKEN_KEY: string,
-    ACCOUNT_ACCESS_TOKEN_DURATION: number,
-    ACCOUNT_REFRESH_TOKEN_DURATION: number,
-    PROFILE_ACCESS_TOKEN_DURATION: number,
+    DEVICE_TOKEN_KEY: string
+    ACCOUNT_ACCESS_TOKEN_DURATION: number
+    ACCOUNT_REFRESH_TOKEN_DURATION: number
+    PROFILE_ACCESS_TOKEN_DURATION: number
     PROFILE_REFRESH_TOKEN_DURATION: number
   }
 }
 
 function generateServerConfig(globalConfig: GlobalConfig): ServerConfig {
   try {
+    logger.attempt("Generating Server Config")
     const serverEnvironment: ServerEnvironment = processServerEnvironment()
     const serverConfig: ServerConfig = {
       app: {
@@ -108,8 +109,9 @@ function generateServerConfig(globalConfig: GlobalConfig): ServerConfig {
         ORIGIN: serverEnvironment.CLIENT_ORIGIN
       },
       secrets: {
-        CRYPTO_KEY: serverEnvironment.CRYPTO_KEY,
-        JWT_SECRET: serverEnvironment.JWT_SECRET
+        DEVICE_TOKEN_SECRET: serverEnvironment.DEVICE_TOKEN_SECRET,
+        ACCOUNT_TOKEN_SECRET: serverEnvironment.ACCOUNT_TOKEN_SECRET,
+        PROFILE_TOKEN_SECRET: serverEnvironment.PROFILE_TOKEN_SECRET
       },
       tokens: {
         DEVICE_TOKEN_KEY: `${globalConfig.APP_NAME}_deviceToken`,
@@ -119,6 +121,7 @@ function generateServerConfig(globalConfig: GlobalConfig): ServerConfig {
         PROFILE_REFRESH_TOKEN_DURATION: serverEnvironment.PROFILE_REFRESH_TOKEN_DURATION
       }
     }
+    logger.success("Successfully Generated Server Config")
     return serverConfig
   }
   catch (object: unknown) {
@@ -135,9 +138,6 @@ function generateServerConfig(globalConfig: GlobalConfig): ServerConfig {
 let serverConfig: ServerConfig
 try { serverConfig = generateServerConfig(globalConfig) }
 catch (object: unknown) { process.exit(0) }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 export default serverConfig
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import ansi from "@/lib/ansi"
+import ansi from "@/library/ansi"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -29,12 +29,12 @@ function record(color: string, label: string, object?: any, ...optionalParams: a
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function start() {
-  line()
+  logger.line()
   console.log(
     generateTimestamp(),
     generateLabel("START OF LOGS", ansi.fgc.purple)
   )
-  line()
+  logger.line()
 }
 
 function end() {
@@ -42,7 +42,7 @@ function end() {
     generateTimestamp(),
     generateLabel("END OF LOGS", ansi.fgc.purple)
   )
-  line()
+  logger.line()
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -55,6 +55,7 @@ function error(error?: Error, ...optionalParams: any[]) {
 function trace(error?: Error, ...optionalParams: any[]) {
   error = error instanceof Error ? error : undefined
   record(ansi.fgc.orange, "TRACE", error, ...optionalParams)
+  logger.line()
 }
 
 function attempt(object?: any, ...optionalParams: any[]) {
@@ -62,7 +63,7 @@ function attempt(object?: any, ...optionalParams: any[]) {
 }
 
 function message(object?: any, ...optionalParams: any[]) {
-  record(ansi.fgc.blue, "MESSAGE", object, ...optionalParams)
+  record(ansi.fgc.teal, "MESSAGE", object, ...optionalParams)
 }
 
 function network(object?: any, ...optionalParams: any[]) {
@@ -81,6 +82,12 @@ function success(object?: any, ...optionalParams: any[]) {
   record(ansi.fgc.green, "SUCCESS", object, ...optionalParams)
 }
 
+function fatal(error: Error, failure: string) {
+  logger.error(error)
+  logger.trace(error)
+  logger.failure(failure)
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const logger = {
@@ -89,7 +96,8 @@ const logger = {
   message,
   attempt, network,
   failure, warning, success,
-  start, end
+  start, end,
+  fatal
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,13 +1,16 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import argon2 from "argon2"
-import logger from "@/config/logger"
+import logger from "@/library/logger"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default async function hashPassword(password: string) {
+export default async function hashPassword(password: string): Promise<string> {
   try {
-    return await argon2.hash(password)
+    logger.attempt("Hashing Password")
+    const hashedPassword: string = await argon2.hash(password)
+    logger.success("Successfully Hashed Password")
+    return hashedPassword
   }
   catch (object: unknown) {
     const error = object as Error

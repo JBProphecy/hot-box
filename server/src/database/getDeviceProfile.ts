@@ -1,17 +1,27 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import argon2 from "argon2"
 import logger from "@/library/logger"
+import prisma from "@/config/db"
+
+import { DeviceProfile } from "@prisma/client"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default async function verifyPassword(storedPassword: string, givenPassword: string): Promise<boolean> {
+export default async function getDeviceProfile(deviceID: string, profileID: string): Promise<DeviceProfile | null> {
   try {
-    return await argon2.verify(storedPassword, givenPassword)
+    const deviceProfile: DeviceProfile | null = await prisma.deviceProfile.findUnique({
+      where: {
+        deviceID_profileID: {
+          deviceID: deviceID,
+          profileID: profileID
+        }
+      }
+    })
+    return deviceProfile
   }
-  catch (object: unknown) {
+  catch(object: unknown) {
     const error = object as Error
-    logger.failure("Error Verifying Password")
+    logger.failure("Error Fetching Device Profile")
     logger.error(error)
     logger.trace(error)
     throw error

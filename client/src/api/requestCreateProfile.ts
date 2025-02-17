@@ -1,13 +1,13 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import clientConfig from "@/config/env"
-import { SignInAccountBody, SignInAccountResult } from "shared/temp/SignInAccountResult"
+import { CreateProfileBody, CreateProfileResult } from "shared/temp/CreateProfileResult"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default async function requestSignInAccount(body: SignInAccountBody) {
+export default async function requestCreateProfile(body: CreateProfileBody) {
   try {
-    const response: Response = await fetch(`${clientConfig.API_URL}/signInAccount`, {
+    const response: Response = await fetch(`${clientConfig.API_URL}/createProfile`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -15,13 +15,8 @@ export default async function requestSignInAccount(body: SignInAccountBody) {
       credentials: "include",
       body: JSON.stringify(body)
     })
-    const result: SignInAccountResult = await response.json()
-    if (response.status >= 200 && response.status < 300) {
-      console.log(result.message)
-      const { accountID } = result
-      if (typeof accountID === "undefined") { throw new Error("Missing Account ID") }
-      console.log(accountID)
-    }
+    const result: CreateProfileResult = await response.json()
+    if (response.status >= 200 && response.status < 300) { console.log(result.message) }
     else if (response.status >= 300 && response.status < 400) { console.log(result.message) }
     else if (response.status >= 400 && response.status < 500) { console.warn(result.message) }
     else if (response.status >= 500 && response.status < 600) { throw new Error(result.message) }
@@ -29,7 +24,7 @@ export default async function requestSignInAccount(body: SignInAccountBody) {
   }
   catch (object: unknown) {
     const error = object as Error
-    console.error("Error Signing In to Your Account")
+    console.error("Error Creating Profile")
     console.error(error)
     throw error
   }

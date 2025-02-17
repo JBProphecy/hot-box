@@ -1,21 +1,25 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import logger from "@/library/logger"
-import jwt, { JwtPayload } from "jsonwebtoken"
+import serverConfig from "@/config/env"
+
+import { Response } from "express"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default function verifyToken(token: string, secret: string): JwtPayload | "expired" | "invalid" {
+const DEVICE_TOKEN_KEY: string = serverConfig.tokens.DEVICE_TOKEN_KEY
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export default function clearDeviceTokenCookie(response: Response) {
   try {
-    const payload: JwtPayload | string = jwt.verify(token, secret)
-    if (typeof payload === "string") { throw new Error("payload is a string (idk)") }
-    return payload
+    logger.attempt("Clearing Device Token Cookie")
+    response.clearCookie(DEVICE_TOKEN_KEY)
+    logger.success("Successfully Set Device Token Cookie")
   }
   catch (object: unknown) {
     const error = object as Error
-    if (error.name === "TokenExpiredError") { return "expired" }
-    if (error.name === "JsonWebTokenError") { return "invalid" }
-    logger.failure("Error Verifying Token")
+    logger.failure("Error Clearing Device Token Cookie")
     logger.error(error)
     logger.trace(error)
     throw error

@@ -6,22 +6,24 @@ import express, { Request, Response, NextFunction } from "express"
 import cookieParser from "cookie-parser"
 
 import serverConfig from "@/config/env"
-import logger from "@/config/logger"
+import logger from "@/library/logger"
 import loggingHandler from "@/middleware/loggingHandler"
 import routeNotFound from "@/middleware/routeNotFound"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Route Handlers
-import handleProcessDeviceToken from "@/api/handleProcessDeviceToken"
+import handleEnsureDeviceToken from "@/api/handleEnsureDeviceToken"
 import handleCreateAccount from "@/api/handleCreateAccount"
 import handleSignInAccount from "@/api/handleSignInAccount"
+
+import handleCreateProfile from "@/api/handleCreateProfile"
+import handleAddProfile from "@/api/handleAddProfile"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // TEMPORARY IMPORTS
 import prisma from "@/config/db"
-import testTokens from "@/test/testTokens"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -49,17 +51,22 @@ export const Main = () => {
 
     // Define Routes
     application.get("/api/hello", (req: Request, res: Response, next: NextFunction) => {
-      testTokens()
       res.status(200).json({ message: "hello world" })
     })
-    application.post("/api/processDeviceToken", async (request: Request, response: Response, next: NextFunction) => {
-      await handleProcessDeviceToken(request, response)
+    application.post("/api/ensureDeviceToken", async (request: Request, response: Response, next: NextFunction) => {
+      await handleEnsureDeviceToken(request, response)
     })
     application.post("/api/createAccount", async (request: Request, response: Response, next: NextFunction) => {
       await handleCreateAccount(request, response)
     })
     application.post("/api/signInAccount", async (request: Request, response: Response, next: NextFunction) => {
       await handleSignInAccount(request, response)
+    })
+    application.post("/api/createProfile", async (request: Request, response: Response, next: NextFunction) => {
+      await handleCreateProfile(request, response)
+    })
+    application.post("/api/addProfile", async (request: Request, response: Response, next: NextFunction) => {
+      await handleAddProfile(request, response)
     })
     // Route Not Found
     application.use(routeNotFound)
@@ -80,9 +87,11 @@ export const Main = () => {
   }
   catch (object: unknown) {
     const error = object as Error
-    console.log("Main Server Error")
+    logger.failure("Server Error")
+    logger.error(error)
+    logger.trace(error)
     console.log(error)
-    process.exit(0)
+    shutdown()
   }
 }
 
@@ -90,8 +99,12 @@ export const Main = () => {
 
 export const shutdown = (callback?: any) => {
   if (httpServer) {
-    logger.end()
+    logger.attempt("Attempting to Close Server")
     httpServer.close(callback)
+    logger.success("Successfully Closed Server")
+    logger.line()
+    logger.end()
+    process.exit(0)
   }
 }
 
