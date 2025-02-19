@@ -1,13 +1,22 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import clientConfig from "@/config/env"
-import { SignInAccountBody, SignInAccountResult } from "shared/temp/SignInAccountResult"
+import { SignInAccountRequestBody, SignInAccountResponseData } from "shared/types/SignInAccountTypes"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default async function requestSignInAccount(body: SignInAccountBody) {
+// Messages
+const attemptMessage: string = "Signing Into Your Account"
+const successMessage: string = "Success Signing Into Your Account"
+const failureMessage: string = "Failure Signing Into Your Account"
+const errorMessage: string = "Error Siging Into Your Account"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export default async function requestSignInAccount(body: SignInAccountRequestBody): Promise<string | null> {
   try {
-    const response: Response = await fetch(`${clientConfig.API_URL}/signInAccount`, {
+    console.log(attemptMessage)
+    const response: Response = await fetch(`${clientConfig.API_URL}/account/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -15,21 +24,26 @@ export default async function requestSignInAccount(body: SignInAccountBody) {
       credentials: "include",
       body: JSON.stringify(body)
     })
-    const result: SignInAccountResult = await response.json()
-    if (response.status >= 200 && response.status < 300) {
-      console.log(result.message)
-      const { accountID } = result
-      if (typeof accountID === "undefined") { throw new Error("Missing Account ID") }
-      console.log(accountID)
+    const result: SignInAccountResponseData = await response.json()
+    switch (result.type) {
+      case "invalid body":
+        console.warn(failureMessage)
+        for (const message of result.messages) { console.warn(message) }
+        return null
+      case "success":
+        console.log(successMessage)
+        return result.accountID
+      case "failure":
+        console.warn(failureMessage)
+        console.warn(result.message)
+        return null
+      case "error": throw new Error(result.message)
+      default: throw new Error("Unhandled Response")
     }
-    else if (response.status >= 300 && response.status < 400) { console.log(result.message) }
-    else if (response.status >= 400 && response.status < 500) { console.warn(result.message) }
-    else if (response.status >= 500 && response.status < 600) { throw new Error(result.message) }
-    else throw new Error("Unhandled Response")
   }
   catch (object: unknown) {
     const error = object as Error
-    console.error("Error Signing In to Your Account")
+    console.error(errorMessage)
     console.error(error)
     throw error
   }

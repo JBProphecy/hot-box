@@ -1,0 +1,35 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type SignInProfileRawBody = {
+  username?: string
+  password?: string
+}
+
+export type SignInProfileValidBody = {
+  username: string
+  password: string
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type SignInProfileResponseData = {
+  type: "success"
+  profileID: string
+} | {
+  type: "failure" | "error"
+  message: string
+} | {
+  type: "invalid body"
+  messages: string[]
+}
+
+export type SignInProfileHelperResult = {
+  respond: true
+  status: number
+  data: SignInProfileResponseData
+} | {
+  respond: false
+  data?: unknown
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,0 +1,67 @@
+/**********************************************************************************************************************/
+
+.page {
+  --pageWidth: "";
+  --pageHeight: "";
+}
+
+/**********************************************************************************************************************/
+
+.page {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+/**********************************************************************************************************************/
+
+.profileMenu {
+  height: 80%;
+  aspect-ratio: 9/16;
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+  overflow-y: auto;
+}
+.profileList {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.profileItem {
+  width: 100%;
+  height: 60px;
+  background-color: rgb(32, 32, 32);
+}
+
+.profileButtons {
+  width: 100%;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.removeAllProfilesButton {
+  width: 200px;
+  height: 40px;
+  border-radius: 6px;
+  background-color: orange;
+}
+
+.addProfileButton {
+  width: 100px;
+  height: 40px;
+  border-radius: 6px;
+  background-color: red;
+}

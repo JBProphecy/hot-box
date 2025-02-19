@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import clientConfig from "@/config/env"
-import { CreateAccountRequestBody, CreateAccountResponseData, CreateAccountResult } from "shared/types/CreateAccountTypes"
+import { CreateAccountRequestBody, CreateAccountResponseData } from "shared/types/CreateAccountTypes"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -15,15 +15,14 @@ export default async function requestCreateAccount(body: CreateAccountRequestBod
       credentials: "include",
       body: JSON.stringify(body)
     })
-    const result: CreateAccountResult = await response.json()
-    const data = result.data as CreateAccountResponseData
-    switch (data.type) {
+    const result: CreateAccountResponseData = await response.json()
+    switch (result.type) {
       case "invalid body":
-        for (const message of data.messages) { console.warn(message) }
+        for (const message of result.messages) { console.warn(message) }
         break
-      case "success": console.log(data.message); break
-      case "failure": console.warn(data.message); break
-      case "error": throw new Error(data.message)
+      case "success": console.log(result.message); break
+      case "failure": console.warn(result.message); break
+      case "error": throw new Error(result.message)
       default: throw new Error("Unhandled Response")
     }
   }

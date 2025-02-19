@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-type UnknownResult = {
+type UnknownResponseData = {
   status: number
-  data: unknown
+  type: string
 }
 
 export function isResult(object: unknown) {
@@ -16,7 +16,7 @@ export function isResult(object: unknown) {
 
 export type Helper = {
   respond: true
-  result: UnknownResult
+  result: UnknownResponseData
 } | {
   respond: false
   result?: unknown

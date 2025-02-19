@@ -1,0 +1,156 @@
+/**********************************************************************************************************************/
+
+.card {
+  /* static */
+  --transitionDuration: 150ms;
+  --transitionFunction: ease-in-out;
+
+  /* dynamic */
+  --cardWidth: "";
+  --cardHeight: "";
+  --cardBorderWidth: "";
+
+  /* calculated */
+  --cardPadding: calc(1.5 * var(--cardBorderWidth));
+  --cardBorderRadius: calc(3 * var(--cardBorderWidth));
+  --cardContentWidth: calc(var(--cardWidth) - (2 * var(--cardBorderWidth)) - (2 * var(--cardPadding)));
+  --cardContentHeight: calc(var(--cardHeight) - (2 * var(--cardBorderWidth)) - (2 * var(--cardPadding)));
+  --cardContentGap: var(--cardPadding);
+  --cardImageSize: var(--cardContentHeight);
+  --cardImageBorderRadius: var(--cardBorderWidth);
+  --cardDetailsWidth: calc(var(--cardContentWidth) - var(--cardImageSize) - var(--cardContentGap));
+  --cardDetailsHeight: var(--cardContentHeight);
+  --cardDetailsHorizontalPadding: var(--cardPadding);
+
+  --cardBorderColor: rgb(24, 24, 24); /* personal */
+  --cardBorderColorHovered: grey; /* personal */
+}
+
+/**********************************************************************************************************************/
+
+.card {
+  width: var(--cardWidth);
+  height: var(--cardHeight);
+  display: flex;
+  padding: var(--cardPadding);
+  border-radius: var(--cardBorderRadius);
+  border: var(--cardBorderWidth) solid;
+  color: var(--cardBorderColor);
+  opacity: 0.8;
+  background-color: black;
+  transition:
+    color var(--transitionDuration) var(--transitionFunction),
+    opacity var(--transitionDuration) var(--transitionFunction),
+    background-color var(--transitionDuration) var(--transitionFunction);
+}
+
+.card:hover {
+  cursor: pointer;
+  color: var(--cardBorderColorHovered);
+  background-color: rgb(8, 8, 8);
+  opacity: 1;
+}
+
+.card:focus {
+  outline: 0;
+  color: var(--cardBorderColorHovered);
+  background-color: rgb(8, 8, 8);
+  opacity: 1;
+}
+
+.card:hover:active, .card.active {
+  opacity: 0.25;
+}
+
+.card:active {
+  color: var(--cardBorderColorHovered);
+  background-color: rgb(8, 8, 8);
+  opacity: 0.5;
+}
+
+/**********************************************************************************************************************/
+
+.content {
+  width: var(--cardContentWidth);
+  height: var(--cardContentHeight);
+  display: flex;
+  gap: var(--cardContentGap);
+}
+
+/**********************************************************************************************************************/
+
+.image {
+  width: var(--cardImageSize);
+  height: var(--cardImageSize);
+  border-radius: var(--cardImageBorderRadius);
+  object-fit: contain;
+  user-select: none;
+}
+
+/**********************************************************************************************************************/
+
+.details {
+  --lineOneHeight: calc(4/12 * var(--cardDetailsHeight));
+  --lineTwoHeight: calc(3/12 * var(--cardDetailsHeight));
+  --lineThreeHeight: calc(4/12 * var(--cardDetailsHeight));
+
+  --lineOneFontSize: calc(8/12 * var(--lineOneHeight));
+  --lineTwoFontSize: calc(7/12 * var(--lineTwoHeight));
+  --lineThreeFontSize: calc(5/12 * var(--lineThreeHeight));
+}
+
+.details {
+  width: var(--cardDetailsWidth);
+  height: var(--cardDetailsHeight);
+  padding: 0 var(--cardDetailsHorizontalPadding);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/**********************************************************************************************************************/
+
+.line:nth-of-type(1) {
+  height: var(--lineOneHeight);
+  color: rgb(200, 200, 200);
+  display: flex;
+}
+
+.line:nth-of-type(2) {
+  height: var(--lineTwoHeight);
+  color: rgb(128, 128, 128);
+  display: flex;
+}
+
+.line:nth-of-type(3) {
+  height: var(--lineThreeHeight);
+  color: rgb(100, 100, 100);
+  display: flex;
+}
+
+/**********************************************************************************************************************/
+
+.line > .text {
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  user-select: none;
+}
+
+.line:nth-of-type(1) > .text {
+  line-height: var(--lineOneHeight);
+  font-size: var(--lineOneFontSize);
+}
+
+.line:nth-of-type(2) > .text {
+  line-height: var(--lineTwoHeight);
+  font-size: var(--lineTwoFontSize);
+}
+
+.line:nth-of-type(3) > .text {
+  line-height: var(--lineThreeHeight);
+  font-size: var(--lineThreeFontSize);
+}
+
+/**********************************************************************************************************************/

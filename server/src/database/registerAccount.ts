@@ -3,25 +3,26 @@
 import logger from "@/library/logger"
 import prisma from "@/config/db"
 
-import { DeviceProfile } from "@prisma/client"
+import { Account } from "@prisma/client"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default async function getDeviceProfile(deviceID: string, profileID: string): Promise<DeviceProfile | null> {
+export default async function registerAccount(name: string, email: string, hashedPassword: string): Promise<Account> {
   try {
-    const deviceProfile: DeviceProfile | null = await prisma.deviceProfile.findUnique({
-      where: {
-        deviceID_profileID: {
-          deviceID: deviceID,
-          profileID: profileID
-        }
+    logger.attempt("Registering Account in the Database")
+    const account: Account = await prisma.account.create({
+      data: {
+        name: name,
+        email: email,
+        password: hashedPassword
       }
     })
-    return deviceProfile
+    logger.success("Successfully Registered Account in the Database")
+    return account
   }
-  catch(object: unknown) {
+  catch (object: unknown) {
     const error = object as Error
-    logger.failure("Error Fetching Device Profile")
+    logger.failure("Error Registering Account in the Database")
     logger.error(error)
     logger.trace(error)
     throw error

@@ -2,20 +2,33 @@
 
 import { useEffect } from "react"
 
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Providers
+
+import CurrentAccountProvider from "@/context/CurrentAccountProvider"
+import CurrentProfileProvider from "@/context/CurrentProfileProvider"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import FullScreenLayout from "@/app/FullScreenLayout"
-//import DevPage from "@/app/DevPage"
-import EntryPage from "@/app/EntryPage"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import requestEnsureDeviceToken from "./api/requestEnsureDeviceToken"
-import requestCreateAccount from "@/api/requestCreateAccount"
-import requestSignInAccount from "@/api/requestSignInAccount"
 
-import requestCreateProfile from "@/api/requestCreateProfile"
-import requestAddProfile from "@/api/requestAddProfile"
+import CreateAccountPage from "@/app/CreateAccountPage"
+import SignInAccountPage from "@/app/SignInAccountPage"
+import CurrentAccountPage from "@/app/CurrentAccountPage"
+
+import DeviceProfilesPage from "@/app/DeviceProfilesPage"
+// add profile page
+import SignInProfilePage from "@/app/SignInProfilePage"
+import CurrentProfilePage from "@/app/CurrentProfilePage"
+
+// create profile page
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -23,18 +36,27 @@ export default function App() {
   useEffect(() => {
     const sendRequests = async () => {
       await requestEnsureDeviceToken()
-      await requestCreateAccount({ name: "Jack", email: "fj@gmail.com", password: "yomama" })
-      await requestSignInAccount({ email: "fj@gmail.com", password: "yomama" })
-      await requestCreateProfile({ name: "Jack", username: "Yo Mama 9", password: "yomama", accountID: "cm77optde00008nfoog5vwmkk" })
-      await requestAddProfile({ username: "Yo Mama 9", password: "yomama" })
     }
     sendRequests()
   }, [])
   try {
     return (
-      <FullScreenLayout>
-        <EntryPage />
-      </FullScreenLayout>
+      <CurrentAccountProvider>
+        <CurrentProfileProvider>
+          <FullScreenLayout>
+            <Router>
+              <Routes>
+                <Route path="/device/profiles" element={<DeviceProfilesPage />} />
+                <Route path="/current/profile" element={<CurrentProfilePage />} />
+                <Route path="/current/account" element={<CurrentAccountPage />} />
+                <Route path="/account/register" element={<CreateAccountPage />} />
+                <Route path="/account/login" element={<SignInAccountPage />} />
+                <Route path="/profile/login" element={<SignInProfilePage />} />
+              </Routes>
+            </Router>
+          </FullScreenLayout>
+        </CurrentProfileProvider>
+      </CurrentAccountProvider>
     )
   }
   catch (object: unknown) {

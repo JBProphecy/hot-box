@@ -5,14 +5,16 @@ import { Request, Response } from "express"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import logger from "@/library/logger"
-import prisma from "@/config/db"
+
+import { Account } from "@prisma/client"
+import getAccountByEmail from "@/database/getAccountByEmail"
+import registerAccount from "@/database/registerAccount"
 
 import hashPassword from "@/utils/hashPassword"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { Helper, isResult } from "@/library/network"
-import { CreateAccountRequestBody, CreateAccountValidBody, CreateAccountResponseData, CreateAccountResult } from "shared/types/CreateAccountTypes"
+import { CreateAccountRequestBody, CreateAccountValidBody, CreateAccountResponseData } from "shared/types/CreateAccountTypes"
 import { ValidationResult, ValidationsResult, processValidationResults } from "@/library/validation"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -32,6 +34,7 @@ function validateName(name: string | undefined): ValidationResult {
     return { success: true }
   }
 }
+
 function validateEmail(email: string | undefined): ValidationResult {
   logger.attempt("Validating Email")
   if (!email) {
@@ -45,6 +48,7 @@ function validateEmail(email: string | undefined): ValidationResult {
     return { success: true }
   }
 }
+
 function validatePassword(password: string | undefined): ValidationResult {
   logger.attempt("Validating Password")
   if (!password) {
@@ -61,7 +65,7 @@ function validatePassword(password: string | undefined): ValidationResult {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function getValidationResults(body: CreateAccountRequestBody): ValidationResult[] {
+function validateBody(body: CreateAccountRequestBody): ValidationResult[] {
   const results: ValidationResult[] = []
   let result: ValidationResult
   result = validateName(body.name)
@@ -75,117 +79,72 @@ function getValidationResults(body: CreateAccountRequestBody): ValidationResult[
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function validateBody(body: CreateAccountRequestBody): Helper {
-  logger.attempt("Validating Body")
-
-  const results: ValidationResult[] = getValidationResults(body)
-  const result: ValidationsResult = processValidationResults(results)
-
-  if (result.valid) {
-    logger.success("Body is Valid")
-    const validBody = body as CreateAccountValidBody
-    return { respond: false, result: validBody }
-  }
-  else {
-    logger.failure("Body is Invalid")
-    const data: CreateAccountResponseData = { type: "invalid body", messages: result.messages }
-    return { respond: true, result: { status: 400, data: data } }
-  }
-}
-
-async function checkEmailAvailability(email: string): Promise<Helper> {
-  try {
-    logger.attempt("Checking Email Availability")
-    const existingAccount = await prisma.account.findUnique({
-      where: { email: email }
-    })
-    if (existingAccount !== null) {
-      const message: string = "Email is Already Registered"
-      logger.warning(message)
-      const data: CreateAccountResponseData = { type: "failure", message: message }
-      return { respond: true, result: { status: 400, data: data } }
-    }
-    else {
-      logger.success("Email is Available")
-      return { respond: false }
-    }
-  }
-  catch (object: unknown) {
-    logger.failure("Error Checking Email Availability")
-    const error = object as Error
-    logger.error(error)
-    logger.trace(error)
-    throw error
-  }
-}
-
-async function registerAccount(name: string, email: string, hashedPassword: string): Promise<Helper> {
-  try {
-    logger.attempt("Registering Account in the Database")
-    await prisma.account.create({
-      data: {
-        name: name,
-        email: email,
-        password: hashedPassword
-      }
-    })
-    logger.success("Successfully Registered Account in the Database")
-    return { respond: false }
-  }
-  catch (object: unknown) {
-    logger.failure("Error Registering Account in the Database")
-    const error = object as Error
-    logger.error(error)
-    logger.trace(error)
-    throw error
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 export default async function handleCreateAccount(request: Request, response: Response) {
   // Helper Objects
-  let data: CreateAccountResponseData
-  let result: CreateAccountResult
-  let helper: Helper
+  let result: CreateAccountResponseData
 
   try {
-    // Initial Message
     logger.attempt("Creating Account")
 
     // Validate Body
-    helper = validateBody(request.body)
-    if (helper.respond) { throw helper.result }
-    const body = helper.result as CreateAccountValidBody
+    try {
+      logger.attempt("Validating Body")
+      const validationResults: ValidationResult[] = validateBody(request.body)
+      const validationsResult: ValidationsResult = processValidationResults(validationResults)
+      if (!validationsResult.valid) {
+        logger.failure("Body is Invalid")
+        result = { status: 400, type: "invalid body", messages: validationsResult.messages }
+        return response.status(result.status).json(result)
+      }
+      logger.success("Body is Valid")
+    }
+    catch (object: unknown) {
+      const error = object as Error
+      logger.failure("Error Validating Body")
+      logger.error(error)
+      logger.trace(error)
+      throw error
+    }
+    const body = request.body as CreateAccountValidBody
 
     // Check Email Availability
-    helper = await checkEmailAvailability(body.email)
-    if (helper.respond) { throw helper.result }
+    try {
+      logger.attempt("Checking Email Availability")
+      const account: Account | null = await getAccountByEmail(body.email)
+      if (account !== null) {
+        const message: string = "Email is Already Registered"
+        logger.warning(message)
+        logger.failure("Failed to Create Account")
+        result = { status: 400, type: "failure", message: message }
+        return response.status(result.status).json(result)
+      }
+      logger.success("Email is Available")
+    }
+    catch (object: unknown) {
+      const error = object as Error
+      logger.failure("Error Checking Email Availability")
+      logger.error(error)
+      logger.trace(error)
+      throw error
+    }
 
     // Hash Password
     const hashedPassword: string = await hashPassword(body.password)
 
     // Register Account
-    helper = await registerAccount(body.name, body.email, hashedPassword)
-    if (helper.respond) { throw helper.result }
+    const account: Account = await registerAccount(body.name, body.email, hashedPassword)
 
-    logger.success("Successfully Created Account")
-    data = { type: "success", message: "Successfully Created Account" }
-    result = { status: 201, data: data }
+    const message: string = "Successfully Created Account"
+    logger.success(message)
+    result = { status: 201, type: "success", message: message }
     return response.status(result.status).json(result)
   }
   catch (object: unknown) {
-    if (isResult(object)) {
-      logger.failure("Failed to Create Account")
-      result = object as CreateAccountResult
-      return response.status(result.status).json(result)
-    }
-    logger.failure("Error Creating Account")
     const error = object as Error
+    logger.failure("Error Creating Account")
     logger.error(error)
     logger.trace(error)
-    data = { type: "error", message: "Server Error" }
-    result = { status: 500, data: data }
+    result = { status: 500, type: "error", message: "Server Error" }
     return response.status(result.status).json(result)
   }
 }

@@ -1,103 +1,142 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import { Request, Response } from "express"
-import { SignInAccountBody, SignInAccountResult } from "shared/temp/SignInAccountResult"
+import { SignInAccountRequestBody, SignInAccountValidBody, SignInAccountResponseData, SignInAccountHelperResult } from "shared/types/SignInAccountTypes"
+import { ValidationResult, ValidationsResult, processValidationResults } from "@/library/validation"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Simpler
+import logger from "@/library/logger"
+
+import { Account } from "@prisma/client"
+import getAccountByEmail from "@/database/getAccountByEmail"
+
+import verifyPassword from "@/utils/verifyPassword"
+
+import AccountTokenPayload from "@/types/account-token/AccountTokenPayload"
+
+import AccountTokens from "@/types/account-token/AccountTokens"
+import generateAccountTokens from "@/utils/account-token/generateAccountTokens"
+
+import AccountTokenKeys from "@/types/account-token/AccountTokenKeys"
+import generateAccountTokenKeys from "@/utils/account-token/generateAccountTokenKeys"
+
 import setAccountAccessTokenCookie from "@/utils/account-token/setAccountAccessTokenCookie"
 import setAccountRefreshTokenCookie from "@/utils/account-token/setAccountRefreshTokenCookie"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import prisma from "@/config/db"
-import logger from "@/library/logger"
+function validateEmail(email: string | undefined): ValidationResult {
+  let result: ValidationResult
+  if (typeof email === "undefined") {
+    const message: string = "Email is Required"
+    result = { success: false, message: message }
+    return result
+  }
+  result = { success: true }
+  return result
+}
 
-import AccountTokenKeys from "@/types/account-token/AccountTokenKeys"
-import AccountTokenPayload from "@/types/account-token/AccountTokenPayload"
-import AccountTokens from "@/types/account-token/AccountTokens"
+function validatePassword(password: string | undefined): ValidationResult {
+  let result: ValidationResult
+  if (typeof password === "undefined") {
+    const message: string = "Password is Required"
+    result = { success: false, message: message }
+    return result
+  }
+  result = { success: true }
+  return result
+}
 
-import generateAccountTokenKeys from "@/utils/account-token/generateAccountTokenKeys"
-import generateAccountTokens from "@/utils/account-token/generateAccountTokens"
+function getValidationResults(body: SignInAccountRequestBody) {
+  const results: ValidationResult[] = []
+  let result: ValidationResult
+  result = validateEmail(body.email)
+  results.push(result)
+  result = validatePassword(body.password)
+  results.push(result)
+  return results
+}
 
-import verifyPassword from "@/utils/verifyPassword"
+function helperValidateBody(body: SignInAccountRequestBody): SignInAccountHelperResult {
+  logger.attempt("Validating Body")
+  let responseData: SignInAccountResponseData
+  let helperResult: SignInAccountHelperResult
+  const validationResults: ValidationResult[] = getValidationResults(body)
+  const validationsResult: ValidationsResult = processValidationResults(validationResults)
+  if (!validationsResult.valid) {
+    logger.failure("Body is Invalid")
+    responseData = { type: "invalid body", messages: validationsResult.messages }
+    helperResult = { respond: true, status: 400, data: responseData }
+    return helperResult
+  }
+  logger.success("Body is Valid")
+  const validBody = body as SignInAccountValidBody
+  helperResult = { respond: false, data: validBody }
+  return helperResult
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export default async function handleSignInAccount(request: Request, response: Response) {
-  const attemptMessage: string = "Signing In to Your Account"
-  const successMessage: string = "Successfully Signed In to Your Account"
-  const failureMessage: string = "Failed to Sign In to Your Account"
+  // Messages
+  const attemptMessage: string = "Handling Sign In Account"
+  const successMessage: string = "Successfully Handled Sign In Account"
+  const failureMessage: string = "Failed to Handle Sign in Account"
   const invalidCredentialsMessage: string = "Email and Password are Not Associated"
+
+  // Helper Objects
+  let responseData: SignInAccountResponseData
+  let helperResult: SignInAccountHelperResult
+
   try {
     logger.attempt(attemptMessage)
 
     // Validate Body
-    logger.attempt("Validating Body")
-    const body: SignInAccountBody = request.body
-    if (!body.email) {
-      const message: string = "Email is Required"
-      logger.warning(message)
-      logger.failure(failureMessage)
-      const result: SignInAccountResult = { message }
-      return response.status(400).json(result)
-    }
-    if (!body.password) {
-      const message: string = "Password is Required"
-      logger.warning(message)
-      logger.failure(failureMessage)
-      const result: SignInAccountResult = { message }
-      return response.status(400).json(result)
-    }
-    logger.success("Successfully Validated Body")
+    helperResult = helperValidateBody(request.body)
+    if (helperResult.respond) { return response.status(helperResult.status).json(helperResult.data) }
+    const body = helperResult.data as SignInAccountValidBody
 
     // Fetch Account
     logger.attempt("Fetching Account")
-    const account = await prisma.account.findUnique({
-      where: { email: body.email }
-    })
+    const account: Account | null = await getAccountByEmail(body.email)
     if (account === null) {
       logger.warning("Email is Not Registered")
       logger.failure(failureMessage)
-      const result: SignInAccountResult = { message: invalidCredentialsMessage }
-      return response.status(400).json(result)
+      responseData = { type: "failure", message: invalidCredentialsMessage}
+      return response.status(400).json(responseData)
     }
     logger.success("Successfully Fetched Account")
-    const accountID: string = account.id
 
     // Verify Password
     logger.attempt("Verifying Password")
-    const doPasswordsMatch: boolean = await verifyPassword(account.password, body.password)
-    if (!doPasswordsMatch) {
-      logger.warning("Passwords do Not Match")
+    const match: boolean = await verifyPassword(account.password, body.password)
+    if (!match) {
+      logger.warning("Password is Invalid")
       logger.failure(failureMessage)
-      const result: SignInAccountResult = { message: invalidCredentialsMessage }
-      return response.status(400).json(result)
+      responseData = { type: "failure", message: invalidCredentialsMessage}
+      return response.status(400).json(responseData)
     }
-    logger.success("Successfully Verified Password")
+    logger.success("Password is Valid")
 
     // Generate Account Tokens
-    logger.attempt("Processing Account Tokens")
-    const accountTokenPayload: AccountTokenPayload = { accountID }
+    const accountTokenPayload: AccountTokenPayload = { accountID: account.id }
     const { accountAccessToken, accountRefreshToken }: AccountTokens = generateAccountTokens(accountTokenPayload)
-    const { accountAccessTokenKey, accountRefreshTokenKey}: AccountTokenKeys = generateAccountTokenKeys(accountID)
+    const { accountAccessTokenKey, accountRefreshTokenKey}: AccountTokenKeys = generateAccountTokenKeys(account.id)
     setAccountAccessTokenCookie(response, accountAccessTokenKey, accountAccessToken)
     setAccountRefreshTokenCookie(response, accountRefreshTokenKey, accountRefreshToken)
-    logger.success("Successfully Processed Account Tokens")
 
     logger.success(successMessage)
-    const result: SignInAccountResult = { message: successMessage, accountID }
-    logger.message(accountID)
-    return response.status(200).json(result)
+    responseData = { type: "success", accountID: account.id }
+    return response.status(200).json(responseData)
   }
   catch (object: unknown) {
     const error = object as Error
-    logger.failure(failureMessage)
+    logger.failure("Error Signing In to Your Account")
     logger.error(error)
     logger.trace(error)
-    const result: SignInAccountResult = { message: "Server Error" }
-    return response.status(500).json(result)
+    responseData = { type: "error", message: "Server Error" }
+    return response.status(500).json(responseData)
   }
 }
 

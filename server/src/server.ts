@@ -20,6 +20,11 @@ import handleSignInAccount from "@/api/handleSignInAccount"
 import handleCreateProfile from "@/api/handleCreateProfile"
 import handleAddProfile from "@/api/handleAddProfile"
 
+import handleGetDeviceProfileData from "@/api/handleGetDeviceProfileData"
+import handleGetCurrentAccountData from "@/api/handleGetCurrentAccountData"
+import handleGetCurrentProfileData from "@/api/handleGetCurrentProfileData"
+import handleSignInProfile from "@/api/handleSignInProfile"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // TEMPORARY IMPORTS
@@ -59,14 +64,26 @@ export const Main = () => {
     application.post("/api/createAccount", async (request: Request, response: Response, next: NextFunction) => {
       await handleCreateAccount(request, response)
     })
-    application.post("/api/signInAccount", async (request: Request, response: Response, next: NextFunction) => {
-      await handleSignInAccount(request, response)
-    })
     application.post("/api/createProfile", async (request: Request, response: Response, next: NextFunction) => {
       await handleCreateProfile(request, response)
     })
     application.post("/api/addProfile", async (request: Request, response: Response, next: NextFunction) => {
       await handleAddProfile(request, response)
+    })
+    application.get("/api/device/profiles", async (request: Request, response: Response, next: NextFunction) => {
+      await handleGetDeviceProfileData(request, response)
+    })
+    application.post("/api/current/account", async (request: Request, response: Response, next: NextFunction) => {
+      await handleGetCurrentAccountData(request, response)
+    })
+    application.post("/api/current/profile", async (request: Request, response: Response, next: NextFunction) => {
+      await handleGetCurrentProfileData(request, response)
+    })
+    application.post("/api/account/login", async (request: Request, response: Response, next: NextFunction) => {
+      await handleSignInAccount(request, response)
+    })
+    application.post("/api/profile/login", async (request: Request, response: Response, next: NextFunction) => {
+      await handleSignInProfile(request, response)
     })
     // Route Not Found
     application.use(routeNotFound)

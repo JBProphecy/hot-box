@@ -7,6 +7,7 @@ import logger from "@/library/logger"
 
 export default async function verifyPassword(storedPassword: string, givenPassword: string): Promise<boolean> {
   try {
+    logger.attempt("Verifying Password")
     return await argon2.verify(storedPassword, givenPassword)
   }
   catch (object: unknown) {

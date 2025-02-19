@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import clientConfig from "@/config/env"
-import { EnsureDeviceTokenResult } from "shared/temp/EnsureDeviceToken"
+import { EnsureDeviceTokenResponseData, EnsureDeviceTokenResult } from "shared/types/EnsureDeviceTokenTypes"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -15,10 +15,11 @@ export default async function requestEnsureDeviceToken() {
       credentials: "include"
     })
     const result: EnsureDeviceTokenResult = await response.json()
-    if (response.status >= 200 && response.status < 300) { console.log(result.message) }
-    else if (response.status >= 300 && response.status < 400) { console.log(result.message) }
-    else if (response.status >= 400 && response.status < 500) { console.warn(result.message) }
-    else if (response.status >= 500 && response.status < 600) { throw new Error(result.message) }
+    const data: EnsureDeviceTokenResponseData = result.data
+    if (response.status >= 200 && response.status < 300) { console.log(data.message) }
+    else if (response.status >= 300 && response.status < 400) { console.log(data.message) }
+    else if (response.status >= 400 && response.status < 500) { console.warn(data.message) }
+    else if (response.status >= 500 && response.status < 600) { throw new Error(data.message) }
     else throw new Error("Unhandled Response")
   }
   catch (object: unknown) {

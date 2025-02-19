@@ -16,6 +16,7 @@ const ACCOUNT_TOKEN_SECRET: string = serverConfig.secrets.ACCOUNT_TOKEN_SECRET
 
 export default function verifyAccountAccessToken(token: string): AccountTokenPayload | "expired" | "invalid" {
   try {
+    logger.attempt("Verifying Account Access Token")
     const payload: JwtPayload | "expired" | "invalid" = verifyToken(token, ACCOUNT_TOKEN_SECRET)
     if (payload !== "expired" && payload !== "invalid") { return payload as AccountTokenPayload }
     return payload

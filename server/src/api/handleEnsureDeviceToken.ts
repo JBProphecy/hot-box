@@ -4,7 +4,6 @@
 
 import logger from "@/library/logger"
 
-import { UUID } from "crypto"
 import { Request, Response } from "express"
 import { EnsureDeviceTokenResponseData, EnsureDeviceTokenResult } from "shared/types/EnsureDeviceTokenTypes"
 
@@ -69,7 +68,7 @@ export default function handleEnsureDeviceToken(request: Request, response: Resp
     else {
       logger.warning("Missing Device Token")
       // Issue New Device Token
-      const deviceID: UUID = generateDeviceID()
+      const deviceID: string = generateDeviceID()
       const deviceTokenPayload: DeviceTokenPayload = { deviceID: deviceID }
       deviceToken = generateDeviceToken(deviceTokenPayload)
       setDeviceTokenCookie(response, deviceToken)

@@ -6,7 +6,7 @@ import { randomUUID, UUID } from "crypto"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default function generateDeviceID(): UUID {
+export default function generateDeviceID(): string {
   try {
     logger.attempt("Generating Device ID")
     const deviceID: UUID = randomUUID()

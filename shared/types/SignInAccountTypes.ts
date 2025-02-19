@@ -1,0 +1,37 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type SignInAccountRequestBody = {
+  name?: string
+  email?: string
+  password?: string
+}
+
+export type SignInAccountValidBody = {
+  name: string,
+  email: string,
+  password: string
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type SignInAccountResponseData = {
+  type: "success"
+  accountID: string
+} | {
+  type: "failure" | "error"
+  message: string
+} | {
+  type: "invalid body"
+  messages: string[]
+}
+
+export type SignInAccountHelperResult = {
+  respond: true
+  status: number
+  data: SignInAccountResponseData
+} | {
+  respond: false
+  data?: unknown
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
