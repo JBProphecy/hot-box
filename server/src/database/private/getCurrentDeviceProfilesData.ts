@@ -3,11 +3,11 @@
 import logger from "@/library/logger"
 import prisma from "@/config/db"
 
-import { CurrentProfileData } from "shared/data/CurrentProfileData"
+import { CurrentDeviceProfileData } from "shared/types/data/private/CurrentDeviceProfileData"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default async function getDeviceProfileData(deviceID: string): Promise<CurrentProfileData[]> {
+export default async function getCurrentDeviceProfileData(deviceID: string): Promise<CurrentDeviceProfileData[]> {
   try {
     logger.attempt("Getting Device Profile Data")
 
@@ -16,7 +16,7 @@ export default async function getDeviceProfileData(deviceID: string): Promise<Cu
       select: { profileID: true }
     }).then(profiles => profiles.map(profile => profile.profileID))
     
-    const deviceProfileData: CurrentProfileData[] = await prisma.profile.findMany({
+    const currentDeviceProfilesData: CurrentDeviceProfileData[] = await prisma.profile.findMany({
       where: { id: { in: profileIDs }},
       select: {
         id: true,
@@ -26,7 +26,7 @@ export default async function getDeviceProfileData(deviceID: string): Promise<Cu
     })
 
     logger.success("Successfully Retrived Device Profile Data")
-    return deviceProfileData
+    return currentDeviceProfilesData
   }
   catch (object: unknown) {
     const error = object as Error

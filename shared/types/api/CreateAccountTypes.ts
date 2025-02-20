@@ -15,13 +15,22 @@ export type CreateAccountValidBody = {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export type CreateAccountResponseData = {
-  status: number
-  type: "success" | "failure" | "error"
+  type: "success"
+} | {
+  type: "failure" | "error"
   message: string
 } | {
-  status: number
   type: "invalid body"
   messages: string[]
+}
+
+export type CreateAccountHelperResult = {
+  respond: true
+  status: number
+  data: CreateAccountResponseData
+} | {
+  respond: false
+  data?: unknown
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

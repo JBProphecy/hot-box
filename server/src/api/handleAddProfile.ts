@@ -7,19 +7,19 @@ import { ValidationResult, ValidationsResult, processValidationResults } from "@
 import {
   AddProfileRawBody, AddProfileValidBody,
   AddProfileResponseData, AddProfileHelperResult
-} from "shared/api/AddProfileTypes"
+} from "shared/types/api/AddProfileTypes"
 
 import getDeviceToken from "@/utils/device-token/getDeviceToken"
 import DeviceTokenPayload from "@/types/device-token/DeviceTokenPayload"
 import verifyDeviceToken from "@/utils/device-token/verifyDeviceToken"
 
 import { Profile } from "@prisma/client"
-import getProfileByUsername from "@/database/private/getProfileByUsername"
+import getProfileByUsername from "@/database/pure/getProfileByUsername"
 import verifyPassword from "@/utils/verifyPassword"
 
 import { DeviceProfile } from "@prisma/client"
-import getDeviceProfile from "@/database/private/getDeviceProfile"
-import registerDeviceProfile from "@/database/registerDeviceProfile"
+import getDeviceProfile from "@/database/pure/getDeviceProfile"
+import registerDeviceProfile from "@/database/pure/registerDeviceProfile"
 
 import ProfileTokenPayload from "@/types/profile-token/ProfileTokenPayload"
 import ProfileTokens from "@/types/profile-token/ProfileTokens"
@@ -35,7 +35,8 @@ import setProfileRefreshTokenCookie from "@/utils/profile-token/setProfileRefres
 const attemptMessage: string = "Handling Add Profile"
 const successMessage: string = "Successfully Handled Add Profile"
 const failureMessage: string = "Failed to Handle Add Profile"
-const errorMessage: string = "Error Handling Add Profile"
+const serverErrorMessage: string = "Error Handling Add Profile"
+const clientErrorMessage: string = "Server Error"
 const invalidCredentialsMessage: string = "Username and Password are not Associated"
 
 // Objects
@@ -101,7 +102,7 @@ function validateBody(body: AddProfileRawBody): AddProfileHelperResult {
     const validationsResult: ValidationsResult = processValidationResults(results)
     if (validationsResult.valid) {
       logger.success("Body is Valid")
-      const validBody: AddProfileValidBody = body as AddProfileValidBody
+      const validBody = body as AddProfileValidBody
       helperResult = { respond: false, data: validBody }
       return helperResult
     }
@@ -228,10 +229,10 @@ export default async function handleAddProfile(request: Request, response: Respo
   }
   catch (object: unknown) {
     const error = object as Error
-    logger.failure(errorMessage)
+    logger.failure(serverErrorMessage)
     logger.error(error)
     logger.trace(error)
-    responseData = { type: "error", message: "Server Error" }
+    responseData = { type: "error", message: clientErrorMessage }
     return response.status(500).json(responseData)
   }
 }

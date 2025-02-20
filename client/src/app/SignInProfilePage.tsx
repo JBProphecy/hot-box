@@ -9,7 +9,7 @@ import { toPixelString, VariableStyles } from "@/utils/styles"
 
 import { CurrentProfileContext, CurrentProfileContextType } from "@/context/CurrentProfileContext"
 
-import { SignInProfileRawBody } from "shared/api/SignInProfileTypes"
+import { SignInProfileRawBody } from "shared/types/api/SignInProfileTypes"
 import requestSignInProfile from "@/api/requestSignInProfile"
 
 

@@ -1,16 +1,21 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-type CreateProfileBody = {
-  name?: string
-  username?: string
-  password?: string
-  accountID?: string
-}
-
-type CreateProfileResult = { message: string }
+import { PublicProfile } from "shared/data/public/PublicProfileData"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export { CreateProfileBody, CreateProfileResult }
+export type GetProfilesResponseData = {
+  type: "success"
+  message: string
+  profiles: PublicProfile[]
+} | {
+  type: "error"
+  message: string
+}
+
+export type GetProfilesResult = {
+  status: number
+  data: GetProfilesResponseData
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

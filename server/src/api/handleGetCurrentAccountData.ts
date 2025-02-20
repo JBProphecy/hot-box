@@ -3,8 +3,8 @@
 import logger from "@/library/logger"
 
 import { Request, Response } from "express"
-import { GetCurrentAccountDataRequestBody, GetCurrentAccountDataValidBody } from "shared/api/GetCurrentAccountDataTypes"
-import { GetCurrentAccountDataResponseData } from "shared/api/GetCurrentAccountDataTypes"
+import { GetCurrentAccountDataRequestBody, GetCurrentAccountDataValidBody } from "shared/types/api/GetCurrentAccountDataTypes"
+import { GetCurrentAccountDataResponseData } from "shared/types/api/GetCurrentAccountDataTypes"
 
 import AccountTokenKeys from "@/types/account-token/AccountTokenKeys"
 import generateAccountTokenKeys from "@/utils/account-token/generateAccountTokenKeys"
@@ -13,7 +13,7 @@ import getAccountAccessToken from "@/utils/account-token/getAccountAccessToken"
 import AccountTokenPayload from "@/types/account-token/AccountTokenPayload"
 import verifyAccountAccessToken from "@/utils/account-token/verifyAccountAccessToken"
 
-import { CurrentAccountData } from "shared/data/CurrentAccountData"
+import { CurrentAccountData } from "shared/types/data/private/CurrentAccountData"
 import getCurrentAccountData from "@/database/private/getCurrentAccountData"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

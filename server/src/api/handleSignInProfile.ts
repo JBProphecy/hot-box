@@ -7,18 +7,18 @@ import { ValidationResult, ValidationsResult, processValidationResults } from "@
 import {
   SignInProfileRawBody, SignInProfileValidBody,
   SignInProfileResponseData, SignInProfileHelperResult
-} from "shared/api/SignInProfileTypes"
+} from "shared/types/api/SignInProfileTypes"
 
 import getDeviceToken from "@/utils/device-token/getDeviceToken"
 import DeviceTokenPayload from "@/types/device-token/DeviceTokenPayload"
 import verifyDeviceToken from "@/utils/device-token/verifyDeviceToken"
 
 import { Profile } from "@prisma/client"
-import getProfileByUsername from "@/database/private/getProfileByUsername"
+import getProfileByUsername from "@/database/pure/getProfileByUsername"
 import verifyPassword from "@/utils/verifyPassword"
 
 import { DeviceProfile } from "@prisma/client"
-import getDeviceProfile from "@/database/private/getDeviceProfile"
+import getDeviceProfile from "@/database/pure/getDeviceProfile"
 
 import ProfileTokenPayload from "@/types/profile-token/ProfileTokenPayload"
 import ProfileTokens from "@/types/profile-token/ProfileTokens"

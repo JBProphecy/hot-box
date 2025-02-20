@@ -3,7 +3,7 @@
 import logger from "@/library/logger"
 import prisma from "@/config/db"
 
-import { CurrentAccountData } from "shared/data/CurrentAccountData"
+import { CurrentAccountData } from "shared/types/data/private/CurrentAccountData"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

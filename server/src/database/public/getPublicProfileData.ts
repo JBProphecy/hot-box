@@ -3,20 +3,26 @@
 import logger from "@/library/logger"
 import prisma from "@/config/db"
 
-import { Account } from "@prisma/client"
+import { PublicProfileData } from "shared/types/data/public/PublicProfileData"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default async function getAccountByEmail(email: string): Promise<Account | null> {
+export default async function getPublicProfileData(id: string): Promise<PublicProfileData | null> {
   try {
-    const account: Account | null = await prisma.account.findUnique({
-      where: { email: email }
+    logger.attempt("Getting Current Profile Data")
+    const publicProfileData: PublicProfileData | null = await prisma.profile.findUnique({
+      where: { id: id },
+      select: {
+        id: true,
+        name: true,
+        username: true
+      }
     })
-    return account
+    return publicProfileData
   }
   catch (object: unknown) {
     const error = object as Error
-    logger.failure("Error Getting Account By Email")
+    logger.failure("Error Getting Public Profile Data")
     logger.error(error)
     logger.trace(error)
     throw error

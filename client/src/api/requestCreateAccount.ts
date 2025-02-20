@@ -1,12 +1,28 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import clientConfig from "@/config/env"
-import { CreateAccountRequestBody, CreateAccountResponseData } from "shared/types/CreateAccountTypes"
+import { CreateAccountRequestBody, CreateAccountResponseData } from "shared/types/api/CreateAccountTypes"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default async function requestCreateAccount(body: CreateAccountRequestBody) {
+// Messages
+const attemptMessage: string = "Creating Account"
+const successMessage: string = "Successfully Created Account"
+const failureMessage: string = "Failed to Create Account"
+const errorMessage: string = "Error Creating Account"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type CreateAccountResult = { success: boolean }
+
+let result: CreateAccountResult
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export default async function requestCreateAccount(body: CreateAccountRequestBody): Promise<CreateAccountResult> {
   try {
+    console.log(attemptMessage)
+
     const response: Response = await fetch(`${clientConfig.API_URL}/createAccount`, {
       method: "POST",
       headers: {
@@ -15,20 +31,31 @@ export default async function requestCreateAccount(body: CreateAccountRequestBod
       credentials: "include",
       body: JSON.stringify(body)
     })
-    const result: CreateAccountResponseData = await response.json()
-    switch (result.type) {
+
+    const data: CreateAccountResponseData = await response.json()
+
+    switch (data.type) {
+      case "success":
+        console.log(successMessage)
+        result = { success: true }
+        return result
+      case "failure":
+        console.warn(failureMessage)
+        console.warn(data.message)
+        result = { success: false }
+        return result
       case "invalid body":
-        for (const message of result.messages) { console.warn(message) }
-        break
-      case "success": console.log(result.message); break
-      case "failure": console.warn(result.message); break
-      case "error": throw new Error(result.message)
+        console.warn(failureMessage)
+        for (const message of data.messages) { console.warn(message) }
+        result = { success: false }
+        return result
+      case "error": throw new Error(data.message)
       default: throw new Error("Unhandled Response")
     }
   }
   catch (object: unknown) {
     const error = object as Error
-    console.error("Error Creating Account")
+    console.error(errorMessage)
     console.error(error)
     throw error
   }

@@ -13,7 +13,7 @@ import { VariableStyles, toPixelString } from "@/utils/styles"
 import { CardList, CardListStyles } from "@/components/temp/card-list"
 import { CardObject } from "@/components/temp/card"
 
-import { PublicProfile } from "shared/data/PublicProfile"
+import { PublicProfile } from "shared/data/public/PublicProfileData"
 import requestGetDeviceProfiles from "@/api/requestGetDeviceProfileData"
 
 import { CurrentProfileContext, CurrentProfileContextType } from "@/context/CurrentProfileContext"

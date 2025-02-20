@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import clientConfig from "@/config/env"
-import { AddProfileRawBody, AddProfileResponseData } from "shared/api/AddProfileTypes"
+import { AddProfileRawBody, AddProfileResponseData } from "shared/types/api/AddProfileTypes"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -13,9 +13,16 @@ const errorMessage: string = "Error Adding Profile to Your Device"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default async function requestAddProfile(body: AddProfileRawBody) {
+export type AddProfileResult = { success: boolean }
+
+let result: AddProfileResult
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export default async function requestAddProfile(body: AddProfileRawBody): Promise<AddProfileResult> {
   try {
     console.log(attemptMessage)
+
     const response: Response = await fetch(`${clientConfig.API_URL}/addProfile`, {
       method: "POST",
       headers: {
@@ -24,19 +31,25 @@ export default async function requestAddProfile(body: AddProfileRawBody) {
       credentials: "include",
       body: JSON.stringify(body)
     })
-    const result: AddProfileResponseData = await response.json()
-    switch (result.type) {
-      case "invalid body":
-        for (const message of result.messages) { console.warn(message) }
-        return false
+
+    const data: AddProfileResponseData = await response.json()
+
+    switch (data.type) {
       case "success":
         console.log(successMessage)
-        return true
+        result = { success: true }
+        return result
       case "failure":
         console.warn(failureMessage)
-        console.warn(result.message)
-        return false
-      case "error": throw new Error(result.message)
+        console.warn(data.message)
+        result = { success: false }
+        return result
+      case "invalid body":
+        console.warn(failureMessage)
+        for (const message of data.messages) { console.warn(message) }
+        result = { success: false }
+        return result
+      case "error": throw new Error(data.message)
       default: throw new Error("Unhandled Response")
     }
   }

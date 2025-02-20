@@ -3,7 +3,7 @@
 import logger from "@/library/logger"
 import prisma from "@/config/db"
 
-import { CurrentProfileData } from "shared/data/CurrentProfileData"
+import { CurrentProfileData } from "shared/types/data/private/CurrentProfileData"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

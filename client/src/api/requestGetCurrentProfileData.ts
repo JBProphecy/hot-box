@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import clientConfig from "@/config/env"
-import { CurrentProfileData } from "shared/data/CurrentProfileData"
-import { GetCurrentProfileDataRequestBody, GetCurrentProfileDataResponseData } from "shared/api/GetCurrentProfileDataTypes"
+import { CurrentProfileData } from "shared/types/data/private/CurrentProfileData"
+import { GetCurrentProfileDataRequestBody, GetCurrentProfileDataResponseData } from "shared/types/api/GetCurrentProfileDataTypes"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import clientConfig from "@/config/env"
-import { PublicProfile } from "shared/data/PublicProfile"
-import { GetProfilesResponseData, GetProfilesResult } from "shared/types/GetProfilesTypes"
+import { PublicProfile } from "shared/types/data/public/PublicProfileData"
+import { GetProfilesResponseData, GetProfilesResult } from "shared/types/api/GetProfilesTypes"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

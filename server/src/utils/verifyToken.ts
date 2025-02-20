@@ -5,6 +5,12 @@ import jwt, { JwtPayload } from "jsonwebtoken"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * verifies a JWT
+ * @param token - the token
+ * @param secret - the secret key
+ * @returns the token's payload | "expired" | "invalid"
+ */
 export default function verifyToken(token: string, secret: string): JwtPayload | "expired" | "invalid" {
   try {
     const payload: JwtPayload | string = jwt.verify(token, secret)

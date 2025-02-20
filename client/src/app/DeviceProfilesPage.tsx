@@ -22,7 +22,7 @@ import { CurrentProfileContext, CurrentProfileContextType } from "@/context/Curr
 import { CardList, CardListStyles } from "@/components/temp/card-list"
 import { CardObject } from "@/components/temp/card"
 
-import { CurrentProfileData } from "shared/data/CurrentProfileData"
+import { CurrentProfileData } from "shared/data/private/CurrentProfileData"
 import requestGetDeviceProfileData from "@/api/requestGetDeviceProfileData"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

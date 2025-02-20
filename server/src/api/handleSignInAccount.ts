@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import { Request, Response } from "express"
-import { SignInAccountRequestBody, SignInAccountValidBody, SignInAccountResponseData, SignInAccountHelperResult } from "shared/types/SignInAccountTypes"
+import { SignInAccountRequestBody, SignInAccountValidBody, SignInAccountResponseData, SignInAccountHelperResult } from "shared/types/api/SignInAccountTypes"
 import { ValidationResult, ValidationsResult, processValidationResults } from "@/library/validation"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -9,7 +9,7 @@ import { ValidationResult, ValidationsResult, processValidationResults } from "@
 import logger from "@/library/logger"
 
 import { Account } from "@prisma/client"
-import getAccountByEmail from "@/database/getAccountByEmail"
+import getAccountByEmail from "@/database/pure/getAccountByEmail"
 
 import verifyPassword from "@/utils/verifyPassword"
 

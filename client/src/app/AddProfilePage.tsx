@@ -9,7 +9,7 @@ import { toPixelString, VariableStyles } from "@/utils/styles"
 
 import { CurrentProfileContext, CurrentProfileContextType } from "@/context/CurrentProfileContext"
 
-import { AddProfileRawBody } from "shared/api/AddProfileTypes"
+import { AddProfileRawBody } from "shared/types/api/AddProfileTypes"
 import requestAddProfile from "@/api/requestAddProfile"
 
 

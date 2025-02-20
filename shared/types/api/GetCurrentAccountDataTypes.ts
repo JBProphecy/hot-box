@@ -1,12 +1,20 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { CurrentProfileData } from "shared/data/CurrentProfileData"
+import { CurrentAccountData } from "shared/types/data/private/CurrentAccountData"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export type GetDeviceProfilesResponseData = {
+export type GetCurrentAccountDataRequestBody = {
+  accountID?: string
+}
+
+export type GetCurrentAccountDataValidBody = {
+  accountID: string
+}
+
+export type GetCurrentAccountDataResponseData = {
   type: "success"
-  data: CurrentProfileData[]
+  data: CurrentAccountData
 } | {
   type: "failure" | "error"
   message: string

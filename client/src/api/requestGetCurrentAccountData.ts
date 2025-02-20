@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import clientConfig from "@/config/env"
-import { CurrentAccountData } from "shared/data/CurrentAccountData"
-import { GetCurrentAccountDataRequestBody, GetCurrentAccountDataResponseData } from "shared/api/GetCurrentAccountDataTypes"
+import { CurrentAccountData } from "shared/types/data/private/CurrentAccountData"
+import { GetCurrentAccountDataRequestBody, GetCurrentAccountDataResponseData } from "shared/types/api/GetCurrentAccountDataTypes"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

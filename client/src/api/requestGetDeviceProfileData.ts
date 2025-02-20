@@ -2,8 +2,8 @@
 
 import clientConfig from "@/config/env"
 
-import { GetDeviceProfilesResponseData } from "shared/types/GetDeviceProfilesTypes"
-import { CurrentProfileData } from "shared/data/CurrentProfileData"
+import { GetDeviceProfilesResponseData } from "shared/types/api/GetDeviceProfilesTypes"
+import { CurrentProfileData } from "shared/data/private/CurrentProfileData"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

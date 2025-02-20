@@ -5,8 +5,8 @@ import useSessionStorage from "@/hooks/useSessionStorage"
 
 import { useEffect, useState } from "react"
 
-import { GetCurrentProfileDataRequestBody } from "shared/api/GetCurrentProfileDataTypes"
-import { CurrentProfileData } from "shared/data/CurrentProfileData"
+import { GetCurrentProfileDataRequestBody } from "shared/types/api/GetCurrentProfileDataTypes"
+import { CurrentProfileData } from "shared/types/data/private/CurrentProfileData"
 import requestGetCurrentProfileData from "@/api/requestGetCurrentProfileData"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

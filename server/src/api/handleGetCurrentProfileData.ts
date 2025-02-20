@@ -3,8 +3,8 @@
 import logger from "@/library/logger"
 
 import { Request, Response } from "express"
-import { GetCurrentProfileDataRequestBody, GetCurrentProfileDataValidBody } from "shared/api/GetCurrentProfileDataTypes"
-import { GetCurrentProfileDataResponseData } from "shared/api/GetCurrentProfileDataTypes"
+import { GetCurrentProfileDataRequestBody, GetCurrentProfileDataValidBody } from "shared/types/api/GetCurrentProfileDataTypes"
+import { GetCurrentProfileDataResponseData } from "shared/types/api/GetCurrentProfileDataTypes"
 
 import ProfileTokenKeys from "@/types/profile-token/ProfileTokenKeys"
 import generateProfileTokenKeys from "@/utils/profile-token/generateProfileTokenKeys"
@@ -13,7 +13,7 @@ import getProfileAccessToken from "@/utils/profile-token/getProfileAccessToken"
 import ProfileTokenPayload from "@/types/profile-token/ProfileTokenPayload"
 import verifyProfileAccessToken from "@/utils/profile-token/verifyProfileAccessToken"
 
-import { CurrentProfileData } from "shared/data/CurrentProfileData"
+import { CurrentProfileData } from "shared/types/data/private/CurrentProfileData"
 import getCurrentProfileData from "@/database/private/getCurrentProfileData"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

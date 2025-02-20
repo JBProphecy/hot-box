@@ -7,7 +7,7 @@ import { processCardStyles } from "@/components/temp/card"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import { CardStyles } from "@/components/temp/card"
-import { PublicProfile } from "shared/data/PublicProfile"
+import { PublicProfile } from "shared/data/public/PublicProfileData"
 import { useContext, useEffect, useRef, useState } from "react"
 import { CurrentProfileContext, CurrentProfileContextType } from "@/context/CurrentProfileContext"
 import { NavigateFunction, useNavigate } from "react-router-dom"

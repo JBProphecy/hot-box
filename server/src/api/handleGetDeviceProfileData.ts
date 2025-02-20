@@ -3,14 +3,14 @@
 import logger from "@/library/logger"
 
 import { Request, Response } from "express"
-import { GetDeviceProfilesResponseData } from "shared/types/GetDeviceProfilesTypes"
+import { GetDeviceProfilesResponseData } from "shared/types/api/GetDeviceProfilesTypes"
 
 import getDeviceToken from "@/utils/device-token/getDeviceToken"
 import DeviceTokenPayload from "@/types/device-token/DeviceTokenPayload"
 import verifyDeviceToken from "@/utils/device-token/verifyDeviceToken"
 
-import { CurrentProfileData } from "shared/data/CurrentProfileData"
-import getDeviceProfileData from "@/database/getDeviceProfileData"
+import { CurrentDeviceProfileData } from "shared/types/data/private/CurrentDeviceProfileData"
+import getDeviceProfileData from "@/database/private/getCurrentDeviceProfilesData"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -63,7 +63,7 @@ export default async function handleGetDeviceProfileData(request: Request, respo
     const { deviceID } = deviceTokenPayload
 
     // Get Device Profile Data
-    const deviceProfileData: CurrentProfileData[] = await getDeviceProfileData(deviceID)
+    const deviceProfileData: CurrentDeviceProfileData[] = await getDeviceProfileData(deviceID)
 
     // Return Successful Response
     logger.success(successMessage)

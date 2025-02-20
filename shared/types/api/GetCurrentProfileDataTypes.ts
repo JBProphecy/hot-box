@@ -1,20 +1,20 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { CurrentAccountData } from "shared/data/CurrentAccountData"
+import { CurrentProfileData } from "shared/types/data/private/CurrentProfileData"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export type GetCurrentAccountDataRequestBody = {
-  accountID?: string
+export type GetCurrentProfileDataRequestBody = {
+  profileID?: string
 }
 
-export type GetCurrentAccountDataValidBody = {
-  accountID: string
+export type GetCurrentProfileDataValidBody = {
+  profileID: string
 }
 
-export type GetCurrentAccountDataResponseData = {
+export type GetCurrentProfileDataResponseData = {
   type: "success"
-  data: CurrentAccountData
+  data: CurrentProfileData
 } | {
   type: "failure" | "error"
   message: string

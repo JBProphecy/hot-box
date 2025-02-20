@@ -4,7 +4,7 @@ import { useRef, useState } from "react"
 import localStyles from "./CreateAccountPage.module.css"
 import useDimensions from "@/hooks/useDimensions"
 import { toPixelString, VariableStyles } from "@/utils/styles"
-import { CreateAccountRequestBody } from "shared/types/CreateAccountTypes"
+import { CreateAccountRequestBody } from "shared/types/api/CreateAccountTypes"
 import requestCreateAccount from "@/api/requestCreateAccount"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

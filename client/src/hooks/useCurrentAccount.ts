@@ -5,8 +5,8 @@ import useSessionStorage from "@/hooks/useSessionStorage"
 
 import { useEffect, useState } from "react"
 
-import { GetCurrentAccountDataRequestBody } from "shared/api/GetCurrentAccountDataTypes"
-import { CurrentAccountData } from "shared/data/CurrentAccountData"
+import { GetCurrentAccountDataRequestBody } from "shared/types/api/GetCurrentAccountDataTypes"
+import { CurrentAccountData } from "shared/types/data/private/CurrentAccountData"
 import requestGetCurrentAccountData from "@/api/requestGetCurrentAccountData"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

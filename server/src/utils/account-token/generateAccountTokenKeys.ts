@@ -6,11 +6,11 @@ import AccountTokenKeys from "@/types/account-token/AccountTokenKeys"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default function generateAccountTokenKeys(id: string): AccountTokenKeys {
+export default function generateAccountTokenKeys(accountID: string): AccountTokenKeys {
   try {
     logger.attempt("Generating Account Token Keys")
-    const accountAccessTokenKey: string = `${serverConfig.app.NAME}_account${id}_accessToken`
-    const accountRefreshTokenKey: string = `${serverConfig.app.NAME}_account${id}_refreshToken`
+    const accountAccessTokenKey: string = `${serverConfig.app.NAME}_account${accountID}_accessToken`
+    const accountRefreshTokenKey: string = `${serverConfig.app.NAME}_account${accountID}_refreshToken`
     logger.success("Successfully Generated Account Token Keys")
     return { accountAccessTokenKey, accountRefreshTokenKey } as AccountTokenKeys
   }

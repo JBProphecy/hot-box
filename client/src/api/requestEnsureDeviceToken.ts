@@ -1,12 +1,28 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import clientConfig from "@/config/env"
-import { EnsureDeviceTokenResponseData, EnsureDeviceTokenResult } from "shared/types/EnsureDeviceTokenTypes"
+import { EnsureDeviceTokenResponseData } from "shared/types/api/EnsureDeviceTokenTypes"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Messages
+const attemptMessage: string = "Ensuring Device Token"
+const successMessage: string = "Successfully Ensured Device Token"
+const failureMessage: string = "Failed to Ensure Device Token"
+const errorMessage: string = "Error Ensuring Device Token"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type EnsureDeviceTokenResult = { success: boolean }
+
+let result: EnsureDeviceTokenResult
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export default async function requestEnsureDeviceToken() {
   try {
+    console.log(attemptMessage)
+
     const response: Response = await fetch(`${clientConfig.API_URL}/ensureDeviceToken`, {
       method: "POST",
       headers: {
@@ -14,17 +30,26 @@ export default async function requestEnsureDeviceToken() {
       },
       credentials: "include"
     })
-    const result: EnsureDeviceTokenResult = await response.json()
-    const data: EnsureDeviceTokenResponseData = result.data
-    if (response.status >= 200 && response.status < 300) { console.log(data.message) }
-    else if (response.status >= 300 && response.status < 400) { console.log(data.message) }
-    else if (response.status >= 400 && response.status < 500) { console.warn(data.message) }
-    else if (response.status >= 500 && response.status < 600) { throw new Error(data.message) }
-    else throw new Error("Unhandled Response")
+
+    const data: EnsureDeviceTokenResponseData = await response.json()
+
+    switch (data.type) {
+      case "success":
+        console.log(successMessage)
+        result = { success: true }
+        return result
+      case "failure":
+        console.warn(failureMessage)
+        console.warn(data.message)
+        result = { success: false }
+        return result
+      case "error": throw new Error(data.message)
+      default: throw new Error("Unhandled Response")
+    }
   }
   catch (object: unknown) {
     const error = object as Error
-    console.error("Error Processing Device Token")
+    console.error(errorMessage)
     console.error(error)
     throw error
   }
