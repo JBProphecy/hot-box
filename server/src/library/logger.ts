@@ -82,12 +82,6 @@ function success(object?: any, ...optionalParams: any[]) {
   record(ansi.fgc.green, "SUCCESS", object, ...optionalParams)
 }
 
-function fatal(error: Error, failure: string) {
-  logger.error(error)
-  logger.trace(error)
-  logger.failure(failure)
-}
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const logger = {
@@ -96,8 +90,7 @@ const logger = {
   message,
   attempt, network,
   failure, warning, success,
-  start, end,
-  fatal
+  start, end
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
