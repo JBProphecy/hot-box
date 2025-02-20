@@ -14,8 +14,8 @@ This is a project I've been working on for the past month or so now. The goal is
 - The main purpose of the shared folder is for global variables like APP_NAME and shared types for the API.
 - As for the client and server folders, they each serve their own purpose and they each have their own set of dependencies.
 
-- In each of the client and server folders, the alias @ (import ... from "@/...") can be used to import from its corresponding `src` folder.
-- In both the client and server folders, the alias shared (import ... from "shared/...") can be used to import from the shared folder.
+- In each of the client and server folders, the alias `@` (import ... from "@/...") can be used to import from its corresponding `src` folder.
+- In both the client and server folders, the alias `shared` (import ... from "shared/...") can be used to import from the shared folder.
 
 ---
 
