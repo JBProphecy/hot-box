@@ -3,6 +3,9 @@
 .page {
   --pageWidth: "";
   --pageHeight: "";
+
+  --headerHeight: 48px;
+  --mainHeight: calc(var(--pageHeight) - var(--headerHeight));
 }
 
 /**********************************************************************************************************************/
@@ -12,6 +15,7 @@
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
@@ -20,48 +24,17 @@
 
 /**********************************************************************************************************************/
 
-.profileMenu {
-  height: 80%;
-  aspect-ratio: 9/16;
-  background-color: black;
+.header {
+  width: var(--pageWidth);
+  height: var(--headerHeight);
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  overflow: hidden;
-  overflow-y: auto;
-}
-.profileList {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.profileItem {
-  width: 100%;
-  height: 60px;
-  background-color: rgb(32, 32, 32);
-}
-
-.profileButtons {
-  width: 100%;
-  height: 60px;
-  display: flex;
-  justify-content: center;
+  padding: 0 10px;
   align-items: center;
-  gap: 10px;
 }
 
-.removeAllProfilesButton {
-  width: 200px;
-  height: 40px;
-  border-radius: 6px;
-  background-color: orange;
-}
-
-.addProfileButton {
-  width: 100px;
-  height: 40px;
-  border-radius: 6px;
-  background-color: red;
+.main {
+  width: var(--pageWidth);
+  height: var(--mainHeight);
+  display: flex;
+  overflow-y: auto;
 }

@@ -28,7 +28,7 @@ type CookieOptionsConfig = {
 
 function generateCookieOptionsConfig(): CookieOptionsConfig {
   try {
-    const DEVICE_TOKEN_DURATION: number = 1000 * 60 * 60 * 24 * 365 * 5 // 5 Years (mutable)
+    const DEVICE_TOKEN_DURATION: number = 60 * 60 * 24 * 365 * 5 // 5 Years (seconds)
     const cookies: CookieOptionsConfig = {
       DEVICE_TOKEN_COOKIE_OPTIONS: generateCookieOptions(DEVICE_TOKEN_DURATION),
       ACCOUNT_ACCESS_TOKEN_COOKIE_OPTIONS: generateCookieOptions(serverConfig.tokens.ACCOUNT_ACCESS_TOKEN_DURATION),

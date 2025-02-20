@@ -1,200 +1,212 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { Request, Response } from "express"
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 import logger from "@/library/logger"
+
+import { Request, Response } from "express"
+import { ValidationResult, ValidationsResult, processValidationResults } from "@/library/validation"
+import {
+  AddProfileRawBody, AddProfileValidBody,
+  AddProfileResponseData, AddProfileHelperResult
+} from "shared/api/AddProfileTypes"
+
+import getDeviceToken from "@/utils/device-token/getDeviceToken"
+import DeviceTokenPayload from "@/types/device-token/DeviceTokenPayload"
+import verifyDeviceToken from "@/utils/device-token/verifyDeviceToken"
+
 import { Profile } from "@prisma/client"
-import { DeviceProfile } from "@prisma/client"
-import getProfileByUsername from "@/database/getProfileByUsername"
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+import getProfileByUsername from "@/database/private/getProfileByUsername"
 import verifyPassword from "@/utils/verifyPassword"
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// Database
+import { DeviceProfile } from "@prisma/client"
 import getDeviceProfile from "@/database/private/getDeviceProfile"
 import registerDeviceProfile from "@/database/registerDeviceProfile"
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-import getDeviceToken from "@/utils/device-token/getDeviceToken"
-import verifyDeviceToken from "@/utils/device-token/verifyDeviceToken"
-import DeviceTokenPayload from "@/types/device-token/DeviceTokenPayload"
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 import ProfileTokenPayload from "@/types/profile-token/ProfileTokenPayload"
-
 import ProfileTokens from "@/types/profile-token/ProfileTokens"
 import generateProfileTokens from "@/utils/profile-token/generateProfileTokens"
-
 import ProfileTokenKeys from "@/types/profile-token/ProfileTokenKeys"
 import generateProfileTokenKeys from "@/utils/profile-token/generateProfileTokenKeys"
-
 import setProfileAccessTokenCookie from "@/utils/profile-token/setProfileAccessTokenCookie"
 import setProfileRefreshTokenCookie from "@/utils/profile-token/setProfileRefreshTokenCookie"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { Helper, isResult } from "@/library/network"
-import { AddProfileRequestBody, AddProfileValidBody, AddProfileResponseData, AddProfileResult } from "shared/types/AddProfileTypes"
-import { ValidationResult, ValidationsResult, processValidationResults } from "@/library/validation"
+// Messages
+const attemptMessage: string = "Handling Add Profile"
+const successMessage: string = "Successfully Handled Add Profile"
+const failureMessage: string = "Failed to Handle Add Profile"
+const errorMessage: string = "Error Handling Add Profile"
+const invalidCredentialsMessage: string = "Username and Password are not Associated"
+
+// Objects
+let responseData: AddProfileResponseData
+let helperResult: AddProfileHelperResult
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function validateUsername(username: string | undefined): ValidationResult {
-  logger.attempt("Validating Username")
-  if (!username || username.trim() === "") {
-    const warning: string = "Username is Required"
-    logger.warning(warning)
-    logger.failure("Username is Invalid")
-    return { success: false, message: warning }
-  }
-  else {
+  try {
+    logger.attempt("Validating Username")
+    if (typeof username === "undefined") {
+      const serverMessage: string = "Username is Undefined"
+      const clientMessage: string = "Username is Required"
+      logger.warning(serverMessage)
+      logger.failure(failureMessage)
+      return { success: false, message: clientMessage }
+    }
     logger.success("Username is Valid")
     return { success: true }
+  }
+  catch (object: unknown) {
+    const error = object as Error
+    logger.failure("Error Validating Username")
+    logger.error(error)
+    logger.trace(error)
+    throw error
   }
 }
 
 function validatePassword(password: string | undefined): ValidationResult {
-  logger.attempt("Validating Password")
-  if (!password) {
-    const warning: string = "Password is Required"
-    logger.warning(warning)
-    logger.failure("Password is Invalid")
-    return { success: false, message: warning }
-  }
-  else {
+  try {
+    logger.attempt("Validating Password")
+    if (typeof password === "undefined") {
+      const serverMessage: string = "Password is Undefined"
+      const clientMessage: string = "Password is Required"
+      logger.warning(serverMessage)
+      logger.failure(failureMessage)
+      return { success: false, message: clientMessage }
+    }
     logger.success("Password is Valid")
     return { success: true }
   }
-}
-
-function getValidationResults(body: AddProfileRequestBody): ValidationResult[] {
-  const results: ValidationResult[] = []
-  let result: ValidationResult
-  result = validateUsername(body.username)
-  results.push(result)
-  result = validatePassword(body.password)
-  results.push(result)
-  return results
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function validateBody(body: AddProfileRequestBody): Helper {
-  logger.attempt("Validating Body")
-
-  const results: ValidationResult[] = getValidationResults(body)
-  const vResult: ValidationsResult = processValidationResults(results)
-
-  if (vResult.valid) {
-    logger.success("Body is Valid")
-    const validBody = body as AddProfileValidBody
-    return { respond: false, result: validBody }
+  catch (object: unknown) {
+    const error = object as Error
+    logger.failure("Error Validating Password")
+    logger.error(error)
+    logger.trace(error)
+    throw error
   }
-  else {
-    logger.failure("Body is Invalid")
-    const data: AddProfileResponseData = { type: "invalid body", messages: vResult.messages }
-    const result: AddProfileResult = { status: 400, data: data }
-    return { respond: true, result: result }
+}
+
+function validateBody(body: AddProfileRawBody): AddProfileHelperResult {
+  try {
+    logger.attempt("Validating Body")
+    const results: ValidationResult[] = []
+    let result: ValidationResult
+    result = validateUsername(body.username)
+    results.push(result)
+    result = validatePassword(body.password)
+    results.push(result)
+
+    const validationsResult: ValidationsResult = processValidationResults(results)
+    if (validationsResult.valid) {
+      logger.success("Body is Valid")
+      const validBody: AddProfileValidBody = body as AddProfileValidBody
+      helperResult = { respond: false, data: validBody }
+      return helperResult
+    }
+    else {
+      const serverMessage: string = "Body is Invalid"
+      const clientMessages: string[] = validationsResult.messages
+      logger.warning(serverMessage)
+      logger.failure(failureMessage)
+      responseData = { type: "invalid body", messages: clientMessages }
+      helperResult = { respond: true, status: 400, data: responseData }
+      return helperResult
+    }
+  }
+  catch (object: unknown) {
+    const error = object as Error
+    logger.failure("Error Validating Body")
+    logger.error(error)
+    logger.failure(error)
+    throw error
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export default async function handleAddProfile(request: Request, response: Response) {
-  // Helper Objects
-  let data: AddProfileResponseData
-  let result: AddProfileResult
-  let helper: Helper
-
-  // Security Purposes
-  const invalidCredentialsMessage: string = "Invalid Credentials"
-
   try {
-    // Initial Message
-    logger.attempt("Adding Profile to Your Device")
+    logger.attempt(attemptMessage)
 
     // Validate Body
-    helper = validateBody(request.body)
-    if (helper.respond) { throw helper.result }
-    const body = helper.result as AddProfileValidBody
-
-    // Fetch Profile
-    logger.attempt("Fetching Profile")
-    const profile: Profile | null = await getProfileByUsername(body.username)
-    if (profile === null) {
-      logger.failure("Profile Doesn't Exist")
-      data = { type: "failure", message: invalidCredentialsMessage }
-      result = { status: 400, data: data }
-      throw result
-    }
-    logger.success("Successfully Fetched Profile")
-
-    // Verify Password
-    logger.attempt("Verifying Password")
-    const match: boolean = await verifyPassword(profile.password, body.password)
-    if (!match) {
-      logger.failure("Password is Invalid")
-      data = { type: "failure", message: invalidCredentialsMessage }
-      result = { status: 400, data: data }
-      throw result
-    }
-    logger.success("Password is Valid")
+    helperResult = validateBody(request.body)
+    if (helperResult.respond) { return response.status(helperResult.status).json(helperResult.data) }
+    const body = helperResult.data as AddProfileValidBody
 
     // Get Device Token
-    logger.attempt("Fetching Device Token")
+    logger.attempt("Getting Device Token")
     const deviceToken: string | undefined = getDeviceToken(request)
     if (typeof deviceToken === "undefined") {
-      const message: string = "Missing Device Token"
-      logger.failure(message)
-      data = { type: "failure", message: message }
-      result = { status: 400, data: data }
-      throw result
+      const serverMessage: string = "Device Token is Undefined"
+      const clientMessage: string = "Please Try Again"
+      logger.warning(serverMessage)
+      logger.failure(failureMessage)
+      responseData = { type: "failure", message: clientMessage }
+      return response.status(403).json(responseData)
     }
-    logger.success("Retrieved Device Token")
+    logger.success("Successfully Retrieved Device Token")
 
     // Verify Device Token
     logger.attempt("Verifying Device Token")
     const deviceTokenPayload: DeviceTokenPayload | "expired" | "invalid" = verifyDeviceToken(deviceToken)
     if (deviceTokenPayload === "expired") {
-      const message: string = "Device Token is Expired"
-      logger.warning(message)
-      data = { type: "failure", message: message }
-      result = { status: 403, data: data }
-      throw result
+      const serverMessage: string = "Device Token is Expired"
+      const clientMessage: string = "Please Try Again"
+      logger.warning(serverMessage)
+      logger.failure(failureMessage)
+      responseData = { type: "failure", message: clientMessage }
+      return response.status(403).json(responseData)
     }
     if (deviceTokenPayload === "invalid") {
-      const message: string = "Device Token is Invalid"
-      logger.warning(message)
-      data = { type: "failure", message: message }
-      result = { status: 403, data: data }
-      throw result
+      const serverMessage: string = "Device Token is Invalid"
+      const clientMessage: string = "Please Try Again"
+      logger.warning(serverMessage)
+      logger.failure(failureMessage)
+      responseData = { type: "failure", message: clientMessage }
+      return response.status(403).json(responseData)
     }
     logger.success("Device Token is Valid")
 
+    // Get Profile By Username
+    const profile: Profile | null = await getProfileByUsername(body.username)
+    if (profile === null) {
+      const serverMessage: string = "Profile Not Found"
+      const clientMessage: string = invalidCredentialsMessage
+      logger.warning(serverMessage)
+      logger.failure(failureMessage)
+      responseData = { type: "failure", message: clientMessage }
+      return response.status(400).json(responseData)
+    }
+    logger.success("Successfully Retrieved Profile By Username")
+
+    // Verify Password
+    const match: boolean = await verifyPassword(profile.password, body.password)
+    if (!match) {
+      const serverMessage: string = "Passwords Don't Match"
+      const clientMessage: string = invalidCredentialsMessage
+      logger.warning(serverMessage)
+      logger.failure(failureMessage)
+      responseData = { type: "failure", message: clientMessage }
+      return response.status(400).json(responseData)
+    }
+    logger.success("Passwords Match")
+
     // Check Device Profile
-    logger.attempt("Checking Device Profile")
     const existingDeviceProfile: DeviceProfile | null = await getDeviceProfile(deviceTokenPayload.deviceID, profile.id)
     if (existingDeviceProfile !== null) {
-      const message: string = "Profile Already Exists on Your Device"
-      logger.warning(message)
-      data = { type: "failure", message: message }
-      result = { status: 400, data: data}
-      throw result
+      const serverMessage: string = "Profile Found"
+      const clientMessage: string = "Profile Already Exists on Your Device"
+      logger.warning(serverMessage)
+      logger.failure(failureMessage)
+      responseData = { type: "failure", message: clientMessage }
+      return response.status(400).json(responseData)
     }
-    logger.success("Profile Doesn't Exist on Your Device")
+    logger.success("Profile Not Found")
 
     // Register Device Profile
     const deviceProfile: DeviceProfile = await registerDeviceProfile(deviceTokenPayload.deviceID, profile.id)
-
-    // SHOULD I OR SHOULD I NOT GENERATE PROFILE TOKENS HERE?
-    // IF PROFILE ALREADY EXISTS, TOKENS WON'T BE GENERATED FOR THE WAY I HAVE IT SET UP NOW
 
     // Generate Profile Tokens
     const profileTokenPayload: ProfileTokenPayload = {
@@ -203,34 +215,24 @@ export default async function handleAddProfile(request: Request, response: Respo
       version: deviceProfile.version
     }
     const profileTokens: ProfileTokens = generateProfileTokens(profileTokenPayload)
-    const { profileAccessToken, profileRefreshToken } = profileTokens
     const profileTokenKeys: ProfileTokenKeys = generateProfileTokenKeys(profileTokenPayload.profileID)
-    const { profileAccessTokenKey, profileRefreshTokenKey } = profileTokenKeys
 
     // Set Profile Token Cookies
-    setProfileAccessTokenCookie(response, profileAccessTokenKey, profileAccessToken)
-    setProfileRefreshTokenCookie(response, profileRefreshTokenKey, profileRefreshToken)
+    setProfileAccessTokenCookie(response, profileTokenKeys.profileAccessTokenKey, profileTokens.profileAccessToken)
+    setProfileRefreshTokenCookie(response, profileTokenKeys.profileRefreshTokenKey, profileTokens.profileRefreshToken)
 
-    // Return Success
-    const success: string = "Successfully Added Profile to Your Device"
-    logger.success(success)
-    data = { type: "success", message: success }
-    result = { status: 201, data: data }
-    return response.status(result.status).json(result)
+    // Return Successful Response
+    logger.success(successMessage)
+    responseData = { type: "success" }
+    return response.status(201).json(responseData)
   }
   catch (object: unknown) {
-    if (isResult(object)) {
-      result = object as AddProfileResult
-      logger.failure("Failed to Add Profile to Your Device")
-      return response.status(result.status).json(result)
-    }
-    logger.failure("Error Adding Profile to Your Device")
     const error = object as Error
+    logger.failure(errorMessage)
     logger.error(error)
     logger.trace(error)
-    data = { type: "error", message: "Server Error" }
-    result = { status: 500, data: data }
-    return response.status(result.status).json(result)
+    responseData = { type: "error", message: "Server Error" }
+    return response.status(500).json(responseData)
   }
 }
 

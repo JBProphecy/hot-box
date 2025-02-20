@@ -1,12 +1,21 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import clientConfig from "@/config/env"
-import { AddProfileRequestBody, AddProfileResponseData, AddProfileResult } from "shared/types/AddProfileTypes"
+import { AddProfileRawBody, AddProfileResponseData } from "shared/api/AddProfileTypes"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default async function requestAddProfile(body: AddProfileRequestBody) {
+// Messages
+const attemptMessage: string = "Adding Profile to Your Device"
+const successMessage: string = "Successfully Added Profile to Your Device"
+const failureMessage: string = "Failed to Add Profile to Your Device"
+const errorMessage: string = "Error Adding Profile to Your Device"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export default async function requestAddProfile(body: AddProfileRawBody) {
   try {
+    console.log(attemptMessage)
     const response: Response = await fetch(`${clientConfig.API_URL}/addProfile`, {
       method: "POST",
       headers: {
@@ -15,21 +24,25 @@ export default async function requestAddProfile(body: AddProfileRequestBody) {
       credentials: "include",
       body: JSON.stringify(body)
     })
-    const result: AddProfileResult = await response.json()
-    const data = result.data as AddProfileResponseData
-    switch (data.type) {
+    const result: AddProfileResponseData = await response.json()
+    switch (result.type) {
       case "invalid body":
-        for (const message of data.messages) { console.warn(message) }
-        break
-      case "success": console.log(data.message); break
-      case "failure": console.warn(data.message); break
-      case "error": throw new Error(data.message)
+        for (const message of result.messages) { console.warn(message) }
+        return false
+      case "success":
+        console.log(successMessage)
+        return true
+      case "failure":
+        console.warn(failureMessage)
+        console.warn(result.message)
+        return false
+      case "error": throw new Error(result.message)
       default: throw new Error("Unhandled Response")
     }
   }
   catch (object: unknown) {
     const error = object as Error
-    console.error("Error Adding Profile to Your Device")
+    console.error(errorMessage)
     console.error(error)
     throw error
   }

@@ -18,12 +18,13 @@ import handleCreateAccount from "@/api/handleCreateAccount"
 import handleSignInAccount from "@/api/handleSignInAccount"
 
 import handleCreateProfile from "@/api/handleCreateProfile"
-import handleAddProfile from "@/api/handleAddProfile"
 
 import handleGetDeviceProfileData from "@/api/handleGetDeviceProfileData"
 import handleGetCurrentAccountData from "@/api/handleGetCurrentAccountData"
 import handleGetCurrentProfileData from "@/api/handleGetCurrentProfileData"
 import handleSignInProfile from "@/api/handleSignInProfile"
+
+import handleAddProfile from "@/api/handleAddProfile"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -84,6 +85,9 @@ export const Main = () => {
     })
     application.post("/api/profile/login", async (request: Request, response: Response, next: NextFunction) => {
       await handleSignInProfile(request, response)
+    })
+    application.post("/api/device/profile/register", async (request: Request, response: Response, next: NextFunction) => {
+      await handleAddProfile(request, response)
     })
     // Route Not Found
     application.use(routeNotFound)

@@ -24,7 +24,7 @@ import SignInAccountPage from "@/app/SignInAccountPage"
 import CurrentAccountPage from "@/app/CurrentAccountPage"
 
 import DeviceProfilesPage from "@/app/DeviceProfilesPage"
-// add profile page
+import AddProfilePage from "@/app/AddProfilePage"
 import SignInProfilePage from "@/app/SignInProfilePage"
 import CurrentProfilePage from "@/app/CurrentProfilePage"
 
@@ -47,6 +47,7 @@ export default function App() {
             <Router>
               <Routes>
                 <Route path="/device/profiles" element={<DeviceProfilesPage />} />
+                <Route path="/device/profile/register" element={<AddProfilePage />} />
                 <Route path="/current/profile" element={<CurrentProfilePage />} />
                 <Route path="/current/account" element={<CurrentAccountPage />} />
                 <Route path="/account/register" element={<CreateAccountPage />} />

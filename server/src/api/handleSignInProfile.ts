@@ -171,7 +171,7 @@ export default async function handleSignInProfile(request: Request, response: Re
     // Get Profile By Username
     const profile: Profile | null = await getProfileByUsername(body.username)
     if (profile === null) {
-      const serverMessage: string = "Profile is Null"
+      const serverMessage: string = "Profile Not Found"
       const clientMessage: string = invalidCredentialsMessage
       logger.warning(serverMessage)
       logger.failure(failureMessage)

@@ -1,6 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import { useContext, useEffect, useRef, useState } from "react"
+import { NavigateFunction, useNavigate } from "react-router-dom"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -27,6 +28,8 @@ import requestGetDeviceProfileData from "@/api/requestGetDeviceProfileData"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export default function DeviceProfilesPage() {
+  const navigate: NavigateFunction = useNavigate()
+
   const currentProfile: CurrentProfileContextType | undefined = useContext(CurrentProfileContext)
   if (typeof currentProfile === "undefined") { throw new Error("Missing Current Profile Provider") }
   
@@ -71,9 +74,14 @@ export default function DeviceProfilesPage() {
     space: 10
   }
 
+  const handleAddProfileClick = () => { navigate("/device/profile/register") }
+
   return (
     <div ref={pageRef} className={localStyles.page} style={variableStyles}>
-      <div ref={listContainerRef} className={localStyles.profileMenu}>
+      <div className={localStyles.header}>
+        <input type="button" onClick={handleAddProfileClick} value="Add Profile" />
+      </div>
+      <div ref={listContainerRef} className={localStyles.main}>
         <CardList cardListStyles={cardListStyles} cardObjects={cards} />
       </div>
     </div>
