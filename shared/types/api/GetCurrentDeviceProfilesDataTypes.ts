@@ -1,12 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { CurrentProfileData } from "shared/data/private/CurrentProfileData"
+import { CurrentDeviceProfileData } from "shared/types/data/private/CurrentDeviceProfileData"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export type GetDeviceProfilesResponseData = {
+export type GetCurrentDeviceProfilesDataResponseData = {
   type: "success"
-  data: CurrentProfileData[]
+  data: CurrentDeviceProfileData[]
 } | {
   type: "failure" | "error"
   message: string

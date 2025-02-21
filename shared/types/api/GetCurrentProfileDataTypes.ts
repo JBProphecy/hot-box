@@ -4,13 +4,15 @@ import { CurrentProfileData } from "shared/types/data/private/CurrentProfileData
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export type GetCurrentProfileDataRequestBody = {
+export type GetCurrentProfileDataRawBody = {
   profileID?: string
 }
 
 export type GetCurrentProfileDataValidBody = {
   profileID: string
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export type GetCurrentProfileDataResponseData = {
   type: "success"

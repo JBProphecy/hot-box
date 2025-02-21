@@ -1,12 +1,28 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import clientConfig from "@/config/env"
-import { CreateProfileBody, CreateProfileResult } from "shared/temp/CreateProfileResult"
+import { CreateProfileRawBody, CreateProfileResponseData } from "shared/types/api/CreateProfileTypes"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default async function requestCreateProfile(body: CreateProfileBody) {
+// Messages
+const attemptMessage: string = "Creating Profile"
+const successMessage: string = "Successfully Created Profile"
+const failureMessage: string = "Failed to Create Profile"
+const errorMessage: string = "Error Creating Profile"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type CreateProfileResult = { success: boolean }
+
+let result: CreateProfileResult
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export default async function requestCreateProfile(body: CreateProfileRawBody): Promise<CreateProfileResult> {
   try {
+    console.log(attemptMessage)
+
     const response: Response = await fetch(`${clientConfig.API_URL}/createProfile`, {
       method: "POST",
       headers: {
@@ -15,16 +31,31 @@ export default async function requestCreateProfile(body: CreateProfileBody) {
       credentials: "include",
       body: JSON.stringify(body)
     })
-    const result: CreateProfileResult = await response.json()
-    if (response.status >= 200 && response.status < 300) { console.log(result.message) }
-    else if (response.status >= 300 && response.status < 400) { console.log(result.message) }
-    else if (response.status >= 400 && response.status < 500) { console.warn(result.message) }
-    else if (response.status >= 500 && response.status < 600) { throw new Error(result.message) }
-    else throw new Error("Unhandled Response")
+
+    const data: CreateProfileResponseData = await response.json()
+
+    switch (data.type) {
+      case "success":
+        console.log(successMessage)
+        result = { success: true }
+        return result
+      case "failure":
+        console.warn(failureMessage)
+        console.warn(data.message)
+        result = { success: false }
+        return result
+      case "invalid body":
+        console.warn(failureMessage)
+        for (const message of data.messages) { console.warn(message) }
+        result = { success: false }
+        return result
+      case "error": throw new Error(data.message)
+      default: throw new Error("Unhandled Response")
+    }
   }
   catch (object: unknown) {
     const error = object as Error
-    console.error("Error Creating Profile")
+    console.error(errorMessage)
     console.error(error)
     throw error
   }

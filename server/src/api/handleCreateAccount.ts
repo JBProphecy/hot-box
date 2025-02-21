@@ -5,7 +5,7 @@ import logger from "@/library/logger"
 import { Request, Response } from "express"
 import { ValidationResult, ValidationsResult, processValidationResults } from "@/library/validation"
 import {
-  CreateAccountRequestBody, CreateAccountValidBody,
+  CreateAccountRawBody, CreateAccountValidBody,
   CreateAccountResponseData, CreateAccountHelperResult
 } from "shared/types/api/CreateAccountTypes"
 
@@ -79,7 +79,7 @@ function validatePassword(password: string | undefined): ValidationResult {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function validateBody(body: CreateAccountRequestBody): CreateAccountHelperResult {
+function validateBody(body: CreateAccountRawBody): CreateAccountHelperResult {
   try {
     logger.attempt("Validating Body")
     const results: ValidationResult[] = []
@@ -121,7 +121,7 @@ function validateBody(body: CreateAccountRequestBody): CreateAccountHelperResult
 
 export default async function handleCreateAccount(request: Request, response: Response) {
   try {
-    logger.attempt("Creating Account")
+    logger.attempt(attemptMessage)
 
     // Validate Body
     helperResult = validateBody(request.body)
@@ -133,7 +133,7 @@ export default async function handleCreateAccount(request: Request, response: Re
     if (existingAccount !== null) {
       const message: string = "Email is Already Registered"
       logger.warning(message)
-      logger.failure("Failed to Create Account")
+      logger.failure(failureMessage)
       responseData = { type: "failure", message: message }
       return response.status(400).json(responseData)
     }

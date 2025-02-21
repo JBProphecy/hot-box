@@ -14,7 +14,7 @@ import { CardList, CardListStyles } from "@/components/temp/card-list"
 import { CardObject } from "@/components/temp/card"
 
 import { PublicProfile } from "shared/data/public/PublicProfileData"
-import requestGetDeviceProfiles from "@/api/requestGetDeviceProfileData"
+import requestGetDeviceProfiles from "@/api/requestGetCurrentDeviceProfilesData"
 
 import { CurrentProfileContext, CurrentProfileContextType } from "@/context/CurrentProfileContext"
 

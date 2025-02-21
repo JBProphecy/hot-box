@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import clientConfig from "@/config/env"
-import { CreateAccountRequestBody, CreateAccountResponseData } from "shared/types/api/CreateAccountTypes"
+import { CreateAccountRawBody, CreateAccountResponseData } from "shared/types/api/CreateAccountTypes"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -19,7 +19,7 @@ let result: CreateAccountResult
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default async function requestCreateAccount(body: CreateAccountRequestBody): Promise<CreateAccountResult> {
+export default async function requestCreateAccount(body: CreateAccountRawBody): Promise<CreateAccountResult> {
   try {
     console.log(attemptMessage)
 

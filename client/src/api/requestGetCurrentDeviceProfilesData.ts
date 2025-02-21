@@ -1,42 +1,48 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import clientConfig from "@/config/env"
-import { EnsureDeviceTokenResponseData } from "shared/types/api/EnsureDeviceTokenTypes"
+import { CurrentDeviceProfileData } from "shared/types/data/private/CurrentDeviceProfileData"
+import { GetCurrentDeviceProfilesDataResponseData } from "shared/types/api/GetCurrentDeviceProfilesDataTypes"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Messages
-const attemptMessage: string = "Ensuring Device Token"
-const successMessage: string = "Successfully Ensured Device Token"
-const failureMessage: string = "Failed to Ensure Device Token"
-const errorMessage: string = "Error Ensuring Device Token"
+const attemptMessage: string = "Getting Current Device Profiles Data"
+const successMessage: string = "Successfully Retrieved Current Device Profiles Data"
+const failureMessage: string = "Failed to Get Current Device Profiles Data"
+const errorMessage: string = "Error Getting Current Device Profiles Data"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export type EnsureDeviceTokenResult = { success: boolean }
+export type GetCurrentDeviceProfilesDataResult = {
+  success: true
+  data: CurrentDeviceProfileData[]
+} | {
+  success: false
+}
 
-let result: EnsureDeviceTokenResult
+let result: GetCurrentDeviceProfilesDataResult
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default async function requestEnsureDeviceToken(): Promise<EnsureDeviceTokenResult> {
+export default async function requestGetDeviceProfileData(): Promise<GetCurrentDeviceProfilesDataResult> {
   try {
     console.log(attemptMessage)
 
-    const response: Response = await fetch(`${clientConfig.API_URL}/ensureDeviceToken`, {
-      method: "POST",
+    const response: Response = await fetch(`${clientConfig.API_URL}/device/profiles`, {
+      method: "GET",
       headers: {
         "Content-Type": "application/json"
       },
-      credentials: "include"
+      credentials: "include",
     })
 
-    const data: EnsureDeviceTokenResponseData = await response.json()
+    const data: GetCurrentDeviceProfilesDataResponseData = await response.json()
 
     switch (data.type) {
       case "success":
         console.log(successMessage)
-        result = { success: true }
+        result = { success: true, data: data.data }
         return result
       case "failure":
         console.warn(failureMessage)

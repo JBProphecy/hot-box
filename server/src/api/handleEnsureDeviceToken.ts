@@ -28,7 +28,7 @@ let responseData: EnsureDeviceTokenResponseData
 
 export default function handleEnsureDeviceToken(request: Request, response: Response) {
   try {
-    logger.attempt("Ensuring Device Token")
+    logger.attempt(attemptMessage)
 
     // Get Device Token
     let deviceToken: string | undefined = getDeviceToken(request)

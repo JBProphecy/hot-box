@@ -23,7 +23,7 @@ import { CardList, CardListStyles } from "@/components/temp/card-list"
 import { CardObject } from "@/components/temp/card"
 
 import { CurrentProfileData } from "shared/data/private/CurrentProfileData"
-import requestGetDeviceProfileData from "@/api/requestGetDeviceProfileData"
+import requestGetDeviceProfileData from "@/api/requestGetCurrentDeviceProfilesData"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

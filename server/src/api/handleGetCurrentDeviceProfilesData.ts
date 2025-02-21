@@ -3,7 +3,7 @@
 import logger from "@/library/logger"
 
 import { Request, Response } from "express"
-import { GetDeviceProfilesResponseData } from "shared/types/api/GetDeviceProfilesTypes"
+import { GetCurrentDeviceProfilesDataResponseData } from "shared/types/api/GetCurrentDeviceProfilesDataTypes"
 
 import getDeviceToken from "@/utils/device-token/getDeviceToken"
 import DeviceTokenPayload from "@/types/device-token/DeviceTokenPayload"
@@ -14,16 +14,19 @@ import getDeviceProfileData from "@/database/private/getCurrentDeviceProfilesDat
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default async function handleGetDeviceProfileData(request: Request, response: Response) {
-  // Messages
-  const attemptMessage: string = "Handling Get Device Profiles"
-  const successMessage: string = "Successfully Handled Get Device Profiles"
-  const failureMessage: string = "Failed to Handle Get Device Profiles"
-  const errorMessage: string = "Error Handling Get Device Profiles"
+// Messages
+const attemptMessage: string = "Handling Get Device Profiles"
+const successMessage: string = "Successfully Handled Get Device Profiles"
+const failureMessage: string = "Failed to Handle Get Device Profiles"
+const serverErrorMessage: string = "Error Handling Get Device Profiles"
+const clientErrorMessage: string = "Server Error"
 
-  // Helper Objects
-  let responseData: GetDeviceProfilesResponseData
-  
+// Helper Objects
+let responseData: GetCurrentDeviceProfilesDataResponseData
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export default async function handleGetDeviceProfileData(request: Request, response: Response) {
   try {
     logger.attempt(attemptMessage)
 
@@ -60,22 +63,21 @@ export default async function handleGetDeviceProfileData(request: Request, respo
       return response.status(403).json(responseData)
     }
     logger.success("Device Token is Valid")
-    const { deviceID } = deviceTokenPayload
 
-    // Get Device Profile Data
-    const deviceProfileData: CurrentDeviceProfileData[] = await getDeviceProfileData(deviceID)
+    // Get Current Device Profiles Data
+    const currentDeviceProfilesData: CurrentDeviceProfileData[] = await getDeviceProfileData(deviceTokenPayload.deviceID)
 
     // Return Successful Response
     logger.success(successMessage)
-    responseData = { type: "success", data: deviceProfileData }
+    responseData = { type: "success", data: currentDeviceProfilesData }
     return response.status(200).json(responseData)
   }
   catch (object: unknown) {
     const error = object as Error
-    logger.failure(errorMessage)
+    logger.failure(serverErrorMessage)
     logger.error(error)
     logger.trace(error)
-    responseData = { type: "error", message: "Server Error" }
+    responseData = { type: "error", message: clientErrorMessage }
     return response.status(500).json(responseData)
   }
 }

@@ -19,7 +19,7 @@ import handleSignInAccount from "@/api/handleSignInAccount"
 
 import handleCreateProfile from "@/api/handleCreateProfile"
 
-import handleGetDeviceProfileData from "@/api/handleGetDeviceProfileData"
+import handleGetDeviceProfileData from "@/api/handleGetCurrentDeviceProfilesData"
 import handleGetCurrentAccountData from "@/api/handleGetCurrentAccountData"
 import handleGetCurrentProfileData from "@/api/handleGetCurrentProfileData"
 import handleSignInProfile from "@/api/handleSignInProfile"
