@@ -13,9 +13,21 @@ const errorMessage: string = "Error Signing Into Your Profile"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default async function requestSignInProfile(body: SignInProfileRawBody): Promise<string | null> {
+export type SignInProfileResult = {
+  success: true
+  profileID: string
+} | {
+  success: false
+}
+
+let result: SignInProfileResult
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export default async function requestSignInProfile(body: SignInProfileRawBody): Promise<SignInProfileResult> {
   try {
     console.log(attemptMessage)
+
     const response: Response = await fetch(`${clientConfig.API_URL}/profile/login`, {
       method: "POST",
       headers: {
@@ -24,20 +36,25 @@ export default async function requestSignInProfile(body: SignInProfileRawBody): 
       credentials: "include",
       body: JSON.stringify(body)
     })
-    const result: SignInProfileResponseData = await response.json()
-    switch (result.type) {
-      case "invalid body":
-        console.warn(failureMessage)
-        for (const message of result.messages) { console.warn(message) }
-        return null
+
+    const data: SignInProfileResponseData = await response.json()
+
+    switch (data.type) {
       case "success":
         console.log(successMessage)
-        return result.profileID
+        result = { success: true, profileID: data.profileID }
+        return result
       case "failure":
-        console.warn(failureMessage)
-        console.warn(result.message)
-        return null
-      case "error": throw new Error(result.message)
+        console.warn(data.message)
+        console.error(failureMessage)
+        result = { success: false }
+        return result
+      case "invalid body":
+        for (const message of data.messages) { console.warn(message) }
+        console.error(failureMessage)
+        result = { success: false }
+        return result
+      case "error": throw new Error(data.message)
       default: throw new Error("Unhandled Response")
     }
   }

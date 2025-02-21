@@ -82,6 +82,7 @@ function validatePassword(password: string | undefined): ValidationResult {
 function validateBody(body: CreateAccountRawBody): CreateAccountHelperResult {
   try {
     logger.attempt("Validating Body")
+
     const results: ValidationResult[] = []
     let result: ValidationResult
     result = validateName(body.name)
@@ -92,6 +93,7 @@ function validateBody(body: CreateAccountRawBody): CreateAccountHelperResult {
     results.push(result)
 
     const validationsResult: ValidationsResult = processValidationResults(results)
+    
     if (validationsResult.valid) {
       logger.success("Body is Valid")
       const validBody = body as CreateAccountValidBody

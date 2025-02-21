@@ -1,12 +1,13 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { Request, Response } from "express"
-import { SignInAccountRequestBody, SignInAccountValidBody, SignInAccountResponseData, SignInAccountHelperResult } from "shared/types/api/SignInAccountTypes"
-import { ValidationResult, ValidationsResult, processValidationResults } from "@/library/validation"
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 import logger from "@/library/logger"
+
+import { Request, Response } from "express"
+import { ValidationResult, ValidationsResult, processValidationResults } from "@/library/validation"
+import {
+  SignInAccountRawBody, SignInAccountValidBody,
+  SignInAccountResponseData, SignInAccountHelperResult
+} from "shared/types/api/SignInAccountTypes"
 
 import { Account } from "@prisma/client"
 import getAccountByEmail from "@/database/pure/getAccountByEmail"
@@ -14,15 +15,26 @@ import getAccountByEmail from "@/database/pure/getAccountByEmail"
 import verifyPassword from "@/utils/verifyPassword"
 
 import AccountTokenPayload from "@/types/account-token/AccountTokenPayload"
-
 import AccountTokens from "@/types/account-token/AccountTokens"
 import generateAccountTokens from "@/utils/account-token/generateAccountTokens"
-
 import AccountTokenKeys from "@/types/account-token/AccountTokenKeys"
 import generateAccountTokenKeys from "@/utils/account-token/generateAccountTokenKeys"
-
 import setAccountAccessTokenCookie from "@/utils/account-token/setAccountAccessTokenCookie"
 import setAccountRefreshTokenCookie from "@/utils/account-token/setAccountRefreshTokenCookie"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Messages
+const attemptMessage: string = "Handling Sign In Account"
+const successMessage: string = "Successfully Handled Sign In Account"
+const failureMessage: string = "Failed to Handle Sign In Account"
+const serverErrorMessage: string = "Error Handling Sign In Account"
+const clientErrorMessage: string = "Server Error"
+const invalidCredentialsMessage: string = "Email and Password are Not Associated"
+
+// Objects
+let responseData: SignInAccountResponseData
+let helperResult: SignInAccountHelperResult
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -48,78 +60,73 @@ function validatePassword(password: string | undefined): ValidationResult {
   return result
 }
 
-function getValidationResults(body: SignInAccountRequestBody) {
-  const results: ValidationResult[] = []
-  let result: ValidationResult
-  result = validateEmail(body.email)
-  results.push(result)
-  result = validatePassword(body.password)
-  results.push(result)
-  return results
-}
+function validateBody(body: SignInAccountRawBody): SignInAccountHelperResult {
+  try {
+    logger.attempt("Validating Body")
 
-function helperValidateBody(body: SignInAccountRequestBody): SignInAccountHelperResult {
-  logger.attempt("Validating Body")
-  let responseData: SignInAccountResponseData
-  let helperResult: SignInAccountHelperResult
-  const validationResults: ValidationResult[] = getValidationResults(body)
-  const validationsResult: ValidationsResult = processValidationResults(validationResults)
-  if (!validationsResult.valid) {
-    logger.failure("Body is Invalid")
-    responseData = { type: "invalid body", messages: validationsResult.messages }
-    helperResult = { respond: true, status: 400, data: responseData }
+    const results: ValidationResult[] = []
+    let result: ValidationResult
+    result = validateEmail(body.email)
+    results.push(result)
+    result = validatePassword(body.password)
+    results.push(result)
+  
+    const validationsResult: ValidationsResult = processValidationResults(results)
+  
+    if (!validationsResult.valid) {
+      logger.failure("Body is Invalid")
+      responseData = { type: "invalid body", messages: validationsResult.messages }
+      helperResult = { respond: true, status: 400, data: responseData }
+      return helperResult
+    }
+    logger.success("Body is Valid")
+    const validBody = body as SignInAccountValidBody
+    helperResult = { respond: false, data: validBody }
     return helperResult
   }
-  logger.success("Body is Valid")
-  const validBody = body as SignInAccountValidBody
-  helperResult = { respond: false, data: validBody }
-  return helperResult
+  catch (object: unknown) {
+    const error = object as Error
+    logger.failure("Error Validating Body")
+    logger.error(error)
+    logger.trace(error)
+    throw error
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export default async function handleSignInAccount(request: Request, response: Response) {
-  // Messages
-  const attemptMessage: string = "Handling Sign In Account"
-  const successMessage: string = "Successfully Handled Sign In Account"
-  const failureMessage: string = "Failed to Handle Sign in Account"
-  const invalidCredentialsMessage: string = "Email and Password are Not Associated"
-
-  // Helper Objects
-  let responseData: SignInAccountResponseData
-  let helperResult: SignInAccountHelperResult
-
   try {
     logger.attempt(attemptMessage)
 
     // Validate Body
-    helperResult = helperValidateBody(request.body)
+    helperResult = validateBody(request.body)
     if (helperResult.respond) { return response.status(helperResult.status).json(helperResult.data) }
     const body = helperResult.data as SignInAccountValidBody
 
-    // Fetch Account
-    logger.attempt("Fetching Account")
+    // Get Account By Email
     const account: Account | null = await getAccountByEmail(body.email)
     if (account === null) {
-      logger.warning("Email is Not Registered")
+      const serverMessage: string = "Account Not Found"
+      logger.warning(serverMessage)
       logger.failure(failureMessage)
       responseData = { type: "failure", message: invalidCredentialsMessage}
       return response.status(400).json(responseData)
     }
-    logger.success("Successfully Fetched Account")
+    logger.success("Successfully Retrieved Account")
 
     // Verify Password
-    logger.attempt("Verifying Password")
     const match: boolean = await verifyPassword(account.password, body.password)
     if (!match) {
-      logger.warning("Password is Invalid")
+      const serverMessage: string = "Passwords Don't Match"
+      logger.warning(serverMessage)
       logger.failure(failureMessage)
       responseData = { type: "failure", message: invalidCredentialsMessage}
       return response.status(400).json(responseData)
     }
     logger.success("Password is Valid")
 
-    // Generate Account Tokens
+    // Process Account Tokens
     const accountTokenPayload: AccountTokenPayload = { accountID: account.id }
     const { accountAccessToken, accountRefreshToken }: AccountTokens = generateAccountTokens(accountTokenPayload)
     const { accountAccessTokenKey, accountRefreshTokenKey}: AccountTokenKeys = generateAccountTokenKeys(account.id)
@@ -132,10 +139,10 @@ export default async function handleSignInAccount(request: Request, response: Re
   }
   catch (object: unknown) {
     const error = object as Error
-    logger.failure("Error Signing In to Your Account")
+    logger.failure(serverErrorMessage)
     logger.error(error)
     logger.trace(error)
-    responseData = { type: "error", message: "Server Error" }
+    responseData = { type: "error", message: clientErrorMessage }
     return response.status(500).json(responseData)
   }
 }

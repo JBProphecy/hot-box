@@ -128,6 +128,7 @@ function validateAccountID(accountID: string | undefined): ValidationResult {
 function validateBody(body: CreateProfileRawBody): CreateProfileHelperResult {
   try {
     logger.attempt("Validating Body")
+
     const results: ValidationResult[] = []
     let result: ValidationResult
     result = validateName(body.name)
@@ -140,6 +141,7 @@ function validateBody(body: CreateProfileRawBody): CreateProfileHelperResult {
     results.push(result)
 
     const validationsResult: ValidationsResult = processValidationResults(results)
+    
     if (validationsResult.valid) {
       logger.success("Body is Valid")
       const validBody = body as CreateProfileValidBody

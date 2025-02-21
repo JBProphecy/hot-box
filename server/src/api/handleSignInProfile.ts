@@ -15,6 +15,7 @@ import verifyDeviceToken from "@/utils/device-token/verifyDeviceToken"
 
 import { Profile } from "@prisma/client"
 import getProfileByUsername from "@/database/pure/getProfileByUsername"
+
 import verifyPassword from "@/utils/verifyPassword"
 
 import { DeviceProfile } from "@prisma/client"
@@ -34,7 +35,8 @@ import setProfileRefreshTokenCookie from "@/utils/profile-token/setProfileRefres
 const attemptMessage: string = "Handling Sign In Profile"
 const successMessage: string = "Success Handling Sign In Profile"
 const failureMessage: string = "Failure Handling Sign In Profile"
-const errorMessage: string = "Error Handling Sign In Profile"
+const serverErrorMessage: string = "Error Handling Sign In Profile"
+const clientErrorMessage: string = "Server Error"
 const invalidCredentialsMessage: string = "Username and Password are not Associated"
 
 // Objects
@@ -90,6 +92,7 @@ function validatePassword(password: string | undefined): ValidationResult {
 function validateBody(body: SignInProfileRawBody): SignInProfileHelperResult {
   try {
     logger.attempt("Validating Body")
+
     const results: ValidationResult[] = []
     let result: ValidationResult
     result = validateUsername(body.username)
@@ -98,6 +101,7 @@ function validateBody(body: SignInProfileRawBody): SignInProfileHelperResult {
     results.push(result)
 
     const validationsResult: ValidationsResult = processValidationResults(results)
+
     if (validationsResult.valid) {
       logger.success("Body is Valid")
       const validBody: SignInProfileValidBody = body as SignInProfileValidBody
@@ -172,10 +176,9 @@ export default async function handleSignInProfile(request: Request, response: Re
     const profile: Profile | null = await getProfileByUsername(body.username)
     if (profile === null) {
       const serverMessage: string = "Profile Not Found"
-      const clientMessage: string = invalidCredentialsMessage
       logger.warning(serverMessage)
       logger.failure(failureMessage)
-      responseData = { type: "failure", message: clientMessage }
+      responseData = { type: "failure", message: invalidCredentialsMessage }
       return response.status(400).json(responseData)
     }
     logger.success("Successfully Retrieved Profile By Username")
@@ -184,10 +187,9 @@ export default async function handleSignInProfile(request: Request, response: Re
     const match: boolean = await verifyPassword(profile.password, body.password)
     if (!match) {
       const serverMessage: string = "Passwords Don't Match"
-      const clientMessage: string = invalidCredentialsMessage
       logger.warning(serverMessage)
       logger.failure(failureMessage)
-      responseData = { type: "failure", message: clientMessage }
+      responseData = { type: "failure", message: invalidCredentialsMessage }
       return response.status(400).json(responseData)
     }
     logger.success("Passwords Match")
@@ -195,7 +197,7 @@ export default async function handleSignInProfile(request: Request, response: Re
     // Get Device Profile
     const deviceProfile: DeviceProfile | null = await getDeviceProfile(deviceTokenPayload.deviceID, profile.id)
     if (deviceProfile === null) {
-      const serverMessage: string = "Device Profile is Null"
+      const serverMessage: string = "Device Profile Not Found"
       const clientMessage: string = "Profile Doesn't Exist on Your Device"
       logger.warning(serverMessage)
       logger.failure(failureMessage)
@@ -204,7 +206,7 @@ export default async function handleSignInProfile(request: Request, response: Re
     }
     logger.success("Successfully Retrieved Profile")
 
-    // Generate Profile Tokens
+    // Process Profile Tokens
     const profileTokenPayload: ProfileTokenPayload = {
       deviceID: deviceProfile.deviceID,
       profileID: deviceProfile.profileID,
@@ -212,8 +214,6 @@ export default async function handleSignInProfile(request: Request, response: Re
     }
     const profileTokens: ProfileTokens = generateProfileTokens(profileTokenPayload)
     const profileTokenKeys: ProfileTokenKeys = generateProfileTokenKeys(profileTokenPayload.profileID)
-
-    // Set Profile Token Cookies
     setProfileAccessTokenCookie(response, profileTokenKeys.profileAccessTokenKey, profileTokens.profileAccessToken)
     setProfileRefreshTokenCookie(response, profileTokenKeys.profileRefreshTokenKey, profileTokens.profileRefreshToken)
 
@@ -224,10 +224,10 @@ export default async function handleSignInProfile(request: Request, response: Re
   }
   catch (object: unknown) {
     const error = object as Error
-    logger.failure(errorMessage)
+    logger.failure(serverErrorMessage)
     logger.error(error)
     logger.trace(error)
-    responseData = { type: "error", message: "Server Error" }
+    responseData = { type: "error", message: clientErrorMessage }
     return response.status(500).json(responseData)
   }
 }

@@ -40,13 +40,13 @@ export default async function requestCreateAccount(body: CreateAccountRawBody): 
         result = { success: true }
         return result
       case "failure":
-        console.warn(failureMessage)
         console.warn(data.message)
+        console.error(failureMessage)
         result = { success: false }
         return result
       case "invalid body":
-        console.warn(failureMessage)
         for (const message of data.messages) { console.warn(message) }
+        console.error(failureMessage)
         result = { success: false }
         return result
       case "error": throw new Error(data.message)

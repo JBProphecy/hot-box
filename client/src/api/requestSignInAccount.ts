@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import clientConfig from "@/config/env"
-import { SignInAccountRequestBody, SignInAccountResponseData } from "shared/types/api/SignInAccountTypes"
+import { SignInAccountRawBody, SignInAccountResponseData } from "shared/types/api/SignInAccountTypes"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -13,9 +13,21 @@ const errorMessage: string = "Error Siging Into Your Account"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default async function requestSignInAccount(body: SignInAccountRequestBody): Promise<string | null> {
+export type SignInAccountResult = {
+  success: true
+  accountID: string
+} | {
+  success: false
+}
+
+let result: SignInAccountResult
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export default async function requestSignInAccount(body: SignInAccountRawBody): Promise<SignInAccountResult> {
   try {
     console.log(attemptMessage)
+
     const response: Response = await fetch(`${clientConfig.API_URL}/account/login`, {
       method: "POST",
       headers: {
@@ -24,20 +36,25 @@ export default async function requestSignInAccount(body: SignInAccountRequestBod
       credentials: "include",
       body: JSON.stringify(body)
     })
-    const result: SignInAccountResponseData = await response.json()
-    switch (result.type) {
-      case "invalid body":
-        console.warn(failureMessage)
-        for (const message of result.messages) { console.warn(message) }
-        return null
+
+    const data: SignInAccountResponseData = await response.json()
+
+    switch (data.type) {
       case "success":
         console.log(successMessage)
-        return result.accountID
+        result = { success: true, accountID: data.accountID }
+        return result
       case "failure":
-        console.warn(failureMessage)
-        console.warn(result.message)
-        return null
-      case "error": throw new Error(result.message)
+        console.warn(data.message)
+        console.error(failureMessage)
+        result = { success: false }
+        return result
+      case "invalid body":
+        for (const message of data.messages) { console.warn(message) }
+        console.error(failureMessage)
+        result = { success: false }
+        return result
+      case "error": throw new Error(data.message)
       default: throw new Error("Unhandled Response")
     }
   }

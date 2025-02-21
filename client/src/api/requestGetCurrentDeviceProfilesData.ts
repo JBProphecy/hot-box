@@ -45,8 +45,8 @@ export default async function requestGetDeviceProfileData(): Promise<GetCurrentD
         result = { success: true, data: data.data }
         return result
       case "failure":
-        console.warn(failureMessage)
         console.warn(data.message)
+        console.error(failureMessage)
         result = { success: false }
         return result
       case "error": throw new Error(data.message)
