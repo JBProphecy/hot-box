@@ -1,26 +1,30 @@
 /**********************************************************************************************************************/
 
-.page {
-  --pageWidth: "";
-  --pageHeight: "";
+.appLayout {
+  --navigationBarHeight: "";
+  --mainScreenHeight: calc(100% - var(--navigationBarHeight));
 }
-
-/**********************************************************************************************************************/
-
-.page {
-  position: relative;
+.appLayout {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  overflow: hidden;
-  opacity: 0;
-  transition: opacity 200ms ease-in-out;
 }
 
-.visible { opacity: 1; }
+/**********************************************************************************************************************/
+
+.mainScreen {
+  width: 100%;
+  height: var(--mainScreenHeight);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navigationBar {
+  width: 100%;
+  height: var(--navigationBarHeight);
+  display: flex;
+}
 
 /**********************************************************************************************************************/

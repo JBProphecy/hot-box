@@ -14,6 +14,7 @@ import CurrentProfileProvider from "@/context/CurrentProfileProvider"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import FullScreenLayout from "@/app/FullScreenLayout"
+import AppLayout from "@/app/AppLayout"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -43,19 +44,21 @@ export default function App() {
     return (
       <CurrentAccountProvider>
         <CurrentProfileProvider>
-          <FullScreenLayout>
-            <Router>
-              <Routes>
-                <Route path="/device/profiles" element={<DeviceProfilesPage />} />
-                <Route path="/device/profile/register" element={<AddProfilePage />} />
-                <Route path="/current/profile" element={<CurrentProfilePage />} />
-                <Route path="/current/account" element={<CurrentAccountPage />} />
-                <Route path="/account/register" element={<CreateAccountPage />} />
-                <Route path="/account/login" element={<SignInAccountPage />} />
-                <Route path="/profile/login" element={<SignInProfilePage />} />
-              </Routes>
-            </Router>
-          </FullScreenLayout>
+          <Router>
+            <FullScreenLayout>
+              <AppLayout>
+                <Routes>
+                  <Route path="/device/profiles" element={<DeviceProfilesPage />} />
+                  <Route path="/device/profile/register" element={<AddProfilePage />} />
+                  <Route path="/current/profile" element={<CurrentProfilePage />} />
+                  <Route path="/current/account" element={<CurrentAccountPage />} />
+                  <Route path="/account/register" element={<CreateAccountPage />} />
+                  <Route path="/account/login" element={<SignInAccountPage />} />
+                  <Route path="/profile/login" element={<SignInProfilePage />} />
+                </Routes>
+              </AppLayout>
+            </FullScreenLayout>
+          </Router>
         </CurrentProfileProvider>
       </CurrentAccountProvider>
     )

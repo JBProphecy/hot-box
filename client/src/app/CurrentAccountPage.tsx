@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { useContext, useRef } from "react"
+import { useContext, useEffect, useRef } from "react"
 import localStyles from "./CurrentAccountPage.module.css"
 import useDimensions from "@/hooks/useDimensions"
 import { toPixelString, VariableStyles } from "@/utils/styles"
@@ -14,19 +14,30 @@ export default function CurrentAccountPage() {
     if (typeof currentAccount === "undefined") { throw new Error("Missing Current Account Provider") }
 
     const pageRef = useRef<HTMLDivElement>(null)
-    const [pageWidth, pageHeight] = useDimensions(pageRef)
+    const pageDimensions = useDimensions(pageRef)
+    useEffect(() => { pageRef.current?.classList.add(localStyles.visible) }, [])
     const variableStyles: VariableStyles = {
-      "--pageWidth": toPixelString(pageWidth),
-      "--pageHeight": toPixelString(pageHeight)
+      "--pageWidth": toPixelString(pageDimensions.width),
+      "--pageHeight": toPixelString(pageDimensions.height)
     }
 
-    return (
-      <div ref={pageRef} className={localStyles.page} style={variableStyles}>
-        <h1>Current Account Page</h1>
-        <h2>{currentAccount.getID}</h2>
-        <h2>{currentAccount.getName}</h2>
-      </div>
-    )
+    if (currentAccount.getID) {
+      return (
+        <div ref={pageRef} className={localStyles.page} style={variableStyles}>
+          <h1>Current Account Page</h1>
+          <h2>{currentAccount.getID}</h2>
+          <h2>{currentAccount.getName}</h2>
+        </div>
+      )
+    }
+    else {
+      return (
+        <div ref={pageRef} className={localStyles.page} style={variableStyles}>
+          <h1>Current Account Page</h1>
+          <h2>You are Logged Out</h2>
+        </div>
+      )
+    }
   }
   catch (object: unknown) {
     const error = object as Error

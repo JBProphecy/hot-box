@@ -46,6 +46,6 @@ li { display: flex; } /* line-height matters for bullets and shit */
 
 a { text-decoration: none; }
 
-span { user-select: none; }
+span, i { user-select: none; }
 
 /**********************************************************************************************************************/
