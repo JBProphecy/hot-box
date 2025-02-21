@@ -17,6 +17,10 @@
   align-items: center;
   text-align: center;
   overflow: hidden;
+  opacity: 0;
+  transition: opacity 200ms ease-in-out;
 }
+
+.visible { opacity: 1; }
 
 /**********************************************************************************************************************/

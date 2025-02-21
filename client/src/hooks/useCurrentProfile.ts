@@ -5,9 +5,9 @@ import useSessionStorage from "@/hooks/useSessionStorage"
 
 import { useEffect, useState } from "react"
 
-import { GetCurrentProfileDataRequestBody } from "shared/types/api/GetCurrentProfileDataTypes"
+import { GetCurrentProfileDataRawBody } from "shared/types/api/GetCurrentProfileDataTypes"
 import { CurrentProfileData } from "shared/types/data/private/CurrentProfileData"
-import requestGetCurrentProfileData from "@/api/requestGetCurrentProfileData"
+import requestGetCurrentProfileData, { GetCurrentProfileDataResult } from "@/api/requestGetCurrentProfileData"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -19,17 +19,17 @@ export default function useCurrentProfile() {
   useEffect(() => {
     const sendRequests = async () => {
       if (!id) { return }
-      const body: GetCurrentProfileDataRequestBody = { profileID: id }
-      const currentProfileData: CurrentProfileData | null = await requestGetCurrentProfileData(body)
-      if (currentProfileData === null) {
-        console.warn("Missing Profile Data")
+      const body: GetCurrentProfileDataRawBody = { profileID: id }
+      const result: GetCurrentProfileDataResult = await requestGetCurrentProfileData(body)
+      if (!result.success) {
         setID(null)
         setName(null)
         setUsername(null)
         return
       }
-      setName(currentProfileData.name)
-      setUsername(currentProfileData.username)
+      const data: CurrentProfileData = result.data
+      setName(data.name)
+      setUsername(data.username)
     }
     sendRequests()
   }, [id])

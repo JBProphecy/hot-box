@@ -4,30 +4,33 @@ import { useEffect, useState } from "react"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default function useDimensions(element: React.RefObject<HTMLElement>) {
-  const [width, setWidth] = useState<number>(0)
-  const [height, setHeight] = useState<number>(0)
+export type Dimensions = {
+  width: number
+  height: number
+}
 
-  const setDimensions = () => {
-    if (!element.current) { console.warn("Missing Element Reference"); return }
-    setWidth(element.current.offsetWidth)
-    setHeight(element.current.offsetHeight)
+export const zeroDimensions: Dimensions = { width: 0, height: 0 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export default function useDimensions(element: React.RefObject<HTMLElement>) {
+  const [dimensions, setDimensions] = useState<Dimensions>({ width: 0, height: 0 })
+
+  const updateDimensions = () => {
+    if (element.current === null) { console.warn("Missing Element Reference"); return }
+    setDimensions({
+      width: element.current.offsetWidth,
+      height: element.current.offsetHeight
+    })
   }
 
   useEffect(() => {
-    setDimensions()
-    window.addEventListener("resize", setDimensions)
-    return () => { window.removeEventListener("resize", setDimensions) }
+    updateDimensions()
+    window.addEventListener("resize", updateDimensions)
+    return () => { window.removeEventListener("resize", updateDimensions) }
   }, [])
 
-  // Optional Logging
-  useEffect(() => {
-    console.log("Page Width:", width)
-    console.log("Page Height:", height)
-  }, [width, height])
-
-  // Return Dimensions
-  return [ width, height ] as const
+  return dimensions
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

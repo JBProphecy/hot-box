@@ -1,12 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { useContext, useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react"
 import { NavigateFunction, useNavigate } from "react-router-dom"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import localStyles from "./DeviceProfilesPage.module.css"
-import useDimensions from "@/hooks/useDimensions"
+import useDimensions, { Dimensions, zeroDimensions } from "@/hooks/useDimensions"
 import { VariableStyles, toPixelString } from "@/utils/styles"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -22,35 +22,49 @@ import { CurrentProfileContext, CurrentProfileContextType } from "@/context/Curr
 import { CardList, CardListStyles } from "@/components/temp/card-list"
 import { CardObject } from "@/components/temp/card"
 
-import { CurrentProfileData } from "shared/data/private/CurrentProfileData"
-import requestGetDeviceProfileData from "@/api/requestGetCurrentDeviceProfilesData"
+import { CurrentDeviceProfileData } from "shared/types/data/private/CurrentDeviceProfileData"
+import requestGetDeviceProfileData, { GetCurrentDeviceProfilesDataResult } from "@/api/requestGetCurrentDeviceProfilesData"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export default function DeviceProfilesPage() {
+
+  // Navigation
   const navigate: NavigateFunction = useNavigate()
 
+  // Current Profile
   const currentProfile: CurrentProfileContextType | undefined = useContext(CurrentProfileContext)
   if (typeof currentProfile === "undefined") { throw new Error("Missing Current Profile Provider") }
   
+  // Page Reference
   const pageRef = useRef<HTMLDivElement>(null)
-  const [pageWidth, pageHeight] = useDimensions(pageRef)
-  const variableStyles: VariableStyles = {
-    "--pageWidth": toPixelString(pageWidth),
-    "--pageHeight": toPixelString(pageHeight)
+  const pageDimensions: Dimensions = useDimensions(pageRef)
+  useEffect(() => { pageRef.current?.classList.add(localStyles.visible) }, [])
+
+  // List Container
+  const listContainerRef = useRef<HTMLDivElement>(null)
+  const [listContainerDimensions, setListContainerDimensions] = useState<Dimensions>(zeroDimensions)
+  const updateListContainerDimensions = () => {
+    if (listContainerRef.current === null) { setListContainerDimensions(zeroDimensions); return }
+    setListContainerDimensions({
+      width: listContainerRef.current.offsetWidth,
+      height: listContainerRef.current.offsetHeight
+    })
   }
+  useEffect(() => { updateListContainerDimensions() }, [pageDimensions])
 
-  const [profiles, setProfiles] = useState<CurrentProfileData[]>([])
-  useEffect(() => {
-    const updateStateProfiles = async () => {
-      const publicProfiles: CurrentProfileData[] = await requestGetDeviceProfileData()
-      setProfiles(publicProfiles)
-    }
-    updateStateProfiles()
-  }, [])
+  // Profiles
+  const [profiles, setProfiles] = useState<CurrentDeviceProfileData[]>([])
+  const updateProfiles = async () => {
+    const result: GetCurrentDeviceProfilesDataResult = await requestGetDeviceProfileData()
+    if (!result.success) { setProfiles([]); return }
+    setProfiles(result.data)
+  }
+  useEffect(() => { updateProfiles() }, [])
 
+  // Cards
   const [cards, setCards] = useState<CardObject[]>([])
-  useEffect(() => {
+  const updateCards = () => {
     const cardObjects: CardObject[] = []
     for (const profile of profiles) {
       const cardObject: CardObject = {
@@ -60,19 +74,29 @@ export default function DeviceProfilesPage() {
       cardObjects.push(cardObject)
     }
     setCards(cardObjects)
-  }, [profiles])
-
-  const listContainerRef = useRef<HTMLDivElement>(null)
-  const [listContainerWidth, listContainerHeight] = useDimensions(listContainerRef)
-
-  // TEMPORARY
-  const cardListStyles: CardListStyles = {
-    containerDimensions: {
-      width: listContainerWidth,
-      height: listContainerHeight
-    },
-    space: 10
   }
+  useEffect(() => { updateCards() }, [profiles])
+
+  // Variable Styles
+  const variableStyles: VariableStyles = {
+    "--pageWidth": toPixelString(pageDimensions.width),
+    "--pageHeight": toPixelString(pageDimensions.height)
+  }
+
+  // Card List Styles
+  const [cardListStyles, setCardListStyles] = useState<CardListStyles>({
+    containerDimensions: zeroDimensions, space: 10
+  })
+  const updateCardListStyles = () => {
+    setCardListStyles({
+      containerDimensions: {
+        width: listContainerDimensions.width,
+        height: listContainerDimensions.height
+      },
+      space: 10
+    })
+  }
+  useEffect(() => { updateCardListStyles() }, [listContainerDimensions])
 
   const handleAddProfileClick = () => { navigate("/device/profile/register") }
 

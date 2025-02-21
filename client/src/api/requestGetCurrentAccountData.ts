@@ -46,8 +46,8 @@ export default async function requestGetCurrentAccountData(body: GetCurrentAccou
         result = { success: true, data: data.data }
         return result
       case "failure":
-        console.warn(data.message)
         console.error(failureMessage)
+        console.warn(data.message)
         result = { success: false }
         return result
       case "error": throw new Error(data.message)

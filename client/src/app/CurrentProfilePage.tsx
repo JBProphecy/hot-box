@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { useContext, useRef } from "react"
+import { useContext, useEffect, useRef } from "react"
 import localStyles from "./CurrentProfilePage.module.css"
 import useDimensions from "@/hooks/useDimensions"
 import { toPixelString, VariableStyles } from "@/utils/styles"
@@ -10,10 +10,11 @@ import { CurrentProfileContext, CurrentProfileContextType } from "@/context/Curr
 
 export default function CurrentProfilePage() {
   const pageRef = useRef<HTMLDivElement>(null)
-  const [pageWidth, pageHeight] = useDimensions(pageRef)
+  const pageDimensions = useDimensions(pageRef)
+  useEffect(() => { pageRef.current?.classList.add(localStyles.visible) }, [])
   const variableStyles: VariableStyles = {
-    "--pageWidth": toPixelString(pageWidth),
-    "--pageHeight": toPixelString(pageHeight)
+    "--pageWidth": toPixelString(pageDimensions.width),
+    "--pageHeight": toPixelString(pageDimensions.height)
   }
 
   try {

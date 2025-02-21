@@ -137,7 +137,6 @@ export default async function handleAddProfile(request: Request, response: Respo
     const body = helperResult.data as AddProfileValidBody
 
     // Get Device Token
-    logger.attempt("Getting Device Token")
     const deviceToken: string | undefined = getDeviceToken(request)
     if (typeof deviceToken === "undefined") {
       const serverMessage: string = "Device Token is Undefined"
@@ -150,11 +149,10 @@ export default async function handleAddProfile(request: Request, response: Respo
     logger.success("Successfully Retrieved Device Token")
 
     // Verify Device Token
-    logger.attempt("Verifying Device Token")
     const deviceTokenPayload: DeviceTokenPayload | "expired" | "invalid" = verifyDeviceToken(deviceToken)
     if (deviceTokenPayload === "expired") {
       const serverMessage: string = "Device Token is Expired"
-      const clientMessage: string = "Please Try Again"
+      const clientMessage: string = "Please Refresh the App"
       logger.warning(serverMessage)
       logger.failure(failureMessage)
       responseData = { type: "failure", message: clientMessage }
@@ -162,7 +160,7 @@ export default async function handleAddProfile(request: Request, response: Respo
     }
     if (deviceTokenPayload === "invalid") {
       const serverMessage: string = "Device Token is Invalid"
-      const clientMessage: string = "Please Try Again"
+      const clientMessage: string = "Please Refresh the App"
       logger.warning(serverMessage)
       logger.failure(failureMessage)
       responseData = { type: "failure", message: clientMessage }
@@ -209,7 +207,7 @@ export default async function handleAddProfile(request: Request, response: Respo
     // Register Device Profile
     const deviceProfile: DeviceProfile = await registerDeviceProfile(deviceTokenPayload.deviceID, profile.id)
 
-    // Generate Profile Tokens
+    // Process Profile Tokens
     const profileTokenPayload: ProfileTokenPayload = {
       deviceID: deviceProfile.deviceID,
       profileID: deviceProfile.profileID,
@@ -217,8 +215,6 @@ export default async function handleAddProfile(request: Request, response: Respo
     }
     const profileTokens: ProfileTokens = generateProfileTokens(profileTokenPayload)
     const profileTokenKeys: ProfileTokenKeys = generateProfileTokenKeys(profileTokenPayload.profileID)
-
-    // Set Profile Token Cookies
     setProfileAccessTokenCookie(response, profileTokenKeys.profileAccessTokenKey, profileTokens.profileAccessToken)
     setProfileRefreshTokenCookie(response, profileTokenKeys.profileRefreshTokenKey, profileTokens.profileRefreshToken)
 

@@ -45,13 +45,13 @@ export default async function requestSignInProfile(body: SignInProfileRawBody): 
         result = { success: true, profileID: data.profileID }
         return result
       case "failure":
-        console.warn(data.message)
         console.error(failureMessage)
+        console.warn(data.message)
         result = { success: false }
         return result
       case "invalid body":
-        for (const message of data.messages) { console.warn(message) }
         console.error(failureMessage)
+        for (const message of data.messages) { console.warn(message) }
         result = { success: false }
         return result
       case "error": throw new Error(data.message)

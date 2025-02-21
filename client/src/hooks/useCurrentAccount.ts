@@ -5,9 +5,9 @@ import useSessionStorage from "@/hooks/useSessionStorage"
 
 import { useEffect, useState } from "react"
 
-import { GetCurrentAccountDataRequestBody } from "shared/types/api/GetCurrentAccountDataTypes"
+import { GetCurrentAccountDataRawBody } from "shared/types/api/GetCurrentAccountDataTypes"
 import { CurrentAccountData } from "shared/types/data/private/CurrentAccountData"
-import requestGetCurrentAccountData from "@/api/requestGetCurrentAccountData"
+import requestGetCurrentAccountData, { GetCurrentAccountDataResult } from "@/api/requestGetCurrentAccountData"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -18,13 +18,15 @@ export default function useCurrentAccount() {
   useEffect(() => {
     const sendRequests = async () => {
       if (!id) { return }
-      const body: GetCurrentAccountDataRequestBody = { accountID: id }
-      const currentAccountData: CurrentAccountData | null = await requestGetCurrentAccountData(body)
-      if (currentAccountData === null) {
-        console.warn("Missing Account Data")
+      const body: GetCurrentAccountDataRawBody = { accountID: id }
+      const result: GetCurrentAccountDataResult = await requestGetCurrentAccountData(body)
+      if (!result.success) {
+        setID(null)
+        setName(null)
         return
       }
-      setName(currentAccountData.name)
+      const data: CurrentAccountData = result.data
+      setName(data.name)
     }
     sendRequests()
   }, [id])

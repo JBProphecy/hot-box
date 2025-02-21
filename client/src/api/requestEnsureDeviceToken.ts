@@ -39,8 +39,8 @@ export default async function requestEnsureDeviceToken(): Promise<EnsureDeviceTo
         result = { success: true }
         return result
       case "failure":
-        console.warn(data.message)
         console.error(failureMessage)
+        console.warn(data.message)
         result = { success: false }
         return result
       case "error": throw new Error(data.message)

@@ -8,9 +8,11 @@ import { processCardStyles } from "@/components/temp/card"
 
 import { CardStyles } from "@/components/temp/card"
 import { PublicProfile } from "shared/data/public/PublicProfileData"
-import { useContext, useEffect, useRef, useState } from "react"
+import { useContext, useRef, useState } from "react"
 import { CurrentProfileContext, CurrentProfileContextType } from "@/context/CurrentProfileContext"
 import { NavigateFunction, useNavigate } from "react-router-dom"
+
+import { useKeyable, UseKeyableProps } from "@/hooks/useKeyable"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -21,7 +23,7 @@ type ProfileCardProps = {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const ProfileCard = ({ cardStyles, profile }: ProfileCardProps) => {
+export const ProfileCard = (props: ProfileCardProps) => {
   const navigate: NavigateFunction = useNavigate()
   try {
     const currentProfile: CurrentProfileContextType | undefined = useContext(CurrentProfileContext)
@@ -30,61 +32,23 @@ export const ProfileCard = ({ cardStyles, profile }: ProfileCardProps) => {
     // References
     const cardReference = useRef<HTMLDivElement>(null)
 
-    // States
-    const [isKeyPressed, setIsKeyPressed] = useState<boolean>(false)
-    const [isButtonPressed, setIsButtonPressed] = useState<boolean>(false)
-    const [isStateLocked, setIsStateLocked] = useState<boolean>(false)
-
-    // Functions
-    const pressButton = () => { if (cardReference.current) {
-      cardReference.current.classList.add(localStyles.active)
-      setIsButtonPressed(true); lockState()
-    }}
-    const releaseButton = () => { if (cardReference.current) {
-      cardReference.current.classList.remove(localStyles.active)
-      setIsButtonPressed(false); lockState()
-    }}
-    const lockState = () => {
-      setIsStateLocked(true)
-      setTimeout(() => { setIsStateLocked(false) }, 200)
-    }
-
-    const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-      if (event.key === "Enter" && !isKeyPressed) {
-        setIsKeyPressed(true)
-        if (!isStateLocked) { pressButton() }
-      }
-    }
-    const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === "Enter") {
-        setIsKeyPressed(false)
-        if (isButtonPressed && !isStateLocked) { releaseButton(); handleSelection(); }
-      }
-    }
-
     // Selection Function
     const handleSelection = () => {
       console.log("Profile Selected")
-      currentProfile.setID(profile.id)
+      currentProfile.setID(props.profile.id)
       navigate("/current/profile")
     }
-
-    // Effects
-    useEffect(() => {
-      if (isKeyPressed) {
-        const timer = setTimeout(() => { releaseButton() }, 500)
-        return () => { clearTimeout(timer) }
-      }
-    }, [isKeyPressed])
-
-    useEffect(() => {
-      if (!isStateLocked && !isKeyPressed && isButtonPressed) { releaseButton(); handleSelection(); }
-    }, [isStateLocked])
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Keyable
+    const useKeyableProps: UseKeyableProps = {
+      element: cardReference,
+      activeClass: localStyles.active,
+      key: "Enter",
+      action: handleSelection
+    }
+    const { handleKeyDown, handleKeyUp } = useKeyable(useKeyableProps)
 
     // Variable Styles
-    const variableStyles: VariableStyles = processCardStyles(cardStyles)
+    const variableStyles: VariableStyles = processCardStyles(props.cardStyles)
 
     // HTML Content
     return (
@@ -99,10 +63,10 @@ export const ProfileCard = ({ cardStyles, profile }: ProfileCardProps) => {
           <img className={localStyles.image} src="/weed.jpg" />
           <div className={localStyles.details}>
             <div className={localStyles.line}>
-              <span className={localStyles.text}>{profile.username}</span>
+              <span className={localStyles.text}>{props.profile.username}</span>
             </div>
             <div className={localStyles.line}>
-              <span className={localStyles.text}>{profile.name}</span>
+              <span className={localStyles.text}>{props.profile.name}</span>
             </div>
             <div className={localStyles.line}>
               <span className={localStyles.text}>{"PROFILE"}</span>

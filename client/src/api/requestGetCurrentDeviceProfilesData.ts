@@ -25,7 +25,7 @@ let result: GetCurrentDeviceProfilesDataResult
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default async function requestGetDeviceProfileData(): Promise<GetCurrentDeviceProfilesDataResult> {
+export default async function requestGetCurrentDeviceProfileData(): Promise<GetCurrentDeviceProfilesDataResult> {
   try {
     console.log(attemptMessage)
 
@@ -45,8 +45,8 @@ export default async function requestGetDeviceProfileData(): Promise<GetCurrentD
         result = { success: true, data: data.data }
         return result
       case "failure":
-        console.warn(data.message)
         console.error(failureMessage)
+        console.warn(data.message)
         result = { success: false }
         return result
       case "error": throw new Error(data.message)
