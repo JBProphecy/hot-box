@@ -5,6 +5,8 @@ import localStyles from "./NavigationBar.module.css"
 import { NavigateFunction, useNavigate } from "react-router-dom"
 import { VariableStyles, toPixelString } from "@/utils/styles"
 
+import routes from "@/library/routes"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export type NavigationBarProps = {
@@ -14,9 +16,9 @@ export type NavigationBarProps = {
 export default function NavigationBar(props: NavigationBarProps) {
   // Navigation
   const navigate: NavigateFunction = useNavigate()
-  const loadDeviceProfilesPage = () => { navigate("/device/profiles") }
-  const loadCurrentAccountPage = () => { navigate("/current/account") }
-  const loadCurrentProfilePage = () => { navigate("/current/profile") }
+  const loadDeviceProfilesPage = () => { navigate(routes.deviceProfilesPage) }
+  const loadCurrentAccountPage = () => { navigate(routes.currentAccountPage) }
+  const loadCurrentProfilePage = () => { navigate(routes.currentProfilePage) }
 
   try {
     // Variable Styles

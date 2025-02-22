@@ -8,11 +8,13 @@ import { processCardStyles } from "@/components/temp/card"
 
 import { CardStyles } from "@/components/temp/card"
 import { PublicProfile } from "shared/data/public/PublicProfileData"
-import { useContext, useRef, useState } from "react"
+import { useContext, useRef } from "react"
 import { CurrentProfileContext, CurrentProfileContextType } from "@/context/CurrentProfileContext"
 import { NavigateFunction, useNavigate } from "react-router-dom"
 
 import { useKeyable, UseKeyableProps } from "@/hooks/useKeyable"
+
+import routes from "@/library/routes"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -36,7 +38,7 @@ export const ProfileCard = (props: ProfileCardProps) => {
     const handleSelection = () => {
       console.log("Profile Selected")
       currentProfile.setID(props.profile.id)
-      navigate("/current/profile")
+      navigate(routes.currentProfilePage)
     }
     // Keyable
     const useKeyableProps: UseKeyableProps = {

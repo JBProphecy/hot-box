@@ -1,7 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { useContext, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { NavigateFunction, useNavigate } from "react-router-dom"
+import routes from "@/library/routes"
 
 import localStyles from "./SignInProfilePage.module.css"
 import useDimensions from "@/hooks/useDimensions"
@@ -10,8 +11,7 @@ import { toPixelString, VariableStyles } from "@/utils/styles"
 import { CurrentProfileContext, CurrentProfileContextType } from "@/context/CurrentProfileContext"
 
 import { SignInProfileRawBody } from "shared/types/api/SignInProfileTypes"
-import requestSignInProfile from "@/api/requestSignInProfile"
-
+import requestSignInProfile, { SignInProfileResult } from "@/api/requestSignInProfile"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -20,10 +20,11 @@ export default function SignInProfilePage() {
   if (typeof currentProfile === "undefined") { throw new Error("Missing Current Profile Provider") }
   
   const pageRef = useRef<HTMLDivElement>(null)
-  const [pageWidth, pageHeight] = useDimensions(pageRef)
+  const pageDimensions = useDimensions(pageRef)
+  useEffect(() => { pageRef.current?.classList.add(localStyles.visible) }, [])
   const variableStyles: VariableStyles = {
-    "--pageWidth": toPixelString(pageWidth),
-    "--pageHeight": toPixelString(pageHeight)
+    "--pageWidth": toPixelString(pageDimensions.width),
+    "--pageHeight": toPixelString(pageDimensions.height)
   }
 
   const navigate: NavigateFunction = useNavigate()
@@ -60,11 +61,11 @@ export default function SignInProfilePage() {
     const isValidFormData: boolean = validateFormData(formData)
     if (!isValidFormData) { return }
 
-    const profileID: string | null = await requestSignInProfile(formData)
-    if (!profileID) { return }
-    currentProfile.setID(profileID)
+    const result: SignInProfileResult = await requestSignInProfile(formData)
+    if (!result.success) { return }
+    currentProfile.setID(result.profileID)
 
-    navigate("/current/profile")
+    navigate(routes.currentProfilePage)
   }
 
   try {

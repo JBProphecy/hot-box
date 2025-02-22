@@ -7,8 +7,8 @@ import { SignInProfileRawBody, SignInProfileResponseData } from "shared/types/ap
 
 // Messages
 const attemptMessage: string = "Signing Into Your Profile"
-const successMessage: string = "Success Signing Into Your Profile"
-const failureMessage: string = "Failure Signing Into Your Profile"
+const successMessage: string = "Successfully Signed Into Your Profile"
+const failureMessage: string = "Failed to Sign Into Your Profile"
 const errorMessage: string = "Error Signing Into Your Profile"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -28,7 +28,7 @@ export default async function requestSignInProfile(body: SignInProfileRawBody): 
   try {
     console.log(attemptMessage)
 
-    const response: Response = await fetch(`${clientConfig.API_URL}/profile/login`, {
+    const response: Response = await fetch(`${clientConfig.API_URL}/profiles/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

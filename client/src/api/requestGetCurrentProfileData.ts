@@ -29,7 +29,7 @@ export default async function requestGetCurrentProfileData(body: GetCurrentProfi
   try {
     console.log(attemptMessage)
     
-    const response: Response = await fetch(`${clientConfig.API_URL}/current/profile`, {
+    const response: Response = await fetch(`${clientConfig.API_URL}/profiles/current`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

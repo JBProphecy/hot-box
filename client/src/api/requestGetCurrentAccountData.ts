@@ -29,7 +29,7 @@ export default async function requestGetCurrentAccountData(body: GetCurrentAccou
   try {
     console.log(attemptMessage)
 
-    const response: Response = await fetch(`${clientConfig.API_URL}/current/account`, {
+    const response: Response = await fetch(`${clientConfig.API_URL}/accounts/current`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

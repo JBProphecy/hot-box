@@ -26,7 +26,7 @@ let responseData: EnsureDeviceTokenResponseData
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default function handleEnsureDeviceToken(request: Request, response: Response) {
+export default async function handleEnsureDeviceToken(request: Request, response: Response) {
   try {
     logger.attempt(attemptMessage)
 

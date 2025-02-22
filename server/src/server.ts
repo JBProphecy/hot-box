@@ -59,35 +59,32 @@ export const Main = () => {
     application.get("/api/hello", (req: Request, res: Response, next: NextFunction) => {
       res.status(200).json({ message: "hello world" })
     })
-    application.post("/api/ensureDeviceToken", async (request: Request, response: Response, next: NextFunction) => {
+    application.post("/api/device/ensure", async (request: Request, response: Response, next: NextFunction) => {
       await handleEnsureDeviceToken(request, response)
-    })
-    application.post("/api/createAccount", async (request: Request, response: Response, next: NextFunction) => {
-      await handleCreateAccount(request, response)
-    })
-    application.post("/api/createProfile", async (request: Request, response: Response, next: NextFunction) => {
-      await handleCreateProfile(request, response)
-    })
-    application.post("/api/addProfile", async (request: Request, response: Response, next: NextFunction) => {
-      await handleAddProfile(request, response)
     })
     application.get("/api/device/profiles", async (request: Request, response: Response, next: NextFunction) => {
       await handleGetDeviceProfileData(request, response)
     })
-    application.post("/api/current/account", async (request: Request, response: Response, next: NextFunction) => {
-      await handleGetCurrentAccountData(request, response)
+    application.post("/api/device/profiles/register", async (request: Request, response: Response, next: NextFunction) => {
+      await handleAddProfile(request, response)
     })
-    application.post("/api/current/profile", async (request: Request, response: Response, next: NextFunction) => {
-      await handleGetCurrentProfileData(request, response)
+    application.post("/api/accounts/register", async (request: Request, response: Response, next: NextFunction) => {
+      await handleCreateAccount(request, response)
     })
-    application.post("/api/account/login", async (request: Request, response: Response, next: NextFunction) => {
+    application.post("/api/accounts/login", async (request: Request, response: Response, next: NextFunction) => {
       await handleSignInAccount(request, response)
     })
-    application.post("/api/profile/login", async (request: Request, response: Response, next: NextFunction) => {
+    application.post("/api/accounts/current", async (request: Request, response: Response, next: NextFunction) => {
+      await handleGetCurrentAccountData(request, response)
+    })
+    application.post("/api/profiles/register", async (request: Request, response: Response, next: NextFunction) => {
+      await handleCreateProfile(request, response)
+    })
+    application.post("/api/profiles/login", async (request: Request, response: Response, next: NextFunction) => {
       await handleSignInProfile(request, response)
     })
-    application.post("/api/device/profile/register", async (request: Request, response: Response, next: NextFunction) => {
-      await handleAddProfile(request, response)
+    application.post("/api/profiles/current", async (request: Request, response: Response, next: NextFunction) => {
+      await handleGetCurrentProfileData(request, response)
     })
     // Route Not Found
     application.use(routeNotFound)

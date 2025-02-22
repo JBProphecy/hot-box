@@ -23,7 +23,7 @@ export default async function requestCreateProfile(body: CreateProfileRawBody): 
   try {
     console.log(attemptMessage)
 
-    const response: Response = await fetch(`${clientConfig.API_URL}/createProfile`, {
+    const response: Response = await fetch(`${clientConfig.API_URL}/profiles/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

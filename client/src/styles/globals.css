@@ -2,7 +2,7 @@
 
 :root {
 	--scale-line-height: 5/4;
-	--h6-line-height: calc(var(--scale-line-height) * 1rem);
+	--h6-line-height: calc(var(--scale-line-height) * 2rem);
 	--h5-line-height: calc(var(--scale-line-height) * var(--h6-line-height));
 	--h4-line-height: calc(var(--scale-line-height) * var(--h5-line-height));
 	--h3-line-height: calc(var(--scale-line-height) * var(--h4-line-height));
@@ -23,7 +23,7 @@
 * { box-sizing: border-box; }
 
 html {
-	font-size: 24px;
+	font-size: 8px;
 	font-family: calibri, sans-serif;
 	background-color: rgb(12, 12, 12);
 	color: rgb(192, 192, 192);

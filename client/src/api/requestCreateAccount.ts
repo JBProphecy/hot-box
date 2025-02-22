@@ -23,7 +23,7 @@ export default async function requestCreateAccount(body: CreateAccountRawBody): 
   try {
     console.log(attemptMessage)
 
-    const response: Response = await fetch(`${clientConfig.API_URL}/createAccount`, {
+    const response: Response = await fetch(`${clientConfig.API_URL}/accounts/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

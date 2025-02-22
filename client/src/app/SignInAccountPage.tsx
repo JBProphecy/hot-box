@@ -1,14 +1,14 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { useContext, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import localStyles from "./CreateAccountPage.module.css"
 import useDimensions from "@/hooks/useDimensions"
 import { toPixelString, VariableStyles } from "@/utils/styles"
-
-import { SignInAccountBody } from "shared/temp/SignInAccountResult"
-import requestSignInAccount from "@/api/requestSignInAccount"
+import { SignInAccountRawBody } from "shared/types/api/SignInAccountTypes"
+import requestSignInAccount, {SignInAccountResult } from "@/api/requestSignInAccount"
 
 import { NavigateFunction, useNavigate } from "react-router-dom"
+import routes from "@/library/routes"
 
 import { CurrentAccountContext, CurrentAccountContextType } from "@/context/CurrentAccountContext"
 
@@ -19,15 +19,16 @@ export default function SignInAccountPage() {
   if (typeof currentAccount === "undefined") { throw new Error("Missing Current Account Provider") }
   
   const pageRef = useRef<HTMLDivElement>(null)
-  const [pageWidth, pageHeight] = useDimensions(pageRef)
+  const pageDimensions = useDimensions(pageRef)
+  useEffect(() => { pageRef.current?.classList.add(localStyles.visible) }, [])
   const variableStyles: VariableStyles = {
-    "--pageWidth": toPixelString(pageWidth),
-    "--pageHeight": toPixelString(pageHeight)
+    "--pageWidth": toPixelString(pageDimensions.width),
+    "--pageHeight": toPixelString(pageDimensions.height)
   }
 
   const navigate: NavigateFunction = useNavigate()
 
-  const [formData, setFormData] = useState<SignInAccountBody>({
+  const [formData, setFormData] = useState<SignInAccountRawBody>({
     email: "",
     password: ""
   })
@@ -40,7 +41,7 @@ export default function SignInAccountPage() {
     }))
   }
 
-  const validateFormData = (data: SignInAccountBody): boolean => {
+  const validateFormData = (data: SignInAccountRawBody): boolean => {
     const { email, password } = data
     if (typeof email === "undefined") {
       console.warn("Email is Required")
@@ -59,11 +60,11 @@ export default function SignInAccountPage() {
     const isValidFormData: boolean = validateFormData(formData)
     if (!isValidFormData) { return }
 
-    const accountID: string | null = await requestSignInAccount(formData)
-    if (!accountID) { return }
-    currentAccount.setID(accountID)
+    const result: SignInAccountResult = await requestSignInAccount(formData)
+    if (!result.success) { return }
+    currentAccount.setID(result.accountID)
 
-    navigate("/current/account")
+    navigate(routes.currentAccountPage)
   }
 
   try {

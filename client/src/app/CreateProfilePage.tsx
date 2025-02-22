@@ -1,15 +1,19 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { useEffect, useRef, useState } from "react"
-import localStyles from "./CreateAccountPage.module.css"
+import { useContext, useEffect, useRef, useState } from "react"
+import localStyles from "./CreateProfilePage.module.css"
 import useDimensions from "@/hooks/useDimensions"
 import { toPixelString, VariableStyles } from "@/utils/styles"
-import { CreateAccountRawBody } from "shared/types/api/CreateAccountTypes"
-import requestCreateAccount from "@/api/requestCreateAccount"
+import { CreateProfileRawBody } from "shared/types/api/CreateProfileTypes"
+import requestCreateProfile from "@/api/requestCreateProfile"
+import { CurrentAccountContext, CurrentAccountContextType } from "@/context/CurrentAccountContext"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default function CreateAccountPage() {
+export default function CreateProfilePage() {
+  const currentAccount: CurrentAccountContextType | undefined = useContext(CurrentAccountContext)
+  if (typeof currentAccount === "undefined") { throw new Error("Missing Current Account Provider") }
+
   const pageRef = useRef<HTMLDivElement>(null)
   const pageDimensions = useDimensions(pageRef)
   useEffect(() => { pageRef.current?.classList.add(localStyles.visible) }, [])
@@ -18,9 +22,9 @@ export default function CreateAccountPage() {
     "--pageHeight": toPixelString(pageDimensions.height)
   }
 
-  const [formData, setFormData] = useState<CreateAccountRawBody>({
+  const [formData, setFormData] = useState<CreateProfileRawBody>({
     name: "",
-    email: "",
+    username: "",
     password: "",
   })
 
@@ -32,14 +36,14 @@ export default function CreateAccountPage() {
     }))
   }
 
-  const validateFormData = (data: CreateAccountRawBody): boolean => {
-    const { name, email, password } = data
+  const validateFormData = (data: CreateProfileRawBody): boolean => {
+    const { name, username, password } = data
     if (typeof name === "undefined") {
       console.warn("Name is Required")
       return false
     }
-    if (typeof email === "undefined") {
-      console.warn("Email is Required")
+    if (typeof username === "undefined") {
+      console.warn("Username is Required")
       return false
     }
     if (typeof password === "undefined") {
@@ -49,20 +53,26 @@ export default function CreateAccountPage() {
     return true
   }
 
-  const handleCreateAccount = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleCreateProfile = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     const isValidFormData: boolean = validateFormData(formData)
     if (!isValidFormData) { return }
+    const accountID: string | null = currentAccount.getID
+    if (accountID === null) {
+      console.warn("Missing Account ID")
+      return
+    }
+    formData.accountID = accountID
 
-    await requestCreateAccount(formData)
+    await requestCreateProfile(formData)
   }
 
   try {
     return (
       <div ref={pageRef} className={localStyles.page} style={variableStyles}>
         <div className={localStyles.formContainer}>
-          <form className={localStyles.form} onSubmit={handleCreateAccount}>
+          <form className={localStyles.form} onSubmit={handleCreateProfile}>
             <div className={localStyles.inputBox}>
               <label htmlFor="name">Name:</label>
               <input
@@ -79,12 +89,12 @@ export default function CreateAccountPage() {
               <span className={localStyles.validationText}>Blash</span>
             </div>
             <div className={localStyles.inputBox}>
-              <label htmlFor="email">Email:</label>
+              <label htmlFor="username">Username:</label>
               <input
-                id="email"
-                type="email"
-                name="email"
-                value={formData.email}
+                id="username"
+                type="text"
+                name="username"
+                value={formData.username}
                 onChange={handleInputChange}
                 required
               />
@@ -111,7 +121,7 @@ export default function CreateAccountPage() {
   }
   catch (object: unknown) {
     const error = object as Error
-    console.error("Error Loading Create Account Page")
+    console.error("Error Loading Create Profile Page")
     console.error(error)
     throw error
   }

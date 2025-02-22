@@ -28,7 +28,7 @@ export default async function requestSignInAccount(body: SignInAccountRawBody): 
   try {
     console.log(attemptMessage)
 
-    const response: Response = await fetch(`${clientConfig.API_URL}/account/login`, {
+    const response: Response = await fetch(`${clientConfig.API_URL}/accounts/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

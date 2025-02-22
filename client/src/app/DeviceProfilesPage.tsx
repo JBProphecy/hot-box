@@ -1,7 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { NavigateFunction, useNavigate } from "react-router-dom"
+import routes from "@/library/routes"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -98,7 +99,7 @@ export default function DeviceProfilesPage() {
   }
   useEffect(() => { updateCardListStyles() }, [listContainerDimensions])
 
-  const handleAddProfileClick = () => { navigate("/device/profile/register") }
+  const handleAddProfileClick = () => { navigate(routes.addProfilePage) }
 
   return (
     <div ref={pageRef} className={localStyles.page} style={variableStyles}>

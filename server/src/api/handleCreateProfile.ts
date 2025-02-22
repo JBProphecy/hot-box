@@ -213,7 +213,7 @@ export default async function handleCreateProfile(request: Request, response: Re
 
     // Check Username Availability
     const existingProfile: Profile | null = await getProfileByUsername(body.username)
-    if (existingProfile === null) {
+    if (existingProfile !== null) {
       const message: string = "Username is Already Registered"
       logger.warning(message)
       logger.failure(failureMessage)

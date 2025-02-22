@@ -20,16 +20,16 @@ import AppLayout from "@/app/AppLayout"
 
 import requestEnsureDeviceToken from "./api/requestEnsureDeviceToken"
 
+import DeviceProfilesPage from "@/app/DeviceProfilesPage"
+import AddProfilePage from "@/app/AddProfilePage"
+
 import CreateAccountPage from "@/app/CreateAccountPage"
 import SignInAccountPage from "@/app/SignInAccountPage"
 import CurrentAccountPage from "@/app/CurrentAccountPage"
 
-import DeviceProfilesPage from "@/app/DeviceProfilesPage"
-import AddProfilePage from "@/app/AddProfilePage"
+import CreateProfilePage from "@/app/CreateProfilePage"
 import SignInProfilePage from "@/app/SignInProfilePage"
 import CurrentProfilePage from "@/app/CurrentProfilePage"
-
-// create profile page
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -49,12 +49,15 @@ export default function App() {
               <AppLayout>
                 <Routes>
                   <Route path="/device/profiles" element={<DeviceProfilesPage />} />
-                  <Route path="/device/profile/register" element={<AddProfilePage />} />
-                  <Route path="/current/profile" element={<CurrentProfilePage />} />
-                  <Route path="/current/account" element={<CurrentAccountPage />} />
-                  <Route path="/account/register" element={<CreateAccountPage />} />
-                  <Route path="/account/login" element={<SignInAccountPage />} />
-                  <Route path="/profile/login" element={<SignInProfilePage />} />
+                  <Route path="/device/profiles/register" element={<AddProfilePage />} />
+
+                  <Route path="/accounts/register" element={<CreateAccountPage />} />
+                  <Route path="/accounts/login" element={<SignInAccountPage />} />
+                  <Route path="/accounts/current" element={<CurrentAccountPage />} />
+                  
+                  <Route path="/profiles/register" element={<CreateProfilePage />} />
+                  <Route path="/profiles/login" element={<SignInProfilePage />} />
+                  <Route path="/profiles/current" element={<CurrentProfilePage />} />
                 </Routes>
               </AppLayout>
             </FullScreenLayout>

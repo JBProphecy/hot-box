@@ -2,6 +2,7 @@
 
 import { useContext, useEffect, useRef, useState } from "react"
 import { NavigateFunction, useNavigate } from "react-router-dom"
+import routes from "@/library/routes"
 
 import localStyles from "./AddProfilePage.module.css"
 import useDimensions from "@/hooks/useDimensions"
@@ -23,7 +24,7 @@ export default function AddProfilePage() {
 
     // Navigation
     const navigate: NavigateFunction = useNavigate()
-    const handleGoBackClick = () => { navigate("/device/profiles") }
+    const handleGoBackClick = () => { navigate(routes.deviceProfilesPage) }
 
     // Page Reference
     const pageRef = useRef<HTMLDivElement>(null)
@@ -64,7 +65,7 @@ export default function AddProfilePage() {
       const result: AddProfileResult = await requestAddProfile(formData)
       if (!result.success) { return }
 
-      navigate("/device/profiles")
+      navigate(routes.deviceProfilesPage)
     }
 
     // Variable Styles

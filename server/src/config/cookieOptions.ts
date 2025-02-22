@@ -7,12 +7,19 @@ import { CookieOptions } from "express"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function generateCookieOptions(duration: number): CookieOptions {
+function generateCookieOptions(duration?: number): CookieOptions {
+  if (duration) {
+    return {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: duration * 1000,
+    }
+  }
   return {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    maxAge: duration * 1000,
   }
 }
 
@@ -31,8 +38,8 @@ function generateCookieOptionsConfig(): CookieOptionsConfig {
     const DEVICE_TOKEN_DURATION: number = 60 * 60 * 24 * 365 * 5 // 5 Years (seconds)
     const cookies: CookieOptionsConfig = {
       DEVICE_TOKEN_COOKIE_OPTIONS: generateCookieOptions(DEVICE_TOKEN_DURATION),
-      ACCOUNT_ACCESS_TOKEN_COOKIE_OPTIONS: generateCookieOptions(serverConfig.tokens.ACCOUNT_ACCESS_TOKEN_DURATION),
-      ACCOUNT_REFRESH_TOKEN_COOKIE_OPTIONS: generateCookieOptions(serverConfig.tokens.ACCOUNT_REFRESH_TOKEN_DURATION),
+      ACCOUNT_ACCESS_TOKEN_COOKIE_OPTIONS: generateCookieOptions(),
+      ACCOUNT_REFRESH_TOKEN_COOKIE_OPTIONS: generateCookieOptions(),
       PROFILE_ACCESS_TOKEN_COOKIE_OPTIONS: generateCookieOptions(serverConfig.tokens.PROFILE_ACCESS_TOKEN_DURATION),
       PROFILE_REFRESH_TOKEN_COOKIE_OPTIONS: generateCookieOptions(serverConfig.tokens.PROFILE_REFRESH_TOKEN_DURATION)
     }

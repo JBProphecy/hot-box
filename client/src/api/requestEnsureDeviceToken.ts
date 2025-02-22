@@ -23,7 +23,7 @@ export default async function requestEnsureDeviceToken(): Promise<EnsureDeviceTo
   try {
     console.log(attemptMessage)
 
-    const response: Response = await fetch(`${clientConfig.API_URL}/ensureDeviceToken`, {
+    const response: Response = await fetch(`${clientConfig.API_URL}/device/ensure`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
