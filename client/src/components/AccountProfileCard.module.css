@@ -1,0 +1,66 @@
+/**********************************************************************************************************************/
+
+.accountProfileCard {
+  --accountProfileCardWidth: "";
+  --accountProfileCardHeight: "";
+  --accountProfileCardBorderColor: rgb(200, 200, 200);
+  --accountProfileCardBorderWidth: 3px;
+  --accountProfileCardPadding: 6px;
+  --accountProfileCardSpace: 1rem;
+
+  --contentWidth: calc(var(--accountProfileCardWidth) - (2 * var(--accountProfileCardBorderWidth)) - (2 * var(--accountProfileCardPadding)));
+  --contentHeight: calc(var(--accountProfileCardHeight) - (2 * var(--accountProfileCardBorderWidth)) - (2 * var(--accountProfileCardPadding)));
+}
+
+.accountProfileCard {
+  width: var(--accountProfileCardWidth);
+  height: var(--accountProfileCardHeight);
+  padding: var(--accountProfileCardPadding);
+  border: var(--accountProfileCardBorderWidth) solid rgba(200, 200, 200, 0.6);
+  color: var(--accountProfileCardBorderColor);
+}
+
+/**********************************************************************************************************************/
+
+.content {
+  --imageContainerSize: var(--contentHeight);
+  --detailsContainerWidth: calc(var(--contentWidth) - var(--accountProfileCardSpace) - var(--imageContainerSize));
+  --detailsContainerHeight: var(--contentHeight);
+}
+
+.content {
+  width: var(--contentWidth);
+  height: var(--contentHeight);
+  display: flex;
+  gap: var(--accountProfileCardSpace);
+}
+
+/**********************************************************************************************************************/
+
+.imageContainer {
+  width: var(--imageContainerSize);
+  height: var(--imageContainerSize);
+  display: flex;
+}
+
+.imageContainer > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.detailsContainer {
+  width: var(--detailsContainerWidth);
+  height: var(--detailsContainerHeight);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.detailsContainer > span {
+  font-size: calc(1/5 * var(--detailsContainerHeight));
+  line-height: 125%;
+  font-weight: bold;
+}
+
+/**********************************************************************************************************************/

@@ -14,17 +14,18 @@ import routeNotFound from "@/middleware/routeNotFound"
 
 // Route Handlers
 import handleEnsureDeviceToken from "@/api/handleEnsureDeviceToken"
+import handleGetDeviceProfileData from "@/api/handleGetCurrentDeviceProfilesData"
+import handleAddProfile from "@/api/handleAddProfile"
+
 import handleCreateAccount from "@/api/handleCreateAccount"
 import handleSignInAccount from "@/api/handleSignInAccount"
+import handleGetCurrentAccountData from "@/api/handleGetCurrentAccountData"
 
 import handleCreateProfile from "@/api/handleCreateProfile"
-
-import handleGetDeviceProfileData from "@/api/handleGetCurrentDeviceProfilesData"
-import handleGetCurrentAccountData from "@/api/handleGetCurrentAccountData"
-import handleGetCurrentProfileData from "@/api/handleGetCurrentProfileData"
 import handleSignInProfile from "@/api/handleSignInProfile"
+import handleGetCurrentProfileData from "@/api/handleGetCurrentProfileData"
 
-import handleAddProfile from "@/api/handleAddProfile"
+import handleGetAccountProfilesData from "@/api/handleGetAccountProfilesData"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -85,6 +86,9 @@ export const Main = () => {
     })
     application.post("/api/profiles/current", async (request: Request, response: Response, next: NextFunction) => {
       await handleGetCurrentProfileData(request, response)
+    })
+    application.post("/api/current/account/profiles", async (request: Request, response: Response, next: NextFunction) => {
+      await handleGetAccountProfilesData(request, response)
     })
     // Route Not Found
     application.use(routeNotFound)

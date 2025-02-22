@@ -26,7 +26,7 @@ html {
 	font-size: 8px;
 	font-family: calibri, sans-serif;
 	background-color: rgb(12, 12, 12);
-	color: rgb(192, 192, 192);
+	color: rgb(200, 200, 200);
 }
 
 body { margin: 0; }
@@ -46,6 +46,6 @@ li { display: flex; } /* line-height matters for bullets and shit */
 
 a { text-decoration: none; }
 
-span, i { user-select: none; }
+span, i, img { user-select: none; }
 
 /**********************************************************************************************************************/

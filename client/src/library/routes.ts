@@ -21,7 +21,7 @@ const routes = {
   currentAccountPage: "/accounts/current",
   createProfilePage: "/profiles/register",
   signInProfilePage: "/profiles/login",
-  currentProfilePage: "/profiles/current"
+  currentProfilePage: "/profiles/current",
 }
 
 export default routes

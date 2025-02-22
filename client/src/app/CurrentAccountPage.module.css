@@ -5,22 +5,94 @@
   --pageHeight: "";
 }
 
-/**********************************************************************************************************************/
-
 .page {
   position: relative;
   width: 100%;
   height: 100%;
+  padding: 2rem;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  overflow: hidden;
   opacity: 0;
   transition: opacity 200ms ease-in-out;
 }
 
 .visible { opacity: 1; }
+
+/**********************************************************************************************************************/
+
+.page.loggedIn {
+  flex-direction: column;
+}
+
+.page.loggedOut {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+/**********************************************************************************************************************/
+
+.page > .content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.line {
+  border: 1px solid rgb(200, 200, 200);
+  margin: 1rem 0 2rem 0;
+  opacity: 0.2;
+}
+
+.space {
+  margin: 2rem 0;
+}
+
+.text {
+  font-weight: normal;
+  opacity: 0.8;
+}
+
+/**********************************************************************************************************************/
+
+.profileList {
+  width: 100%;
+  height: max-content;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem; /* temp */
+}
+
+.profileItem {
+  width: 100%;
+  height: max-content;
+  display: flex;
+  gap: 2rem;
+}
+
+.profileItem > .left {
+  height: 100px;
+  aspect-ratio: 1/1;
+}
+
+.profileItem > .left > img {
+  width: 100px;
+  height: 100px;
+}
+
+.profileItem > .right {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.profileItem > .right > span {
+  font-size: 2.5rem;
+  line-height: 125%;
+  font-weight: bold;
+}
 
 /**********************************************************************************************************************/

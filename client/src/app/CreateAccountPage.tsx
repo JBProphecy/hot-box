@@ -5,14 +5,23 @@ import localStyles from "./CreateAccountPage.module.css"
 import useDimensions from "@/hooks/useDimensions"
 import { toPixelString, VariableStyles } from "@/utils/styles"
 import { CreateAccountRawBody } from "shared/types/api/CreateAccountTypes"
-import requestCreateAccount from "@/api/requestCreateAccount"
+import requestCreateAccount, { CreateAccountResult } from "@/api/requestCreateAccount"
+
+import { NavigateFunction, useNavigate } from "react-router-dom"
+import routes from "@/library/routes"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export default function CreateAccountPage() {
+  // Navigation
+  const navigate: NavigateFunction = useNavigate()
+
+  // Page Stuff
   const pageRef = useRef<HTMLDivElement>(null)
   const pageDimensions = useDimensions(pageRef)
   useEffect(() => { pageRef.current?.classList.add(localStyles.visible) }, [])
+
+  // Variable Styles
   const variableStyles: VariableStyles = {
     "--pageWidth": toPixelString(pageDimensions.width),
     "--pageHeight": toPixelString(pageDimensions.height)
@@ -55,7 +64,9 @@ export default function CreateAccountPage() {
     const isValidFormData: boolean = validateFormData(formData)
     if (!isValidFormData) { return }
 
-    await requestCreateAccount(formData)
+    const result: CreateAccountResult = await requestCreateAccount(formData)
+    if (!result.success) { return }
+    navigate(routes.signInAccountPage )
   }
 
   try {
