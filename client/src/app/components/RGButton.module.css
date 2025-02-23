@@ -22,10 +22,11 @@
 
 .box {
   --totalHeight: "";
-  --borderWidth: 8px;
+  --borderWidth: 3px;
   --contentHeight: calc(var(--totalHeight) - (2 * var(--borderWidth)));
+  --borderRadius: 8px;
 
-  --fontSizeMultiplier: 7/10;
+  --fontSizeMultiplier: 3/5;
   --fontSize: calc(var(--fontSizeMultiplier) * var(--contentHeight));
   --font-weight: bold;
 
@@ -34,9 +35,9 @@
 
   --backgroundColor: rgb(0, 0, 0, 0.85);
   --opacity: 0.7;
-  --base1: rgba(255, 255, 0, var(--opacity));
-  --base2: rgba(255, 255, 0, var(--opacity));
-  --base3: rgba(255, 64, 64, var(--opacity));
+  --base1: rgba(128, 128, 128, var(--opacity));
+  --base2: rgba(128, 128, 128, var(--opacity));
+  --base3: rgba(128, 128, 128, var(--opacity));
   --color1: rgba(80, 255, 100, var(--opacity));
   --color2: rgba(0, 255, 200, var(--opacity));
   --color3: rgba(255, 0, 255, var(--opacity));
@@ -51,9 +52,9 @@
 
 .box {
   position: relative;
-  width: 100%;
+  max-width: max-content;
   height: 100%;
-  border-radius: 20px;
+  border-radius: var(--borderRadius);
   cursor: pointer;
   color: transparent;
 }
@@ -71,7 +72,7 @@
   --gradientColor1: var(--color1);
   --gradientColor2: var(--color2);
   --gradientColor3: var(--color3);
-  --backgroundColor: rgb(0, 0, 0, 0.85);
+  --backgroundColor: rgb(0, 0, 0, 0.8);
 }
 
 .box:hover, .box:focus {
@@ -105,6 +106,7 @@
 
 /* Text/Icon Layer */
 .layer:nth-of-type(3) {
+  position: relative;
   background: linear-gradient(var(--textGradientDirection), var(--gradientColor1), var(--gradientColor2), var(--gradientColor3));
   transition:
     --gradientColor1 100ms ease-in-out,

@@ -1,82 +1,19 @@
 /**********************************************************************************************************************/
 
 .form {
-  --inputBackgroundColor: rgb(8, 8, 8);
-  --inputBorderColor: rgb(48, 48, 48);
-  --inputTextColor: rgb(128, 128, 128);
-  --inputBorderRadius: 6px;
-  --inputBorderWidth: 2px;
-  --inputContentHeight: 5rem;
-  --inputHeight: calc(var(--inputContentHeight) + (2 * var(--inputBorderWidth)));
-  --inputFontSize: calc(1/2 * var(--inputContentHeight));
-  --inputHorizontalPadding: calc(1/4 * var(--inputContentHeight));
-}
-.form {
   width: 100%;
   height: max-content;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 4rem;
 }
 
-/**********************************************************************************************************************/
-
-.form > div {
+.buttons {
+  width: 100%;
+  height: 60px;
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.form > div:last-of-type {
-  flex-direction: row;
-  width: 100%;
-  height: 5rem;
-  gap: 2rem;
-  margin-top: 3rem;
-}
-
-.form > div > label {
-  font-size: var(--inputFontSize);
-  font-weight: bold;
-  padding: 0 var(--inputBorderWidth);
-}
-
-.form > div > input {
-  outline: 0;
-  width: 100%;
-  height: var(--inputHeight);
-  padding: 0 var(--inputHorizontalPadding);
-  border: var(--inputBorderWidth) solid var(--inputBorderColor);
-  background-color: var(--inputBackgroundColor);
-  border-radius: var(--inputBorderRadius);
-  color: var(--inputTextColor);
-  font-size: var(--inputFontSize);
-  font-weight: bold;
-  transition:
-    border-color 200ms ease-in-out,
-    color 200ms ease-in-out;
-}
-
-.form > div > input:focus {
-  --inputBorderColor: rgb(128, 128, 128);
-  --inputTextColor: rgb(200, 200, 200);
-}
-.form > div > input::placeholder {
-  color: rgb(48, 48, 48);
-}
-
-.form > div:last-of-type > input:hover {
-  cursor: pointer;
-  --inputBorderColor: rgb(128, 128, 128);
-  --inputTextColor: rgb(200, 200, 200)
-}
-.form > div:last-of-type > input:hover.active {
-  --inputBorderColor: rgb(32, 32, 32);
-  --inputTextColor: rgb(50, 50, 50);
-}
-.form > div:last-of-type > input.active {
-  --inputBorderColor: rgb(64, 64, 64);
-  --inputTextColor: rgb(100, 100, 100);
+  justify-content: flex-end;
+  gap: 3rem;
 }
 
 /**********************************************************************************************************************/

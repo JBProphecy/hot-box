@@ -10,9 +10,19 @@
   gap: 4rem;
 }
 
+.container {
+  width: 500px;
+  height: max-content;
+  display: flex;
+  flex-direction: column;
+  gap: 6rem;
+}
+
 .container1 {
   width: 80%;
   height: 20%;
+  display: flex;
+  justify-content: center;
 }
 
 .container2 {

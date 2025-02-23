@@ -11,8 +11,8 @@ import routes from "@/library/routes"
 import { CreateAccountRawBody } from "shared/types/api/CreateAccountTypes"
 import requestCreateAccount, { CreateAccountResult } from "@/api/requestCreateAccount"
 
-import useKeyable from "@/hooks/useKeyable"
-import useClickable from "@/hooks/useClickable"
+import RGButton from "@/app/components/RGButton"
+import FancyInput from "@/app/components/FancyInput"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -30,10 +30,6 @@ export default function CreateAccountForm() {
     // Navigation
     const navigate: NavigateFunction = useNavigate()
     const loadCurrentAccountPage = () => { navigate(routes.currentAccountPage) }
-
-    // Refs
-    const goBackButtonRef = useRef<HTMLInputElement>(null)
-    const createAccountButtonRef = useRef<HTMLInputElement>(null)
 
     // Form Data
     const [formData, setFormData] = useState<CreateAccountFormData>({
@@ -78,102 +74,59 @@ export default function CreateAccountForm() {
       navigate(routes.currentAccountPage)
     }
 
-    // Keyable
-    const { handleKeyDown: handleKeyDownBackButton, handleKeyUp: handleKeyUpBackButton } = useKeyable({
-      element: goBackButtonRef,
-      activeClass: styles.active,
-      key: "Enter",
-      action: loadCurrentAccountPage
-    })
-    const { handleKeyDown: handleKeyDownSubmitButton, handleKeyUp: handleKeyUpSubmitButton } = useKeyable({
-      element: createAccountButtonRef,
-      activeClass: styles.active,
-      key: "Enter",
-      action: handleCreateAccount
-    })
-
-    // Clickable
-    const { handleMouseDown: handleMouseDownBackButton, handleMouseUp: handleMouseUpBackButton } = useClickable({
-      element: goBackButtonRef,
-      activeClass: styles.active,
-      action: loadCurrentAccountPage
-    })
-    const { handleMouseDown: handleMouseDownSubmitButton, handleMouseUp: handleMouseUpSubmitButton } = useClickable({
-      element: createAccountButtonRef,
-      activeClass: styles.active,
-      action: handleCreateAccount
-    })
-
-
     // Return Content
     return (
       <form className={styles.form}>
-        <div>
-          <label htmlFor="name">Name:</label>
-          <input
-            id="name"
+        <FancyInput
+          height={60}
+          label="Name:"
+          id="name"
+          type="text"
+          name="name"
+          value={formData.name}
+          placeholder="Name"
+          handleChange={handleInputChange}
+        />
+        <FancyInput
+          height={60}
+          label="Email:"
+          id="email"
+          type="email"
+          name="email"
+          value={formData.email}
+          placeholder="Email"
+          handleChange={handleInputChange}
+        />
+        <FancyInput
+          height={60}
+          label="Set Password:"
+          id="set-password"
+          type="password"
+          name="setPassword"
+          value={formData.setPassword}
+          placeholder="Set Password"
+          handleChange={handleInputChange}
+        />
+        <FancyInput
+          height={60}
+          label="Confirm Password:"
+          id="confirm-password"
+          type="password"
+          name="confirmPassword"
+          value={formData.confirmPassword}
+          placeholder="Confirm Password"
+          handleChange={handleInputChange}
+        />
+        <div className={styles.buttons}>
+          <RGButton
             type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleInputChange}
-            placeholder="name"
-            required
+            text="Go Back"
+            action={loadCurrentAccountPage}
           />
-        </div>
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            id="email"
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleInputChange}
-            placeholder="email"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="set-password">Set Password:</label>
-          <input
-            id="set-password"
-            type="password"
-            name="setPassword"
-            value={formData.setPassword}
-            onChange={handleInputChange}
-            placeholder="set password"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="confirm-password">Confirm Password:</label>
-          <input
-            id="confirm-password"
-            type="password"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleInputChange}
-            placeholder="confirm password"
-            required
-          />
-        </div>
-        <div>
-          <input
-            ref={goBackButtonRef}
-            type="button"
-            value="Go Back"
-            onKeyDown={handleKeyDownBackButton}
-            onKeyUp={handleKeyUpBackButton}
-            onMouseDown={handleMouseDownBackButton}
-            onMouseUp={handleMouseUpBackButton}
-          />
-          <input
-            ref={createAccountButtonRef}
-            type="button"
-            value="Create Account"
-            onKeyDown={handleKeyDownSubmitButton}
-            onKeyUp={handleKeyUpSubmitButton}
-            onMouseDown={handleMouseDownSubmitButton}
-            onMouseUp={handleMouseUpSubmitButton}
+          <RGButton
+            type="text"
+            text="Create Account"
+            action={handleCreateAccount}
           />
         </div>
       </form>
