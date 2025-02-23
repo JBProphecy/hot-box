@@ -6,6 +6,7 @@ import { VariableStyles, toPixelString } from "@/utils/styles"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export type FancyInputProps = {
+  row?: boolean
   height: number
   label?: string
   id?: string
@@ -14,13 +15,15 @@ export type FancyInputProps = {
   value?: string
   placeholder?: string
   handleChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+  required?: boolean
 }
 
 export default function FancyInput(props: FancyInputProps) {
   try {
     // Variable Styles
     const variables: VariableStyles = {
-      "--totalHeight": toPixelString(props.height)
+      "--totalHeight": toPixelString(props.height),
+      "--flexDirection": props.row ? "row" : "column"
     }
 
     // Return Content
@@ -38,6 +41,7 @@ export default function FancyInput(props: FancyInputProps) {
             value={props.value}
             onChange={props.handleChange}
             placeholder={props.placeholder}
+            required={props.required}
           />
         </div>
       </div>

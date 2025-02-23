@@ -39,8 +39,10 @@
 /**********************************************************************************************************************/
 
 .box {
+  --flexDirection: "";
+
   --totalHeight: "";
-  --borderWidth: 2px;
+  --borderWidth: 3px;
   --contentHeight: calc(var(--totalHeight) - (2 * var(--borderWidth)));
   --borderRadius: 8px;
 
@@ -80,7 +82,7 @@
   width: 100%;
   height: max-content;
   display: flex;
-  flex-direction: column;
+  flex-direction: var(--flexDirection);
   gap: var(--horizontalPadding);
 }
 
@@ -98,7 +100,7 @@
 }
 
 .label {
-  width: max-content;
+  max-width: max-content;
   line-height: 100%;
   font-size: var(--fontSize);
   font-weight: var(--fontWeight);

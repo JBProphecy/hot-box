@@ -27,6 +27,9 @@ type CreateAccountFormData = {
 
 export default function CreateAccountForm() {
   try {
+    // Form Ref
+    const formRef = useRef<HTMLFormElement>(null)
+
     // Navigation
     const navigate: NavigateFunction = useNavigate()
     const loadCurrentAccountPage = () => { navigate(routes.currentAccountPage) }
@@ -50,6 +53,22 @@ export default function CreateAccountForm() {
 
     // Validate Form Data
     const validateFormData = () => {
+      if (!formData.name) {
+        console.warn("Name is Required")
+        return false
+      }
+      if (!formData.email) {
+        console.warn("Email is Required")
+        return false
+      }
+      if (!formData.setPassword) {
+        console.warn("Set Password is Required")
+        return false
+      }
+      if (!formData.confirmPassword) {
+        console.warn("Confirm Password is Required")
+        return false
+      }
       if (formData.setPassword !== formData.confirmPassword) {
         console.warn("Passwords Don't Match")
         return false
@@ -58,7 +77,9 @@ export default function CreateAccountForm() {
     }
 
     // Handle Create Account
-    const handleCreateAccount = async () => {
+    const handleCreateAccount = async (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault()
+
       const isValidFormData: boolean = validateFormData()
       if (!isValidFormData) {
         console.warn("Form Data is Invalid")
@@ -74,11 +95,14 @@ export default function CreateAccountForm() {
       navigate(routes.currentAccountPage)
     }
 
+    // Styles
+    const fieldHeight: number = 60
+
     // Return Content
     return (
-      <form className={styles.form}>
+      <form ref={formRef} onSubmit={handleCreateAccount} className={styles.form}>
         <FancyInput
-          height={60}
+          height={fieldHeight}
           label="Name:"
           id="name"
           type="text"
@@ -86,9 +110,10 @@ export default function CreateAccountForm() {
           value={formData.name}
           placeholder="Name"
           handleChange={handleInputChange}
+          required={true}
         />
         <FancyInput
-          height={60}
+          height={fieldHeight}
           label="Email:"
           id="email"
           type="email"
@@ -96,9 +121,10 @@ export default function CreateAccountForm() {
           value={formData.email}
           placeholder="Email"
           handleChange={handleInputChange}
+          required={true}
         />
         <FancyInput
-          height={60}
+          height={fieldHeight}
           label="Set Password:"
           id="set-password"
           type="password"
@@ -106,9 +132,10 @@ export default function CreateAccountForm() {
           value={formData.setPassword}
           placeholder="Set Password"
           handleChange={handleInputChange}
+          required={true}
         />
         <FancyInput
-          height={60}
+          height={fieldHeight}
           label="Confirm Password:"
           id="confirm-password"
           type="password"
@@ -116,6 +143,7 @@ export default function CreateAccountForm() {
           value={formData.confirmPassword}
           placeholder="Confirm Password"
           handleChange={handleInputChange}
+          required={true}
         />
         <div className={styles.buttons}>
           <RGButton
@@ -126,7 +154,7 @@ export default function CreateAccountForm() {
           <RGButton
             type="text"
             text="Create Account"
-            action={handleCreateAccount}
+            action={() => formRef.current?.requestSubmit()}
           />
         </div>
       </form>
