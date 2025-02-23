@@ -1,27 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/*
-export type RoutesType = {
-  deviceProfilesPage: string
-  addProfilePage: string
-  createAccountPage: string
-  signInAccountPage: string
-  currentAccountPage: string
-  createProfilePage: string
-  signInProfilePage: string
-  currentProfilePage: string
-}
-*/
-
 const routes = {
-  deviceProfilesPage: "/device/profiles",
-  addProfilePage: "/device/profiles/register",
-  createAccountPage: "/accounts/register",
-  signInAccountPage: "/accounts/login",
-  currentAccountPage: "/accounts/current",
-  createProfilePage: "/profiles/register",
-  signInProfilePage: "/profiles/login",
-  currentProfilePage: "/profiles/current",
+  deviceProfilesPage: "/profiles",
+  addProfilePage: "/profiles/add-profile",
+  createAccountPage: "/accounts/create-account",
+  currentAccountPage: "/accounts/current-account",
+  createProfilePage: "/accounts/current-account/create-profile",
+  currentProfilePage: "/profiles/current-profile",
 }
 
 export default routes

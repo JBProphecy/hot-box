@@ -1,6 +1,6 @@
 /**********************************************************************************************************************/
 
-.fullScreen { width: 100vw; height: 100vh; position: relative; }
+.rootLayout { width: 100vw; height: 100vh; position: relative; }
 
 .background { width: 100vw; height: 100vh; position: absolute; }
 .content { width: 100vw; height: 100vh; position: absolute; }

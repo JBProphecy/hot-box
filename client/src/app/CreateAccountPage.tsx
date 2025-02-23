@@ -66,7 +66,7 @@ export default function CreateAccountPage() {
 
     const result: CreateAccountResult = await requestCreateAccount(formData)
     if (!result.success) { return }
-    navigate(routes.signInAccountPage )
+    navigate(routes.currentAccountPage )
   }
 
   try {

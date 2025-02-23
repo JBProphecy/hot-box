@@ -7,10 +7,11 @@ import { toPixelString, VariableStyles } from "@/utils/styles"
 import { CurrentAccountContext, CurrentAccountContextType } from "@/context/CurrentAccountContext"
 
 import { AccountProfileData } from "shared/types/data/private/AccountProfileData"
-import { GetAccountProfilesRawBody } from "shared/types/api/GetAccountProfilesTypes"
 import requestGetAccountProfilesData, { GetAccountProfilesDataResult } from "@/api/requestGetAccountProfilesData"
 
 import AccountProfileCardList from "@/components/AccountProfileCardList"
+
+import SignInAccountPage from "@/pages/SignInAccountPage"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -23,15 +24,14 @@ export default function CurrentAccountPage() {
     // Page Reference Stuff
     const pageRef = useRef<HTMLDivElement>(null)
     const pageDimensions = useDimensions(pageRef)
-    useEffect(() => { pageRef.current?.classList.add(localStyles.visible) }, [])
+    useEffect(() => { setTimeout(() => { pageRef.current?.classList.add(localStyles.visible) }, 150) }, [])
 
     // Account Profiles Data
     const [accountProfilesData, setAccountProfilesData] = useState<AccountProfileData[]>([])
     const updateAccountProfilesData = async () => {
       const accountID: string | null = currentAccount.getID
       if (accountID === null) { return }
-      const body: GetAccountProfilesRawBody = { accountID: accountID }
-      const result: GetAccountProfilesDataResult = await requestGetAccountProfilesData(body)
+      const result: GetAccountProfilesDataResult = await requestGetAccountProfilesData(accountID)
       if (!result.success) { return }
       setAccountProfilesData(result.data)
     }
@@ -43,17 +43,12 @@ export default function CurrentAccountPage() {
       "--pageHeight": toPixelString(pageDimensions.height)
     }
 
-    // Styles
-    const loggedOutStyles = `
-      ${localStyles.page}
-      ${localStyles.loggedOut}
-    `
+    const loggedOutStyles: string = `${localStyles.content} ${localStyles.loggedOut}`
 
-    // Return Content
-    if (currentAccount.getID) {
+    function getLoggedInContent(currentAccount: CurrentAccountContextType) {
       return (
-        <div ref={pageRef} className={localStyles.page} style={variableStyles}>
-          <div className={localStyles.content}>
+        <div className={localStyles.page} style={variableStyles} ref={pageRef}>
+          <div className={localStyles.content + " " + localStyles.loggedIn}>
             <h2>Account Details</h2>
             <div className={localStyles.line} />
             <h4>Account ID:  <span className={localStyles.text}>{currentAccount.getID}</span></h4>
@@ -62,18 +57,28 @@ export default function CurrentAccountPage() {
             <h2>Linked Profiles</h2>
             <div className={localStyles.line} />
             <AccountProfileCardList accountProfilesData={accountProfilesData} />
+            <div className={localStyles.space} />
+            <h2>Settings</h2>
+            <div className={localStyles.line} />
           </div>
         </div>
       )
     }
-    else {
+
+    function getLoggedOutContent() {
       return (
-        <div ref={pageRef} className={loggedOutStyles} style={variableStyles}>
-          <h1>Current Account Page</h1>
-          <h2>You are Logged Out</h2>
+        <div className={localStyles.page} style={variableStyles} ref={pageRef}>
+          <div className={loggedOutStyles}>
+            <SignInAccountPage />
+          </div>
         </div>
       )
     }
+
+    // Return Content
+    return (
+      currentAccount.getID ? getLoggedInContent(currentAccount) : getLoggedOutContent()
+    )
   }
   catch (object: unknown) {
     const error = object as Error

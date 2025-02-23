@@ -1,0 +1,133 @@
+/**********************************************************************************************************************/
+
+@property --gradientColor1 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --gradientColor2 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --gradientColor3 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+
+/**********************************************************************************************************************/
+
+.box {
+  --totalHeight: "";
+  --borderWidth: 8px;
+  --contentHeight: calc(var(--totalHeight) - (2 * var(--borderWidth)));
+
+  --fontSizeMultiplier: 7/10;
+  --fontSize: calc(var(--fontSizeMultiplier) * var(--contentHeight));
+  --font-weight: bold;
+
+  --horizontalPaddingMultiplier: calc(1/2 * (1 - var(--fontSizeMultiplier)));
+  --horizontalPadding: calc(var(--horizontalPaddingMultiplier) * var(--contentHeight));
+
+  --backgroundColor: rgb(0, 0, 0, 0.85);
+  --opacity: 0.7;
+  --base1: rgba(255, 255, 0, var(--opacity));
+  --base2: rgba(255, 255, 0, var(--opacity));
+  --base3: rgba(255, 64, 64, var(--opacity));
+  --color1: rgba(80, 255, 100, var(--opacity));
+  --color2: rgba(0, 255, 200, var(--opacity));
+  --color3: rgba(255, 0, 255, var(--opacity));
+  --borderGradientDirection: 135deg;
+  --textGradientDirection: 135deg;
+  --gradientColor1: var(--base1);
+  --gradientColor2: var(--base2);
+  --gradientColor3: var(--base3);
+}
+
+/**********************************************************************************************************************/
+
+.box {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  cursor: pointer;
+  color: transparent;
+}
+
+.layer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+}
+
+/**********************************************************************************************************************/
+
+.box:hover, .box:focus, .box.active {
+  --gradientColor1: var(--color1);
+  --gradientColor2: var(--color2);
+  --gradientColor3: var(--color3);
+  --backgroundColor: rgb(0, 0, 0, 0.85);
+}
+
+.box:hover, .box:focus {
+  --opacity: 1;
+}
+.box.active:hover {
+  --opacity: 0.2;
+}
+.box.active {
+  --opacity: 0.4;
+}
+
+/**********************************************************************************************************************/
+
+/* Background Border Layer */
+.layer:nth-of-type(1) {
+  background: linear-gradient(var(--borderGradientDirection), var(--gradientColor1), var(--gradientColor2), var(--gradientColor3));
+  transition:
+    --gradientColor1 100ms ease-in-out,
+    --gradientColor2 200ms ease-in-out,
+    --gradientColor3 300ms ease-in-out;
+}
+
+/* Content Background Layer */
+.layer:nth-of-type(2) {
+  background-color: var(--backgroundColor);
+  transition: background-color 100ms ease-in-out;
+  background-clip: padding-box;
+  border: var(--borderWidth) solid transparent;
+}
+
+/* Text/Icon Layer */
+.layer:nth-of-type(3) {
+  background: linear-gradient(var(--textGradientDirection), var(--gradientColor1), var(--gradientColor2), var(--gradientColor3));
+  transition:
+    --gradientColor1 100ms ease-in-out,
+    --gradientColor2 200ms ease-in-out,
+    --gradientColor3 300ms ease-in-out;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: var(--borderWidth) solid transparent;
+  padding: 0 var(--horizontalPadding);
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+.layer:nth-of-type(3) > span, .layer:nth-of-type(3) > i  {
+  font-size: var(--fontSize);
+  font-weight: var(--font-weight);
+  line-height: 100%;
+  user-select: none;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/**********************************************************************************************************************/

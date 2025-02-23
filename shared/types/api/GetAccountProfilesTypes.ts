@@ -4,31 +4,12 @@ import { AccountProfileData } from "shared/types/data/private/AccountProfileData
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export type GetAccountProfilesRawBody = {
-  accountID?: string
-}
-
-export type GetAccountProfilesValidBody = {
-  accountID: string
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 export type GetAccountProfilesResponseData = {
   type: "success"
   data: AccountProfileData[]
 } | {
   type: "failure" | "error"
   message: string
-}
-
-export type GetAccountProfilesHelperResult = {
-  respond: true
-  status: number
-  data: GetAccountProfilesResponseData
-} | {
-  respond: false
-  data?: unknown
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -4,7 +4,9 @@ import styles from "./AccountProfileCardList.module.css"
 import { AccountProfileData } from "shared/types/data/private/AccountProfileData"
 import AccountProfileCard, { AccountProfileCardProps } from "./AccountProfileCard"
 import useDimensions, { Dimensions } from "@/hooks/useDimensions"
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
+
+import CreateProfileCard from "./CreateProfileCard"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -26,6 +28,9 @@ export default function AccountProfileCardList(props: AccountProfileCardListProp
               <AccountProfileCard accountProfileData={accountProfileData} width={dimensions.width} height={100} />
             </li>
           ))}
+          <li key={"create-account"}>
+            <CreateProfileCard width={dimensions.width} height={100} />
+          </li>
         </ul>
       </div>
     )

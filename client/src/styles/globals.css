@@ -21,6 +21,7 @@
 /**********************************************************************************************************************/
 
 * { box-sizing: border-box; }
+*:focus { outline: 0; }
 
 html {
 	font-size: 8px;
@@ -28,6 +29,8 @@ html {
 	background-color: rgb(12, 12, 12);
 	color: rgb(200, 200, 200);
 }
+
+input { font-family: calibri, sans-serif; }
 
 body { margin: 0; }
 
@@ -38,7 +41,8 @@ h4 { line-height: var(--h4-line-height); font-size: var(--h4-font-size) }
 h5 { line-height: var(--h5-line-height); font-size: var(--h5-font-size) }
 h6 { line-height: var(--h6-line-height); font-size: var(--h6-font-size) }
 
-h1, h2, h3, h4, h5, h6, p { margin: 0; user-select: none; }
+h1, h2, h3, h4, h5, h6, p { margin: 0; user-select: none; overflow: hidden; text-overflow: ellipsis;}
+span { overflow: hidden; }
 
 ol, ul { margin: 0; padding: 0; list-style-type: none; }
 

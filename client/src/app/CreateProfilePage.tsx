@@ -5,14 +5,20 @@ import localStyles from "./CreateProfilePage.module.css"
 import useDimensions from "@/hooks/useDimensions"
 import { toPixelString, VariableStyles } from "@/utils/styles"
 import { CreateProfileRawBody } from "shared/types/api/CreateProfileTypes"
-import requestCreateProfile from "@/api/requestCreateProfile"
+import requestCreateProfile, { CreateProfileResult } from "@/api/requestCreateProfile"
 import { CurrentAccountContext, CurrentAccountContextType } from "@/context/CurrentAccountContext"
+
+import { NavigateFunction, useNavigate } from "react-router-dom"
+import routes from "@/library/routes"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export default function CreateProfilePage() {
   const currentAccount: CurrentAccountContextType | undefined = useContext(CurrentAccountContext)
   if (typeof currentAccount === "undefined") { throw new Error("Missing Current Account Provider") }
+
+  // Navigation
+  const navigate: NavigateFunction = useNavigate()
 
   const pageRef = useRef<HTMLDivElement>(null)
   const pageDimensions = useDimensions(pageRef)
@@ -65,7 +71,9 @@ export default function CreateProfilePage() {
     }
     formData.accountID = accountID
 
-    await requestCreateProfile(formData)
+    const result: CreateProfileResult = await requestCreateProfile(formData)
+    if (!result.success) { return }
+    navigate(routes.currentAccountPage)
   }
 
   try {
@@ -112,7 +120,7 @@ export default function CreateProfilePage() {
             </div>
             <div>
               <input type="submit" value="Submit" />
-              <input type="button" value="Go Back" />
+              <input type="button" value="Go Back" onClick={() => {navigate(routes.currentAccountPage)}}/>
             </div>
           </form>
         </div>

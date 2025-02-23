@@ -13,17 +13,18 @@
   display: flex;
   opacity: 0;
   transition: opacity 200ms ease-in-out;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .visible { opacity: 1; }
 
 /**********************************************************************************************************************/
 
-.page.loggedIn {
-  flex-direction: column;
-}
-
-.page.loggedOut {
+.content.loggedOut {
+  width: 100%;
+  height: 100%;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -33,12 +34,16 @@
 
 /**********************************************************************************************************************/
 
-.page > .content {
+.content.loggedIn {
   width: 100%;
-  height: 100%;
+  height: max-content;
   display: flex;
   flex-direction: column;
 }
+
+.page::-webkit-scrollbar { background: transparent; }
+.page::-webkit-scrollbar-track { background: linear-gradient(rgb(24, 24, 24), rgb(8, 8, 8)); }
+.page::-webkit-scrollbar-thumb { background: linear-gradient(rgb(24, 24, 24), gray, rgb(8, 8, 8)); }
 
 .line {
   border: 1px solid rgb(200, 200, 200);

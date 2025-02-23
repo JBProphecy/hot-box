@@ -2,7 +2,7 @@
 
 import clientConfig from "@/config/env"
 import { AccountProfileData } from "shared/types/data/private/AccountProfileData"
-import { GetAccountProfilesRawBody, GetAccountProfilesResponseData } from "shared/types/api/GetAccountProfilesTypes"
+import { GetAccountProfilesResponseData } from "shared/types/api/GetAccountProfilesTypes"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -25,17 +25,17 @@ let result: GetAccountProfilesDataResult
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default async function requestGetAccountProfilesData(body: GetAccountProfilesRawBody): Promise<GetAccountProfilesDataResult> {
+export default async function requestGetAccountProfilesData(accountID: string): Promise<GetAccountProfilesDataResult> {
   try {
     console.log(attemptMessage)
 
     const response: Response = await fetch(`${clientConfig.API_URL}/current/account/profiles`, {
-      method: "POST",
+      method: "GET",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "X-Account-ID": accountID
       },
-      credentials: "include",
-      body: JSON.stringify(body)
+      credentials: "include"
     })
 
     const data: GetAccountProfilesResponseData = await response.json()

@@ -1,8 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import { useEffect } from "react"
-
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import { createBrowserRouter, createRoutesFromElements, Navigate, RouterProvider, Route } from "react-router-dom"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -13,55 +12,66 @@ import CurrentProfileProvider from "@/context/CurrentProfileProvider"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import FullScreenLayout from "@/app/FullScreenLayout"
-import AppLayout from "@/app/AppLayout"
+// Layouts
+
+import RootLayout from "@/layouts/RootLayout"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// Pages
+
+import DevPage from "@/app/test/DevPage"
+
 import requestEnsureDeviceToken from "./api/requestEnsureDeviceToken"
+
+import CurrentAccountPage from "@/app/CurrentAccountPage"
+import CreateAccountPage from "@/pages/CreateAccountPage"
 
 import DeviceProfilesPage from "@/app/DeviceProfilesPage"
 import AddProfilePage from "@/app/AddProfilePage"
 
-import CreateAccountPage from "@/app/CreateAccountPage"
-import SignInAccountPage from "@/app/SignInAccountPage"
-import CurrentAccountPage from "@/app/CurrentAccountPage"
-
-import CreateProfilePage from "@/app/CreateProfilePage"
-import SignInProfilePage from "@/app/SignInProfilePage"
 import CurrentProfilePage from "@/app/CurrentProfilePage"
+import CreateProfilePage from "@/app/CreateProfilePage"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Router
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/" element={<RootLayout />}>
+      <Route path="test" element={<DevPage />} />
+      <Route path="accounts">
+        <Route index element={<Navigate to={"current-account"} />} />
+        <Route path="create-account" element={<CreateAccountPage />} />
+        <Route path="current-account">
+          <Route index element={<CurrentAccountPage />} />
+          <Route path="create-profile" element={<CreateProfilePage />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/accounts/current-account" />} />
+      </Route>
+      <Route path="profiles">
+        <Route index element={<DeviceProfilesPage />} />
+        <Route path="add-profile" element={<AddProfilePage />} />
+        <Route path="current-profile">
+          <Route index element={<CurrentProfilePage />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/profiles" />} />
+      </Route>
+    </Route>
+  )
+)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export default function App() {
-  useEffect(() => {
-    const sendRequests = async () => {
-      await requestEnsureDeviceToken()
-    }
-    sendRequests()
-  }, [])
+  useEffect(() => { requestEnsureDeviceToken() }, [])
+
   try {
     return (
       <CurrentAccountProvider>
         <CurrentProfileProvider>
-          <Router>
-            <FullScreenLayout>
-              <AppLayout>
-                <Routes>
-                  <Route path="/device/profiles" element={<DeviceProfilesPage />} />
-                  <Route path="/device/profiles/register" element={<AddProfilePage />} />
-
-                  <Route path="/accounts/register" element={<CreateAccountPage />} />
-                  <Route path="/accounts/login" element={<SignInAccountPage />} />
-                  <Route path="/accounts/current" element={<CurrentAccountPage />} />
-                  
-                  <Route path="/profiles/register" element={<CreateProfilePage />} />
-                  <Route path="/profiles/login" element={<SignInProfilePage />} />
-                  <Route path="/profiles/current" element={<CurrentProfilePage />} />
-                </Routes>
-              </AppLayout>
-            </FullScreenLayout>
-          </Router>
+          <RouterProvider router={router} />
         </CurrentProfileProvider>
       </CurrentAccountProvider>
     )

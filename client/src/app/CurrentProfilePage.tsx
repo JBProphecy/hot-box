@@ -6,6 +6,8 @@ import useDimensions from "@/hooks/useDimensions"
 import { toPixelString, VariableStyles } from "@/utils/styles"
 import { CurrentProfileContext, CurrentProfileContextType } from "@/context/CurrentProfileContext"
 
+import SignInProfilePage from "@/app/SignInProfilePage"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export default function CurrentProfilePage() {
@@ -33,8 +35,7 @@ export default function CurrentProfilePage() {
     else {
       return (
         <div ref={pageRef} className={localStyles.page} style={variableStyles}>
-          <h1>Current Profile Page</h1>
-          <h2>You are Logged Out</h2>
+          <SignInProfilePage />
         </div>
       )
     }

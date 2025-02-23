@@ -87,7 +87,7 @@ export const Main = () => {
     application.post("/api/profiles/current", async (request: Request, response: Response, next: NextFunction) => {
       await handleGetCurrentProfileData(request, response)
     })
-    application.post("/api/current/account/profiles", async (request: Request, response: Response, next: NextFunction) => {
+    application.get("/api/current/account/profiles", async (request: Request, response: Response, next: NextFunction) => {
       await handleGetAccountProfilesData(request, response)
     })
     // Route Not Found

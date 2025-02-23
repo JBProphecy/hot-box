@@ -3,10 +3,7 @@
 import logger from "@/library/logger"
 
 import { Request, Response } from "express"
-import {
-  GetAccountProfilesRawBody, GetAccountProfilesValidBody,
-  GetAccountProfilesResponseData, GetAccountProfilesHelperResult
-} from "shared/types/api/GetAccountProfilesTypes"
+import { GetAccountProfilesResponseData } from "shared/types/api/GetAccountProfilesTypes"
 
 import AccountTokenKeys from "@/types/account-token/AccountTokenKeys"
 import generateAccountTokenKeys from "@/utils/account-token/generateAccountTokenKeys"
@@ -29,33 +26,6 @@ const clientErrorMessage: string = "Server Error"
 
 // Helper Objects
 let responseData: GetAccountProfilesResponseData
-let helperResult: GetAccountProfilesHelperResult
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function validateBody(body: GetAccountProfilesRawBody): GetAccountProfilesHelperResult {
-  try {
-    if (typeof body.accountID === "undefined") {
-      const serverMessage: string = "Account ID is Undefined"
-      const clientMessage: string = "Account ID is Required"
-      logger.warning(serverMessage)
-      logger.failure(failureMessage)
-      responseData = { type: "failure", message: clientMessage }
-      helperResult = { respond: true, status: 400, data: responseData }
-      return helperResult
-    }
-    const validBody = body as GetAccountProfilesValidBody
-    helperResult = { respond: false, data: validBody }
-    return helperResult
-  }
-  catch (object: unknown) {
-    const error = object as Error
-    logger.failure(serverErrorMessage)
-    logger.error(error)
-    logger.trace(error)
-    throw error
-  }
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -63,13 +33,20 @@ export default async function handleGetAccountProfilesData(request: Request, res
   try {
     logger.attempt(attemptMessage)
 
-    // Validate Body
-    helperResult = validateBody(request.body)
-    if (helperResult.respond) { return response.status(helperResult.status).json(helperResult.data) }
-    const body = helperResult.data as GetAccountProfilesValidBody
+    // Get Account ID
+    const accountID = request.headers["x-account-id"]
+    if (typeof accountID === "undefined") {
+      const serverMessage: string = "X-Account-ID is Undefined"
+      const clientMessage: string = "Please Sign Into Your Account"
+      logger.warning(serverMessage)
+      logger.failure(failureMessage)
+      responseData = { type: "failure", message: clientMessage }
+      return response.status(400).json(responseData)
+    }
+    if (Array.isArray(accountID)) { throw new Error("X-Account-ID has been Defined Multiple Times") }
 
     // Get Account Access Token
-    const accountTokenKeys: AccountTokenKeys = generateAccountTokenKeys(body.accountID)
+    const accountTokenKeys: AccountTokenKeys = generateAccountTokenKeys(accountID)
     const { accountAccessTokenKey, accountRefreshTokenKey } = accountTokenKeys
     const accountAccessToken: string | undefined = getAccountAccessToken(request, accountAccessTokenKey)
     if (typeof accountAccessToken === "undefined") {
@@ -103,7 +80,7 @@ export default async function handleGetAccountProfilesData(request: Request, res
     logger.success("Account Access Token is Valid")
 
     // Get Account Profiles Data
-    const accountProfilesData: AccountProfileData[] = await getAccountProfilesData(body.accountID)
+    const accountProfilesData: AccountProfileData[] = await getAccountProfilesData(accountID)
 
     // Return Successful Response
     logger.success(successMessage)

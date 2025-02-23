@@ -1,0 +1,27 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import styles from "./SignInAccountPage.module.css"
+import SignInAccountForm from "@/pages/SignInAccountForm"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export default function SignInAccountPage() {
+  try {
+    // Return Content
+    return (
+      <div className={styles.page}>
+        <div className={styles.formContainer}>
+          <SignInAccountForm />
+        </div>
+      </div>
+    )
+  }
+  catch (object: unknown) {
+    const error = object as Error
+    console.error("Error Loading Sign In Account Page")
+    console.error(error)
+    throw error
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

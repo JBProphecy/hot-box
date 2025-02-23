@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { useEffect, useState } from "react"
+import { useLayoutEffect, useState } from "react"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -16,18 +16,20 @@ export const zeroDimensions: Dimensions = { width: 0, height: 0 }
 export default function useDimensions(element: React.RefObject<HTMLElement>) {
   const [dimensions, setDimensions] = useState<Dimensions>({ width: 0, height: 0 })
 
-  const updateDimensions = () => {
+  useLayoutEffect(() => {
     if (element.current === null) { console.warn("Missing Element Reference"); return }
     setDimensions({
       width: element.current.offsetWidth,
       height: element.current.offsetHeight
     })
-  }
-
-  useEffect(() => {
-    updateDimensions()
-    window.addEventListener("resize", updateDimensions)
-    return () => { window.removeEventListener("resize", updateDimensions) }
+    const observer = new ResizeObserver(() => {
+      setDimensions({
+        width: element.current!.offsetWidth,
+        height: element.current!.offsetHeight
+      })
+    })
+    observer.observe(element.current)
+    return () => { observer.disconnect() }
   }, [])
 
   return dimensions

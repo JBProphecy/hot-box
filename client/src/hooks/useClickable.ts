@@ -4,17 +4,14 @@ import { useEffect, useState } from "react"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export type UseKeyableProps = {
+export type UseClickableProps = {
   element: React.RefObject<HTMLElement>,
   activeClass: string,
-  key: string,
   action: Function
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export default function useKeyable(props: UseKeyableProps) {
-  const [isKeyPressed, setIsKeyPressed] = useState<boolean>(false)
+export default function useClickable(props: UseClickableProps) {
+  const [isMousePressed, setIsMousePressed] = useState<boolean>(false)
   const [isButtonPressed, setIsButtonPressed] = useState<boolean>(false)
   const [isStateLocked, setIsStateLocked] = useState<boolean>(false)
 
@@ -31,31 +28,29 @@ export default function useKeyable(props: UseKeyableProps) {
     setTimeout(() => { setIsStateLocked(false) }, 300)
   }
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
-    if (event.key === props.key && !isKeyPressed) {
-      setIsKeyPressed(true)
+  const handleMouseDown = () => {
+    if (!isMousePressed) {
+      setIsMousePressed(true)
       if (!isStateLocked) { pressButton() }
     }
   }
-  const handleKeyUp = (event: React.KeyboardEvent<HTMLElement>) => {
-    if (event.key === props.key) {
-      setIsKeyPressed(false)
-      if (isButtonPressed && !isStateLocked) { releaseButton(); props.action() }
-    }
+  const handleMouseUp = () => {
+    setIsMousePressed(false)
+    if (isButtonPressed && !isStateLocked) { releaseButton(); props.action() }
   }
 
   useEffect(() => {
-    if (isKeyPressed) {
+    if (isMousePressed) {
       const timer = setTimeout(() => { releaseButton() }, 500)
       return () => { clearTimeout(timer) }
     }
-  }, [isKeyPressed])
+  }, [isMousePressed])
 
   useEffect(() => {
-    if (!isStateLocked && !isKeyPressed && isButtonPressed) { releaseButton(); props.action() }
+    if (!isStateLocked && !isMousePressed && isButtonPressed) { releaseButton(); props.action() }
   }, [isStateLocked])
 
-  return { handleKeyDown, handleKeyUp }
+  return { handleMouseDown, handleMouseUp }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

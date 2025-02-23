@@ -12,7 +12,7 @@ import { useContext, useRef } from "react"
 import { CurrentProfileContext, CurrentProfileContextType } from "@/context/CurrentProfileContext"
 import { NavigateFunction, useNavigate } from "react-router-dom"
 
-import { useKeyable, UseKeyableProps } from "@/hooks/useKeyable"
+import useKeyable from "@/hooks/useKeyable"
 
 import routes from "@/library/routes"
 

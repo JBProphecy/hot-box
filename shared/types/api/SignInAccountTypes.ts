@@ -1,13 +1,11 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export type SignInAccountRawBody = {
-  name?: string
   email?: string
   password?: string
 }
 
 export type SignInAccountValidBody = {
-  name: string,
   email: string,
   password: string
 }

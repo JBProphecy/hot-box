@@ -96,7 +96,7 @@ export default function SignInProfilePage() {
           </div>
           <div>
             <input type="submit" value="Submit" />
-            <input type="button" value="Go Back" />
+            <input type="button" value="Go Back" onClick={() => navigate(routes.deviceProfilesPage)}/>
           </div>
         </form>
       </div>
