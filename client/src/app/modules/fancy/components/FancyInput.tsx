@@ -1,13 +1,24 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import styles from "./FancyInput.module.css"
+
+import { FancyColorSet } from "../types/FancyColorSet"
+
 import { VariableStyles, toPixelString } from "@/utils/styles"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export type FancyInputStyles = {
+  height?: number
+  flexDirection?: "column" | "row"
+  borderWidth?: number
+  borderRadius?: number
+  fontSizeMultiplier?: number
+}
+
 export type FancyInputProps = {
-  row?: boolean
-  height: number
+  colors?: FancyColorSet
+  styles?: FancyInputStyles
   label?: string
   id?: string
   type?: string
@@ -18,18 +29,31 @@ export type FancyInputProps = {
   required?: boolean
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export default function FancyInput(props: FancyInputProps) {
   try {
     // Variable Styles
-    const variables: VariableStyles = {
-      "--totalHeight": toPixelString(props.height),
-      "--flexDirection": props.row ? "row" : "column"
+    const variables: VariableStyles = {}
+    if (props.colors) {
+      if (props.colors.color1) { variables["--color1"] = props.colors.color1 }
+      if (props.colors.color2) { variables["--color2"] = props.colors.color2 }
+      if (props.colors.color3) { variables["--color3"] = props.colors.color3 }
+    }
+    if (props.styles) {
+      if (props.styles.height) { variables["--height"] = toPixelString(props.styles.height) }
+      if (props.styles.flexDirection) { variables["--flexDirection"] = props.styles.flexDirection }
+      if (props.styles.borderWidth) { variables["--borderWidth"] = toPixelString(props.styles.borderWidth) }
+      if (props.styles.borderRadius) { variables["--borderRadius"] = toPixelString(props.styles.borderRadius) }
+      if (props.styles.fontSizeMultiplier) { variables["--fontSizeMultiplier"] = props.styles.fontSizeMultiplier }
     }
 
     // Return Content
     return (
       <div className={styles.box} style={variables}>
-        <label className={styles.label} htmlFor={props.id}>{props.label}</label>
+        <div className={styles.labelBox}>
+          <label className={styles.label} htmlFor={props.id}>{props.label}</label>
+        </div>
         <div className={styles.inputBox}>
           <div className={styles.layer}></div>
           <div className={styles.layer}></div>

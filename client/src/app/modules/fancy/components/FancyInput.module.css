@@ -1,0 +1,209 @@
+/**********************************************************************************************************************/
+
+@property --labelGradientColor1 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --labelGradientColor2 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --labelGradientColor3 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --inputGradientColor1 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --inputGradientColor2 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --inputGradientColor3 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+
+/**********************************************************************************************************************/
+
+.box {
+  /* Raw Styles */
+  --height: 60px; /* default */
+  --flexDirection: column; /* default */
+  --borderWidth: 3px; /* default */
+  --borderRadius: 8px; /* default */
+  --fontSizeMultiplier: 1/2; /* default */
+  --fontWeight: bold;
+
+  /* Computed Styles */
+  --contentHeight: calc(var(--height) - (2 * var(--borderWidth)));
+  --fontSize: calc(var(--fontSizeMultiplier) * var(--contentHeight));
+  --horizontalPaddingMultiplier: calc(1/2 * (1 - var(--fontSizeMultiplier)));
+  --horizontalPadding: calc(var(--horizontalPaddingMultiplier) * var(--contentHeight));
+
+  /* opacity */
+  --animationOpacity: 0.7;
+  --backgroundOpacity: 1;
+
+  /* colors */
+  --backgroundColor: rgba(0, 0, 0);
+  --labelColor: rgb(240, 240, 240);
+  --inputColor: rgb(192, 192, 192);
+  --placeholderColor: rgb(96, 96, 96);
+
+  --gradientDirection: 135deg;
+  --color1: rgb(96, 96, 96); /* default */
+  --color2: rgb(96, 96, 96); /* default */
+  --color3: rgb(96, 96, 96); /* default */
+
+  --labelBase1: white;
+  --labelBase2: white;
+  --labelBase3: white;
+  --labelGradientColor1: var(--labelBase1);
+  --labelGradientColor2: var(--labelBase2);
+  --labelGradientColor3: var(--labelBase3);
+
+  --inputBase1: rgb(96, 96, 96);
+  --inputBase2: rgb(96, 96, 96);
+  --inputBase3: rgb(96, 96, 96);
+  --inputGradientColor1: var(--inputBase1);
+  --inputGradientColor2: var(--inputBase2);
+  --inputGradientColor3: var(--inputBase3);
+}
+
+/**********************************************************************************************************************/
+
+.box {
+  width: 100%;
+  height: max-content;
+  display: flex;
+  flex-direction: var(--flexDirection);
+  gap: var(--horizontalPadding);
+}
+
+.box:focus-within {
+  --labelGradientColor1: var(--color1);
+  --labelGradientColor2: var(--color2);
+  --labelGradientColor3: var(--color3);
+  --inputGradientColor1: var(--color1);
+  --inputGradientColor2: var(--color2);
+  --inputGradientColor3: var(--color3);
+
+  --animationOpacity: 1;
+  --backgroundOpacity: 0.96;
+}
+
+/**********************************************************************************************************************/
+
+.labelBox {
+  display: flex;
+  align-items: center;
+}
+
+.label {
+  color: var(--labelColor); /* a color will override the label gradient */
+  max-width: max-content;
+  line-height: 100%;
+  padding: 0 var(--borderWidth);
+  font-size: var(--fontSize);
+  font-weight: var(--fontWeight);
+  border-radius: var(--borderRadius);
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: linear-gradient(var(--gradientDirection), var(--labelGradientColor1), var(--labelGradientColor2), var(--labelGradientColor3));
+  background-clip: text;
+  -webkit-background-clip: text;
+  opacity: var(--animationOpacity);
+  transition:
+    opacity 300ms ease-in-out,
+    --labelGradientColor1 100ms ease-in-out,
+    --labelGradientColor2 300ms ease-in-out,
+    --labelGradientColor3 500ms ease-in-out;
+}
+
+.label:hover {
+  --animationOpacity: 1;
+}
+
+.label:active:hover {
+  --animationOpacity: 0.2;
+}
+
+.label:active {
+  --animationOpacity: 0.4;
+}
+
+/**********************************************************************************************************************/
+
+/* Input Box */
+.inputBox {
+  position: relative;
+  width: 100%;
+  height: var(--height);
+  border-radius: var(--borderRadius);
+}
+
+/* Border Layer */
+.layer:nth-of-type(1) {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(var(--gradientDirection), var(--inputGradientColor1), var(--inputGradientColor2), var(--inputGradientColor3));
+  opacity: var(--animationOpacity);
+  transition:
+    --inputGradientColor1 100ms ease-in-out,
+    --inputGradientColor2 300ms ease-in-out,
+    --inputGradientColor3 500ms ease-in-out;
+}
+
+/* Background Layer */
+.layer:nth-of-type(2) {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  border: var(--borderWidth) solid transparent;
+  background-color: var(--backgroundColor);
+  background-clip: padding-box;
+  opacity: var(--backgroundOpacity);
+  transition: opacity 300ms ease-in-out;
+}
+
+/* Input Layer */
+.input {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  border: var(--borderWidth) solid transparent;
+  padding: 0 var(--horizontalPadding);
+  display: flex;
+  font-size: var(--fontSize);
+  font-weight: var(--fontWeight);
+  color: var(--inputColor);
+  opacity: var(--animationOpacity);
+  transition: opacity 300ms ease-in-out;
+}
+
+.input::placeholder {
+  color: var(--placeholderColor);
+  opacity: var(--animationOpacity);
+  transition: opacity 300ms ease-in-out;
+}
+
+/**********************************************************************************************************************/

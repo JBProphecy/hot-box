@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react"
 import styles from "./CreateAccountPage.module.css"
-import CreateAccountForm from "@/pages/CreateAccountForm"
+import CreateAccountForm from "@/app/forms/CreateAccountForm"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

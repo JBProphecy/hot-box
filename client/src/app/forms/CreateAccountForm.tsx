@@ -11,8 +11,8 @@ import routes from "@/library/routes"
 import { CreateAccountRawBody } from "shared/types/api/CreateAccountTypes"
 import requestCreateAccount, { CreateAccountResult } from "@/api/requestCreateAccount"
 
-import RGButton from "@/app/components/RGButton"
-import FancyInput from "@/app/components/FancyInput"
+import { FancyInput, FancyInputStyles, FancyButton, FancyButtonStyles } from "@/app/modules/fancy"
+import { fancyColors } from "@/app/library/fancyColors"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -95,14 +95,20 @@ export default function CreateAccountForm() {
       navigate(routes.currentAccountPage)
     }
 
-    // Styles
-    const fieldHeight: number = 60
+    // Fancy Input Styles
+    const fancyInputStyles: FancyInputStyles = {
+      flexDirection: "row"
+    }
+
+    // Fancy Button Styles
+    const fancyButtonStyles: FancyButtonStyles = {}
 
     // Return Content
     return (
       <form ref={formRef} onSubmit={handleCreateAccount} className={styles.form}>
         <FancyInput
-          height={fieldHeight}
+          colors={fancyColors.set01}
+          styles={fancyInputStyles}
           label="Name:"
           id="name"
           type="text"
@@ -110,10 +116,10 @@ export default function CreateAccountForm() {
           value={formData.name}
           placeholder="Name"
           handleChange={handleInputChange}
-          required={true}
         />
         <FancyInput
-          height={fieldHeight}
+          colors={fancyColors.set01}
+          styles={fancyInputStyles}
           label="Email:"
           id="email"
           type="email"
@@ -121,10 +127,10 @@ export default function CreateAccountForm() {
           value={formData.email}
           placeholder="Email"
           handleChange={handleInputChange}
-          required={true}
         />
         <FancyInput
-          height={fieldHeight}
+          colors={fancyColors.set01}
+          styles={fancyInputStyles}
           label="Set Password:"
           id="set-password"
           type="password"
@@ -132,10 +138,10 @@ export default function CreateAccountForm() {
           value={formData.setPassword}
           placeholder="Set Password"
           handleChange={handleInputChange}
-          required={true}
         />
         <FancyInput
-          height={fieldHeight}
+          colors={fancyColors.set01}
+          styles={fancyInputStyles}
           label="Confirm Password:"
           id="confirm-password"
           type="password"
@@ -143,15 +149,18 @@ export default function CreateAccountForm() {
           value={formData.confirmPassword}
           placeholder="Confirm Password"
           handleChange={handleInputChange}
-          required={true}
         />
         <div className={styles.buttons}>
-          <RGButton
+          <FancyButton
+            colors={fancyColors.set02}
+            styles={fancyButtonStyles}
             type="text"
             text="Go Back"
             action={loadCurrentAccountPage}
           />
-          <RGButton
+          <FancyButton
+            colors={fancyColors.set02}
+            styles={fancyButtonStyles}
             type="text"
             text="Create Account"
             action={() => formRef.current?.requestSubmit()}
