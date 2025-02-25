@@ -1,0 +1,82 @@
+/**********************************************************************************************************************/
+
+.page {
+  --pageWidth: "";
+  --pageHeight: "";
+  --pageSpace: "";
+  --headerTotalHeight: "";
+
+  /* Computed Styles */
+  --headerContentHeight: calc(var(--headerTotalHeight) - 2 * (var(--pageSpace)));
+  --mainTotalHeight: calc(var(--pageHeight) - var(--headerTotalHeight));
+  --mainContentHeight: calc(var(--mainTotalHeight) - (2 * var(--pageSpace)))
+}
+
+.page {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transition: opacity 200ms ease-in-out;
+}
+
+.visible { opacity: 1; }
+
+/**********************************************************************************************************************/
+
+.header {
+  width: 100%;
+  height: var(--headerTotalHeight);
+  padding: var(--pageSpace);
+  display: flex;
+  justify-content: space-between;
+}
+
+.textBox {
+  height: var(--headerContentHeight);
+  display: flex;
+  align-items: center;
+}
+
+.textBox > span {
+  font-size: calc(4/5 * var(--headerContentHeight));
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.iconBox {
+  height: var(--headerContentHeight);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.line {
+  border: 1px solid rgb(200, 200, 200);
+  margin: 1rem 0;
+  opacity: 0.2;
+}
+
+.space {
+  margin: 3rem 0;
+}
+
+.text {
+  font-weight: normal;
+  opacity: 0.8;
+}
+
+/**********************************************************************************************************************/
+
+.main {
+  width: 100%;
+  height: var(--mainTotalHeight);
+  padding: var(--pageSpace);
+  overflow: hidden;
+  overflow-y: auto;
+}
+
+.main::-webkit-scrollbar { display: none; }
+
+/**********************************************************************************************************************/

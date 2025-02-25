@@ -2,7 +2,7 @@
 
 :root {
 	--scale-line-height: 5/4;
-	--h6-line-height: calc(var(--scale-line-height) * 2rem);
+	--h6-line-height: calc(var(--scale-line-height) * 1.5rem);
 	--h5-line-height: calc(var(--scale-line-height) * var(--h6-line-height));
 	--h4-line-height: calc(var(--scale-line-height) * var(--h5-line-height));
 	--h3-line-height: calc(var(--scale-line-height) * var(--h4-line-height));
@@ -31,7 +31,7 @@ input {
 }
 
 html {
-	font-size: 8px;
+	font-size: 12px;
 	font-family: calibri, sans-serif;
 	background-color: rgb(12, 12, 12);
 	color: rgb(200, 200, 200);
@@ -48,7 +48,7 @@ h4 { line-height: var(--h4-line-height); font-size: var(--h4-font-size) }
 h5 { line-height: var(--h5-line-height); font-size: var(--h5-font-size) }
 h6 { line-height: var(--h6-line-height); font-size: var(--h6-font-size) }
 
-h1, h2, h3, h4, h5, h6, p { margin: 0; user-select: none; overflow: hidden; text-overflow: ellipsis;}
+h1, h2, h3, h4, h5, h6, p { margin: 0; user-select: none; overflow: hidden; text-overflow: ellipsis; }
 span { overflow: hidden; }
 
 ol, ul { margin: 0; padding: 0; list-style-type: none; }

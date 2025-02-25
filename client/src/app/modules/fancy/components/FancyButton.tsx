@@ -1,21 +1,21 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { useRef } from "react"
-
 import styles from "./FancyButton.module.css"
-import { VariableStyles, toPixelString } from "@/utils/styles"
-
-import useKeyable from "@/hooks/useKeyable"
-import useClickable from "@/hooks/useClickable"
 
 import { FancyColorSet } from "../types/FancyColorSet"
+import { VariableStyles } from "@/utils/styles"
+
+import { useRef } from "react"
+import useKeyable from "@/hooks/useKeyable"
+import useClickable from "@/hooks/useClickable"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export type FancyButtonStyles = {
-  height?: number
-  borderWidth?: number
-  borderRadius?: number
+  width?: string
+  height?: string
+  borderWidth?: string
+  borderRadius?: string
   fontSizeMultiplier?: number
 }
 
@@ -23,7 +23,7 @@ export type FancyButtonProps = {
   colors?: FancyColorSet
   styles?: FancyButtonStyles
   type: "icon"
-  className: string
+  icon: string
   action: Function
 } | {
   colors?: FancyColorSet
@@ -48,16 +48,17 @@ export default function FancyButton(props: FancyButtonProps) {
       if (props.colors.color3) { variables["--color3"] = props.colors.color3 }
     }
     if (props.styles) {
-      if (props.styles.height) { variables["--totalHeight"] = toPixelString(props.styles.height) }
-      if (props.styles.borderWidth) { variables["--borderWidth"] = toPixelString(props.styles.borderWidth) }
-      if (props.styles.borderRadius) { variables["--borderRadius"] = toPixelString(props.styles.borderRadius) }
+      if (props.styles.width) { variables["--totalWidth"] = props.styles.width }
+      if (props.styles.height) { variables["--totalHeight"] = props.styles.height }
+      if (props.styles.borderWidth) { variables["--borderWidth"] = props.styles.borderWidth }
+      if (props.styles.borderRadius) { variables["--borderRadius"] = props.styles.borderRadius }
       if (props.styles.fontSizeMultiplier) { variables["--fontSizeMultiplier"] = props.styles.fontSizeMultiplier }
     }
 
     // Process Content
     const applyContent = () => {
       switch (props.type) {
-        case "icon": return <i className={props.className} />
+        case "icon": return <i className={props.icon} />
         case "text": return <span>{props.text}</span>
         default: return <></>
       }

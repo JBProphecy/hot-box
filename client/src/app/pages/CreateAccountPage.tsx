@@ -1,24 +1,32 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import styles from "./SignInAccountPage.module.css"
-import SignInAccountForm from "@/pages/SignInAccountForm"
+import { useEffect, useRef } from "react"
+import styles from "./CreateAccountPage.module.css"
+import CreateAccountForm from "@/app/forms/CreateAccountForm"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default function SignInAccountPage() {
+export default function CreateAccountPage() {
   try {
+    // Page Ref
+    const pageRef = useRef<HTMLDivElement>(null)
+
+    // Page Effects
+    useEffect(() => { setTimeout(() => { pageRef.current?.classList.add(styles.visible) }, 150) }, [])
+    
     // Return Content
     return (
-      <div className={styles.page}>
+      <div ref={pageRef} className={styles.page}>
+        <h1>Create Account</h1>
         <div className={styles.formContainer}>
-          <SignInAccountForm />
+          <CreateAccountForm />
         </div>
       </div>
     )
   }
   catch (object: unknown) {
     const error = object as Error
-    console.error("Error Loading Sign In Account Page")
+    console.error("Error Loading Create Account Page")
     console.error(error)
     throw error
   }

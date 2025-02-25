@@ -3,16 +3,15 @@
 import styles from "./FancyInput.module.css"
 
 import { FancyColorSet } from "../types/FancyColorSet"
-
-import { VariableStyles, toPixelString } from "@/utils/styles"
+import { VariableStyles } from "@/utils/styles"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export type FancyInputStyles = {
-  height?: number
+  height?: string
   flexDirection?: "column" | "row"
-  borderWidth?: number
-  borderRadius?: number
+  borderWidth?: string
+  borderRadius?: string
   fontSizeMultiplier?: number
 }
 
@@ -41,10 +40,10 @@ export default function FancyInput(props: FancyInputProps) {
       if (props.colors.color3) { variables["--color3"] = props.colors.color3 }
     }
     if (props.styles) {
-      if (props.styles.height) { variables["--height"] = toPixelString(props.styles.height) }
+      if (props.styles.height) { variables["--height"] = props.styles.height }
       if (props.styles.flexDirection) { variables["--flexDirection"] = props.styles.flexDirection }
-      if (props.styles.borderWidth) { variables["--borderWidth"] = toPixelString(props.styles.borderWidth) }
-      if (props.styles.borderRadius) { variables["--borderRadius"] = toPixelString(props.styles.borderRadius) }
+      if (props.styles.borderWidth) { variables["--borderWidth"] = props.styles.borderWidth }
+      if (props.styles.borderRadius) { variables["--borderRadius"] = props.styles.borderRadius }
       if (props.styles.fontSizeMultiplier) { variables["--fontSizeMultiplier"] = props.styles.fontSizeMultiplier }
     }
 

@@ -40,10 +40,10 @@
 
 .box {
   /* Raw Styles */
-  --height: 60px; /* default */
-  --flexDirection: column; /* default */
-  --borderWidth: 3px; /* default */
-  --borderRadius: 8px; /* default */
+  --height: 5rem; /* default */
+  --flexDirection: row; /* default */
+  --borderWidth: calc(1/24 * var(--height) + 1px); /* default */
+  --borderRadius: calc(3/24 * var(--height)); /* default */
   --fontSizeMultiplier: 1/2; /* default */
   --fontWeight: bold;
 
@@ -87,9 +87,9 @@
 
 .box {
   width: 100%;
-  height: max-content;
   display: flex;
   flex-direction: var(--flexDirection);
+  flex-wrap: wrap;
   gap: var(--horizontalPadding);
 }
 
@@ -129,7 +129,7 @@
   -webkit-background-clip: text;
   opacity: var(--animationOpacity);
   transition:
-    opacity 300ms ease-in-out,
+    opacity 180ms ease-in-out,
     --labelGradientColor1 100ms ease-in-out,
     --labelGradientColor2 300ms ease-in-out,
     --labelGradientColor3 500ms ease-in-out;
@@ -152,7 +152,8 @@
 /* Input Box */
 .inputBox {
   position: relative;
-  width: 100%;
+  flex: 1;
+  min-width: 20rem;
   height: var(--height);
   border-radius: var(--borderRadius);
 }

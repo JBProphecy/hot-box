@@ -11,7 +11,7 @@ import requestGetAccountProfilesData, { GetAccountProfilesDataResult } from "@/a
 
 import AccountProfileCardList from "@/components/AccountProfileCardList"
 
-import SignInAccountPage from "@/pages/SignInAccountPage"
+import SignInAccountPage from "@/app/pages/SignInAccountPage"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -43,8 +43,6 @@ export default function CurrentAccountPage() {
       "--pageHeight": toPixelString(pageDimensions.height)
     }
 
-    const loggedOutStyles: string = `${localStyles.content} ${localStyles.loggedOut}`
-
     function getLoggedInContent(currentAccount: CurrentAccountContextType) {
       return (
         <div className={localStyles.page} style={variableStyles} ref={pageRef}>
@@ -65,19 +63,9 @@ export default function CurrentAccountPage() {
       )
     }
 
-    function getLoggedOutContent() {
-      return (
-        <div className={localStyles.page} style={variableStyles} ref={pageRef}>
-          <div className={loggedOutStyles}>
-            <SignInAccountPage />
-          </div>
-        </div>
-      )
-    }
-
     // Return Content
     return (
-      currentAccount.getID ? getLoggedInContent(currentAccount) : getLoggedOutContent()
+      currentAccount.getID ? getLoggedInContent(currentAccount) : <SignInAccountPage />
     )
   }
   catch (object: unknown) {

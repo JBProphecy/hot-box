@@ -11,15 +11,15 @@ const set01: FancyColorSet = {
 }
 
 const set02: FancyColorSet = {
-  color1: "rgb(80, 255, 80)",
-  color2: "rgb(80, 255, 200)",
-  color3: "rgb(255, 80, 255)"
+  color1: "rgb(255, 165, 0)",
+  color2: "rgb(255, 255, 0)",
+  color3: "rgb(80, 255, 0)"
 }
 
 const set03: FancyColorSet = {
-  color1: "rgb(0, 100, 255)",
-  color2: "rgb(200, 80, 255)",
-  color3: "rgb(255, 80, 0)"
+  color1: "rgb(80, 255, 80)",
+  color2: "rgb(80, 255, 150)",
+  color3: "rgb(80, 255, 150)"
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

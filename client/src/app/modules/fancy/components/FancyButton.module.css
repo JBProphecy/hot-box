@@ -22,9 +22,10 @@
 
 .box {
   /* Raw Styles */
-  --totalHeight: 60px; /* default */
-  --borderWidth: 3px; /* default */
-  --borderRadius: 8px; /* default */
+  --totalWidth: 100%; /* default */
+  --totalHeight: 16rem; /* default */
+  --borderWidth: calc(1/24 * var(--totalHeight) + 1px); /* default */
+  --borderRadius: calc(3/24 * var(--totalHeight)); /* default */
   --fontSizeMultiplier: 3/5; /* default */
   --font-weight: bold;
 
@@ -39,7 +40,7 @@
   --backgroundOpacity: 1;
 
   /* colors */
-  --backgroundColor: rgb(0, 0, 0);
+  --backgroundColor: black;
 
   --gradientDirection: 135deg;
   --base1: rgb(96, 96, 96);
@@ -57,7 +58,7 @@
 
 .box {
   position: relative;
-  max-width: max-content;
+  width: var(--totalWidth);
   height: var(--totalHeight);
   border-radius: var(--borderRadius);
   cursor: pointer;
@@ -70,7 +71,7 @@
   --gradientColor2: var(--color2);
   --gradientColor3: var(--color3);
 
-  --backgroundOpacity: 0.8;
+  --backgroundOpacity: 0.84;
 }
 
 .box:hover, .box:focus {

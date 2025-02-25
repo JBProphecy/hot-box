@@ -5,10 +5,13 @@
   height: 100%;
   padding: 2rem;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 4rem;
   opacity: 0;
   transition: opacity 200ms ease-in-out;
+  overflow: hidden;
 }
 
 .visible { opacity: 1; }
@@ -16,7 +19,7 @@
 /**********************************************************************************************************************/
 
 .formContainer {
-  width: 600px;
+  max-width: 600px;
   height: 80%;
   overflow: hidden;
   overflow-y: auto;

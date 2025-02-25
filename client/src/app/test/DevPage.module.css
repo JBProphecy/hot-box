@@ -1,12 +1,27 @@
 /**********************************************************************************************************************/
 
 .page {
+  --itemWidth: "";
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 4rem;
 }
+
+.grid {
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--itemWidth));
+  padding: 4rem;
+  gap: 4rem;
+  overflow: hidden;
+  overflow-y: auto;
+  place-items: center;
+}
+
+.grid::-webkit-scrollbar { display: none; }
 
 /**********************************************************************************************************************/

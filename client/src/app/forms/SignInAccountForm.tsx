@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { useRef, useState } from "react"
+import { useContext, useRef, useState } from "react"
 import { NavigateFunction, useNavigate } from "react-router-dom"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -8,19 +8,19 @@ import { NavigateFunction, useNavigate } from "react-router-dom"
 import styles from "./CreateAccountForm.module.css"
 import routes from "@/library/routes"
 
-import { CreateAccountRawBody } from "shared/types/api/CreateAccountTypes"
-import requestCreateAccount, { CreateAccountResult } from "@/api/requestCreateAccount"
+import { SignInAccountRawBody } from "shared/types/api/SignInAccountTypes"
+import requestSignInAccount, { SignInAccountResult } from "@/api/requestSignInAccount"
 
 import { FancyButton, FancyButtonStyles, FancyColorSet, FancyInput, FancyInputStyles } from "@/app/modules/fancy"
 import { fancyColors } from "@/app/library/fancyColors"
 
+import { CurrentAccountContext, CurrentAccountContextType } from "@/context/CurrentAccountContext"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-type CreateAccountFormData = {
-  name: string
+type SignInAccountFormData = {
   email: string
-  setPassword: string
-  confirmPassword: string
+  password: string
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -32,14 +32,12 @@ export default function CreateAccountForm() {
 
     // Navigation
     const navigate: NavigateFunction = useNavigate()
-    const loadCurrentAccountPage = () => { navigate(routes.currentAccountPage) }
+    const loadCreateAccountPage = () => { navigate(routes.createAccountPage) }
 
     // Form Data
-    const [formData, setFormData] = useState<CreateAccountFormData>({
-      name: "",
+    const [formData, setFormData] = useState<SignInAccountFormData>({
       email: "",
-      setPassword: "",
-      confirmPassword: ""
+      password: "",
     })
 
     // Update Form Data
@@ -53,45 +51,37 @@ export default function CreateAccountForm() {
 
     // Validate Form Data
     const validateFormData = () => {
-      if (!formData.name) {
-        console.warn("Name is Required")
-        return false
-      }
       if (!formData.email) {
         console.warn("Email is Required")
         return false
       }
-      if (!formData.setPassword) {
-        console.warn("Set Password is Required")
-        return false
-      }
-      if (!formData.confirmPassword) {
-        console.warn("Confirm Password is Required")
-        return false
-      }
-      if (formData.setPassword !== formData.confirmPassword) {
-        console.warn("Passwords Don't Match")
+      if (!formData.password) {
+        console.warn("Password is Required")
         return false
       }
       return true
     }
 
-    // Handle Create Account
-    const handleCreateAccount = async (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault()
+    // Current Account
+    const currentAccount: CurrentAccountContextType | undefined = useContext(CurrentAccountContext)
+    if (typeof currentAccount === "undefined") { throw new Error("Missing Current Account Provider") }
+
+    // Handle Sign In Account
+    const handleSignInAccount = async (event: React.FormEvent<HTMLFormElement>) => {
+      event?.preventDefault()
 
       const isValidFormData: boolean = validateFormData()
       if (!isValidFormData) {
         console.warn("Form Data is Invalid")
         return
       }
-      const body: CreateAccountRawBody = {
-        name: formData.name,
+      const body: SignInAccountRawBody = {
         email: formData.email,
-        password: formData.setPassword
+        password: formData.password
       }
-      const result: CreateAccountResult = await requestCreateAccount(body)
+      const result: SignInAccountResult = await requestSignInAccount(body)
       if (!result.success) { return }
+      currentAccount.setID(result.accountID)
       navigate(routes.currentAccountPage)
     }
 
@@ -111,18 +101,7 @@ export default function CreateAccountForm() {
 
     // Return Content
     return (
-      <form ref={formRef} onSubmit={handleCreateAccount} className={styles.form}>
-        <FancyInput
-          colors={fancyInputColors}
-          styles={fancyInputStyles}
-          label="Name:"
-          id="name"
-          type="text"
-          name="name"
-          value={formData.name}
-          placeholder="Name"
-          handleChange={handleInputChange}
-        />
+      <form ref={formRef} onSubmit={handleSignInAccount} className={styles.form}>
         <FancyInput
           colors={fancyInputColors}
           styles={fancyInputStyles}
@@ -137,23 +116,12 @@ export default function CreateAccountForm() {
         <FancyInput
           colors={fancyInputColors}
           styles={fancyInputStyles}
-          label="Set Password:"
-          id="set-password"
+          label="Password:"
+          id="password"
           type="password"
-          name="setPassword"
-          value={formData.setPassword}
-          placeholder="Set Password"
-          handleChange={handleInputChange}
-        />
-        <FancyInput
-          colors={fancyInputColors}
-          styles={fancyInputStyles}
-          label="Confirm Password:"
-          id="confirm-password"
-          type="password"
-          name="confirmPassword"
-          value={formData.confirmPassword}
-          placeholder="Confirm Password"
+          name="password"
+          value={formData.password}
+          placeholder="Password"
           handleChange={handleInputChange}
         />
         <div className={styles.buttons}>
@@ -161,14 +129,14 @@ export default function CreateAccountForm() {
             colors={fancyColors.set01}
             styles={fancyButtonStyles}
             type="text"
-            text="Go Back"
-            action={loadCurrentAccountPage}
+            text="Create Account"
+            action={loadCreateAccountPage}
           />
           <FancyButton
             colors={fancyColors.set03}
             styles={fancyButtonStyles}
             type="text"
-            text="Create Account"
+            text="Sign In"
             action={() => formRef.current?.requestSubmit()}
           />
         </div>
@@ -177,7 +145,7 @@ export default function CreateAccountForm() {
   }
   catch (object: unknown) {
     const error = object as Error
-    console.error("Error Loading Create Account Form")
+    console.error("Error Loading Sign In Account Form")
     console.error(error)
     throw error
   }

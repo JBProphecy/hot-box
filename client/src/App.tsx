@@ -14,7 +14,7 @@ import CurrentProfileProvider from "@/context/CurrentProfileProvider"
 
 // Layouts
 
-import RootLayout from "@/layouts/RootLayout"
+import RootLayout from "@/app/layouts/RootLayout"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -24,8 +24,8 @@ import DevPage from "@/app/test/DevPage"
 
 import requestEnsureDeviceToken from "./api/requestEnsureDeviceToken"
 
-import CurrentAccountPage from "@/app/CurrentAccountPage"
-import CreateAccountPage from "@/pages/CreateAccountPage"
+import CurrentAccountPage from "@/app/pages/CurrentAccountPage"
+import CreateAccountPage from "@/app/pages/CreateAccountPage"
 
 import DeviceProfilesPage from "@/app/DeviceProfilesPage"
 import AddProfilePage from "@/app/AddProfilePage"
