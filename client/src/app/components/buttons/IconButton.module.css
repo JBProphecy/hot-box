@@ -1,0 +1,123 @@
+/**********************************************************************************************************************/
+
+@property --gradientColor1 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --gradientColor2 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --gradientColor3 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+
+/**********************************************************************************************************************/
+
+.container {
+  --setSize: "";
+  --totalSize: "";
+  --borderWidth: calc(1/30 * var(--totalSize) + 2px);
+  --borderRadius: calc(1/10 * var(--totalSize));
+
+  --contentHeight: calc(var(--totalSize) - (2 * var(--borderWidth)));
+
+  --fontSizeMultiplier: 2/3;
+  --fontSize: calc(var(--fontSizeMultiplier) * var(--contentHeight));
+  --fontWeight: bold;
+  --colorOpacity: 0.7;
+  --backgroundOpacity: 0.85;
+  --gradientDirection: 315deg;
+  --normalColor1: hsl(0, 0%, 20%);
+  --normalColor2: hsl(0, 0%, 20%);
+  --normalColor3: hsl(0, 0%, 20%);
+  --activeColor1: hsl(0, 0%, 40%);
+  --activeColor2: hsl(0, 0%, 40%);
+  --activeColor3: hsl(0, 0%, 40%);
+  --gradientColor1: var(--normalColor1);
+  --gradientColor2: var(--normalColor2);
+  --gradientColor3: var(--normalColor3);
+}
+
+.container {
+  cursor: pointer;
+  position: relative;
+  width: var(--totalSize);
+  height: var(--setSize);
+  display: grid;
+  place-items: center;
+  border-radius: var(--borderRadius);
+  background-color: black;
+}
+
+.container:hover, .container:focus, .container:active, .container.pressed {
+  --gradientColor1: var(--activeColor1);
+  --gradientColor2: var(--activeColor2);
+  --gradientColor3: var(--activeColor3);
+  --backgroundOpacity: 0.7;
+}
+
+.container:hover, .container:focus {
+  --colorOpacity: 1;
+}
+.container:active, .container.pressed {
+  --colorOpacity: 0.5;
+}
+
+/**********************************************************************************************************************/
+
+/* All Layers */
+.layer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+}
+
+/* Border Layer */
+.layer:nth-of-type(1) {
+  background: linear-gradient(var(--gradientDirection), var(--gradientColor1), var(--gradientColor2), var(--gradientColor3));
+  opacity: var(--colorOpacity);
+  transition:
+    --gradientColor1 100ms ease-in-out,
+    --gradientColor2 300ms ease-in-out,
+    --gradientColor3 500ms ease-in-out,
+    opacity 200ms ease-in-out;
+}
+
+/* Background Layer */
+.layer:nth-of-type(2) {
+  position: relative;
+  border: var(--borderWidth) solid transparent;
+  background-color: black;
+  background-clip: padding-box;
+  display: grid;
+  place-items: center;
+  opacity: var(--backgroundOpacity);
+  transition: opacity 200ms ease-in-out;
+  overflow: hidden;
+}
+
+/* Icon */
+.layer:nth-of-type(2) > i {
+  background: linear-gradient(var(--gradientDirection), var(--gradientColor1), var(--gradientColor2), var(--gradientColor3));
+  background-clip: text;
+  color: transparent;
+  font-size: var(--fontSize);
+  font-weight: var(--fontWeight);
+  line-height: 1;
+  opacity: var(--colorOpacity);
+  transition:
+    --gradientColor1 100ms ease-in-out,
+    --gradientColor2 300ms ease-in-out,
+    --gradientColor3 500ms ease-in-out,
+    opacity 200ms ease-in-out;
+}
+
+/**********************************************************************************************************************/

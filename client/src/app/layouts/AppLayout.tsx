@@ -5,15 +5,15 @@ import { Outlet } from "react-router-dom"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import styles from "./AppLayout.module.css"
-import NavigationBar from "@/components/NavigationBar"
-import { VariableStyles, toPixelString } from "@/utils/styles"
+import NavigationBar from "@/app/temp/components/02/NavigationBar"
+import { VariableStyles, toPixelString } from "@/app/utils/styles/types/VariableStyles"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export default function AppLayout() {
   try {
     // Static Variables
-    const navigationBarHeight: number = 48
+    const navigationBarHeight: number = 60
 
     // Variable Styles
     const variableStyles: VariableStyles = {

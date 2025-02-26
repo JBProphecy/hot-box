@@ -7,8 +7,8 @@ import { createBrowserRouter, createRoutesFromElements, Navigate, RouterProvider
 
 // Providers
 
-import CurrentAccountProvider from "@/context/CurrentAccountProvider"
-import CurrentProfileProvider from "@/context/CurrentProfileProvider"
+import CurrentAccountProvider from "@/app/context/CurrentAccountProvider"
+import CurrentProfileProvider from "@/app/context/CurrentProfileProvider"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -27,11 +27,11 @@ import requestEnsureDeviceToken from "./api/requestEnsureDeviceToken"
 import CurrentAccountPage from "@/app/pages/CurrentAccountPage"
 import CreateAccountPage from "@/app/pages/CreateAccountPage"
 
-import DeviceProfilesPage from "@/app/DeviceProfilesPage"
-import AddProfilePage from "@/app/AddProfilePage"
+import DeviceProfilesPage from "@/app/temp/pages/DeviceProfilesPage"
+//import AddProfilePage from "@/app/AddProfilePage"
 
-import CurrentProfilePage from "@/app/CurrentProfilePage"
-import CreateProfilePage from "@/app/CreateProfilePage"
+import CurrentProfilePage from "@/app/temp/pages/CurrentProfilePage"
+//import CreateProfilePage from "@/app/CreateProfilePage"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -46,13 +46,13 @@ const router = createBrowserRouter(
         <Route path="create-account" element={<CreateAccountPage />} />
         <Route path="current-account">
           <Route index element={<CurrentAccountPage />} />
-          <Route path="create-profile" element={<CreateProfilePage />} />
+          <Route path="create-profile" element={<></>} />
         </Route>
         <Route path="*" element={<Navigate to="/accounts/current-account" />} />
       </Route>
       <Route path="profiles">
         <Route index element={<DeviceProfilesPage />} />
-        <Route path="add-profile" element={<AddProfilePage />} />
+        <Route path="add-profile" element={<></>} />
         <Route path="current-profile">
           <Route index element={<CurrentProfilePage />} />
         </Route>

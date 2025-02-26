@@ -6,15 +6,17 @@ import { NavigateFunction, useNavigate } from "react-router-dom"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import styles from "./CreateAccountForm.module.css"
-import routes from "@/library/routes"
+import routes from "@/config/routes"
 
 import { SignInAccountRawBody } from "shared/types/api/SignInAccountTypes"
 import requestSignInAccount, { SignInAccountResult } from "@/api/requestSignInAccount"
 
-import { FancyButton, FancyButtonStyles, FancyColorSet, FancyInput, FancyInputStyles } from "@/app/modules/fancy"
-import { fancyColors } from "@/app/library/fancyColors"
+import FancyInput, { FancyInputProps } from "@/app/components/FancyInput"
+import threeColorSets from "@/app/library/threeColorSets"
 
-import { CurrentAccountContext, CurrentAccountContextType } from "@/context/CurrentAccountContext"
+import TextButton, { TextButtonProps } from "@/app/components/buttons/TextButton"
+
+import { CurrentAccountContext, CurrentAccountContextType } from "@/app/context/CurrentAccountContext"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -68,7 +70,7 @@ export default function CreateAccountForm() {
 
     // Handle Sign In Account
     const handleSignInAccount = async (event: React.FormEvent<HTMLFormElement>) => {
-      event?.preventDefault()
+      event.preventDefault()
 
       const isValidFormData: boolean = validateFormData()
       if (!isValidFormData) {
@@ -85,59 +87,54 @@ export default function CreateAccountForm() {
       navigate(routes.currentAccountPage)
     }
 
-    // Fancy Input Colors
-    const fancyInputColors: FancyColorSet = fancyColors.set02
-    
-    // Fancy Input Styles
-    const fancyInputStyles: FancyInputStyles = {
-      flexDirection: "row"
+    // Shared Fancy Input Props
+    const sharedFancyInputProps: FancyInputProps = {
+      handleChange: handleInputChange,
+      colors: threeColorSets.set03,
+      styles: {
+        flexDirection: "row"
+      }
     }
 
-    // Fancy Button Styles
-    const fancyButtonStyles: FancyButtonStyles = {
-      width: "max-content",
-      height: "5rem"
+    // Shared Text Button Props
+    const sharedTextButtonProps: TextButtonProps = {
+      height: 5,
+      unit: "rem"
     }
 
     // Return Content
     return (
       <form ref={formRef} onSubmit={handleSignInAccount} className={styles.form}>
         <FancyInput
-          colors={fancyInputColors}
-          styles={fancyInputStyles}
+          {...sharedFancyInputProps}
           label="Email:"
           id="email"
           type="email"
           name="email"
           value={formData.email}
           placeholder="Email"
-          handleChange={handleInputChange}
         />
         <FancyInput
-          colors={fancyInputColors}
-          styles={fancyInputStyles}
+          {...sharedFancyInputProps}
           label="Password:"
           id="password"
           type="password"
           name="password"
           value={formData.password}
           placeholder="Password"
-          handleChange={handleInputChange}
         />
         <div className={styles.buttons}>
-          <FancyButton
-            colors={fancyColors.set01}
-            styles={fancyButtonStyles}
-            type="text"
+          <TextButton
+            {...sharedTextButtonProps}
             text="Create Account"
-            action={loadCreateAccountPage}
+            pressedAction={loadCreateAccountPage}
+            activeColors={threeColorSets.set01}
           />
-          <FancyButton
-            colors={fancyColors.set03}
-            styles={fancyButtonStyles}
-            type="text"
+          <TextButton
+            {...sharedTextButtonProps}
             text="Sign In"
-            action={() => formRef.current?.requestSubmit()}
+            pressedAction={() => formRef.current?.requestSubmit()}
+            activeColors={threeColorSets.set03}
           />
         </div>
       </form>

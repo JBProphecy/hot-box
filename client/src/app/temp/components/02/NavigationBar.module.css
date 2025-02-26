@@ -1,0 +1,23 @@
+/**********************************************************************************************************************/
+
+.navigationBar {
+  --navigationBarHeight: "";
+}
+.navigationBar {
+  width: 100%;
+  height: var(--navigationBarHeight);
+  display: flex;
+  overflow-x: auto;
+  background: linear-gradient(rgb(24, 24, 24), rgb(8, 8, 8));
+}
+
+.navigationBar::-webkit-scrollbar { display: none; }
+
+/**********************************************************************************************************************/
+
+.buttonList {
+  height: var(--navigationBarHeight);
+  display: flex;
+  padding: 0.5rem;
+  gap: 0.5rem;
+}

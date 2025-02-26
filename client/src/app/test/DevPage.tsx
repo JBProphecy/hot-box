@@ -1,181 +1,43 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import styles from "./DevPage.module.css"
-import { FancyButton, FancyButtonStyles } from "../modules/fancy"
-import { fancyColors } from "../library/fancyColors"
-import { VariableStyles } from "@/utils/styles"
+import { VariableStyles } from "@/app/utils/styles/types/VariableStyles"
+
+import IconButton from "../components/buttons/IconButton"
+import TextButton from "../components/buttons/TextButton"
+
+import threeColorSets, { ThreeColorSet } from "../library/threeColorSets"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export default function DevPage() {
   try {
     // Dynamic Values
-    const itemWidth: string = "8rem"
-    const itemHeight: string = "8rem"
+    const textButtonNormalColors: ThreeColorSet = {}
+    const textButtonActiveColors: ThreeColorSet = threeColorSets.set03
+    const iconButtonNormalColors: ThreeColorSet = {}
+    const iconButtonActiveColors: ThreeColorSet = threeColorSets.gold
 
     // Variable Styles
-    const variables: VariableStyles = {
-      "--itemWidth": itemWidth
-    }
-
-    // Fancy Button Styles
-    const fancyButtonStyles: FancyButtonStyles = {
-      width: itemWidth,
-      height: itemHeight,
-    }
+    const variables: VariableStyles = {}
 
     // Return Content
     return (
       <div className={styles.page} style={variables}>
-        <div className={styles.grid}>
-          <FancyButton
-            colors={fancyColors.set01}
-            styles={fancyButtonStyles}
-            type="text"
-            text="bx bxs-cog"
-            action={() => console.log("hey")}
-          />
-          <FancyButton
-            colors={fancyColors.set02}
-            styles={fancyButtonStyles}
-            type="icon"
-            icon="bx bx-windows"
-            action={() => console.log("hey")}
-          />
-          <FancyButton
-            colors={fancyColors.set03}
-            styles={fancyButtonStyles}
-            type="icon"
-            icon="bx bxs-user"
-            action={() => console.log("hey")}
-          />
-          <FancyButton
-            colors={fancyColors.set01}
-            styles={fancyButtonStyles}
-            type="icon"
-            icon="bx bxs-cog"
-            action={() => console.log("hey")}
-          />
-          <FancyButton
-            colors={fancyColors.set02}
-            styles={fancyButtonStyles}
-            type="icon"
-            icon="bx bx-windows"
-            action={() => console.log("hey")}
-          />
-          <FancyButton
-            colors={fancyColors.set03}
-            styles={fancyButtonStyles}
-            type="icon"
-            icon="bx bxs-user"
-            action={() => console.log("hey")}
-          />
-          <FancyButton
-            colors={fancyColors.set01}
-            styles={fancyButtonStyles}
-            type="icon"
-            icon="bx bxs-cog"
-            action={() => console.log("hey")}
-          />
-          <FancyButton
-            colors={fancyColors.set02}
-            styles={fancyButtonStyles}
-            type="icon"
-            icon="bx bx-windows"
-            action={() => console.log("hey")}
-          />
-          <FancyButton
-            colors={fancyColors.set03}
-            styles={fancyButtonStyles}
-            type="icon"
-            icon="bx bxs-user"
-            action={() => console.log("hey")}
-          />
-          <FancyButton
-            colors={fancyColors.set01}
-            styles={fancyButtonStyles}
-            type="icon"
-            icon="bx bxs-cog"
-            action={() => console.log("hey")}
-          />
-          <FancyButton
-            colors={fancyColors.set02}
-            styles={fancyButtonStyles}
-            type="icon"
-            icon="bx bx-windows"
-            action={() => console.log("hey")}
-          />
-          <FancyButton
-            colors={fancyColors.set03}
-            styles={fancyButtonStyles}
-            type="icon"
-            icon="bx bxs-user"
-            action={() => console.log("hey")}
-          />
-          <FancyButton
-            colors={fancyColors.set01}
-            styles={fancyButtonStyles}
-            type="icon"
-            icon="bx bxs-cog"
-            action={() => console.log("hey")}
-          />
-          <FancyButton
-            colors={fancyColors.set02}
-            styles={fancyButtonStyles}
-            type="icon"
-            icon="bx bx-windows"
-            action={() => console.log("hey")}
-          />
-          <FancyButton
-            colors={fancyColors.set03}
-            styles={fancyButtonStyles}
-            type="icon"
-            icon="bx bxs-user"
-            action={() => console.log("hey")}
-          />
-          <FancyButton
-            colors={fancyColors.set01}
-            styles={fancyButtonStyles}
-            type="icon"
-            icon="bx bxs-cog"
-            action={() => console.log("hey")}
-          />
-          <FancyButton
-            colors={fancyColors.set02}
-            styles={fancyButtonStyles}
-            type="icon"
-            icon="bx bx-windows"
-            action={() => console.log("hey")}
-          />
-          <FancyButton
-            colors={fancyColors.set03}
-            styles={fancyButtonStyles}
-            type="icon"
-            icon="bx bxs-user"
-            action={() => console.log("hey")}
-          />
-          <FancyButton
-            colors={fancyColors.set01}
-            styles={fancyButtonStyles}
-            type="icon"
-            icon="bx bxs-cog"
-            action={() => console.log("hey")}
-          />
-          <FancyButton
-            colors={fancyColors.set02}
-            styles={fancyButtonStyles}
-            type="icon"
-            icon="bx bx-windows"
-            action={() => console.log("hey")}
-          />
-          <FancyButton
-            colors={fancyColors.set03}
-            styles={fancyButtonStyles}
-            type="icon"
-            icon="bx bxs-user"
-            action={() => console.log("hey")}
-          />
-        </div>
+        <TextButton
+          text="My Button"
+          height={5}
+          unit="rem"
+          normalColors={textButtonNormalColors}
+          activeColors={textButtonActiveColors}
+        />
+        <IconButton
+          icon="bx bxs-cog"
+          size={5}
+          unit="rem"
+          normalColors={iconButtonNormalColors}
+          activeColors={iconButtonActiveColors}
+        />
       </div>
     )
   }
