@@ -35,6 +35,7 @@
   padding: 0 10px;
   align-items: center;
   justify-content: space-between;
+  background: linear-gradient(rgb(24, 24, 24), rgb(8, 8, 8));
 }
 
 .header > span {

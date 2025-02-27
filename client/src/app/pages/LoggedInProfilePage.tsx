@@ -11,8 +11,6 @@ import { CurrentProfileContext, CurrentProfileContextType } from "@/app/context/
 import { useContext, useEffect, useRef } from "react"
 import useDimensions, { Dimensions } from "@/app/hooks/useDimensions"
 
-import threeColorSets from "../library/threeColorSets"
-
 import FancyButton, { FancyButtonSizeProps} from "../components/FancyButton"
 
 import { NavigateFunction, useNavigate } from "react-router-dom"

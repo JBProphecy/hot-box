@@ -117,7 +117,7 @@ export default function DeviceProfilesPage() {
           {...fancyButtonSizeProps}
           contentType="text"
           contentValue="Add Profile"
-          activeColors={threeColorSets.gold}
+          activeColors={threeColorSets.set04}
           pressedAction={handleAddProfileClick}
         />
       </div>
