@@ -58,7 +58,7 @@ export default function SignInProfileForm() {
     return true
   }
 
-  // Current Account
+  // Current Profile
   const currentProfile: CurrentProfileContextType | undefined = useContext(CurrentProfileContext)
   if (typeof currentProfile === "undefined") { throw new Error("Missing Current Profile Provider") }
 

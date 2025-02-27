@@ -19,14 +19,15 @@ let result: CreateProfileResult
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default async function requestCreateProfile(body: CreateProfileRawBody): Promise<CreateProfileResult> {
+export default async function requestCreateProfile(accountID: string, body: CreateProfileRawBody): Promise<CreateProfileResult> {
   try {
     console.log(attemptMessage)
 
     const response: Response = await fetch(`${clientConfig.API_URL}/profiles/register`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "X-Account-ID": accountID
       },
       credentials: "include",
       body: JSON.stringify(body)

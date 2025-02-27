@@ -4,7 +4,7 @@
   --pageWidth: "";
   --pageHeight: "";
 
-  --headerHeight: 48px;
+  --headerHeight: 60px;
   --mainHeight: calc(var(--pageHeight) - var(--headerHeight));
 }
 
@@ -34,14 +34,24 @@
   display: flex;
   padding: 0 10px;
   align-items: center;
+  justify-content: space-between;
+}
+
+.header > span {
+  line-height: var(--headerHeight);
+  font-size: calc(1/2 * var(--headerHeight));
+  padding: 0 1rem;
+  font-weight: bold;
 }
 
 .main {
   width: var(--pageWidth);
   height: var(--mainHeight);
   display: flex;
-  overflow: hidden; /* for dependent css shift */
+  overflow: hidden;
   overflow-y: auto;
 }
+
+.main::-webkit-scrollbar { display: none; }
 
 /**********************************************************************************************************************/

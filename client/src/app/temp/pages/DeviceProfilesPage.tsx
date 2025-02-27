@@ -26,6 +26,9 @@ import { CardObject } from "@/app/temp/components/01/card"
 import { CurrentDeviceProfileData } from "shared/types/data/private/CurrentDeviceProfileData"
 import requestGetDeviceProfileData, { GetCurrentDeviceProfilesDataResult } from "@/api/requestGetCurrentDeviceProfilesData"
 
+import FancyButton, { FancyButtonSizeProps } from "@/app/components/FancyButton"
+import threeColorSets from "@/app/library/threeColorSets"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export default function DeviceProfilesPage() {
@@ -101,10 +104,22 @@ export default function DeviceProfilesPage() {
 
   const handleAddProfileClick = () => { navigate(routes.addProfilePage) }
 
+  const fancyButtonSizeProps: FancyButtonSizeProps = {
+    width: { type: "intrinsic" },
+    height: { type: "relative", percent: 70 }
+  }
+
   return (
     <div ref={pageRef} className={localStyles.page} style={variableStyles}>
       <div className={localStyles.header}>
-        <input type="button" onClick={handleAddProfileClick} value="Add Profile" />
+        <span>Your Profiles</span>
+        <FancyButton
+          {...fancyButtonSizeProps}
+          contentType="text"
+          contentValue="Add Profile"
+          activeColors={threeColorSets.gold}
+          pressedAction={handleAddProfileClick}
+        />
       </div>
       <div ref={listContainerRef} className={localStyles.main}>
         <CardList cardListStyles={cardListStyles} cardObjects={cards} />

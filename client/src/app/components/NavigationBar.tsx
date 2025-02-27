@@ -57,6 +57,15 @@ export default function NavigationBar(props: NavigationBarProps) {
           <li className={localStyles.buttonItem}>
             <FancyButton
               {...fancyButtonSizeProps}
+              activeColors={threeColorSets.set04}
+              contentType="text"
+              contentValue="Device Profiles"
+              pressedAction={loadDeviceProfilesPage}
+            />
+          </li>
+          <li className={localStyles.buttonItem}>
+            <FancyButton
+              {...fancyButtonSizeProps}
               activeColors={threeColorSets.set01}
               contentType="text"
               contentValue="Account Page" // "bx bxs-user"
@@ -70,22 +79,6 @@ export default function NavigationBar(props: NavigationBarProps) {
               contentType="text"
               contentValue="Profile Page"
               pressedAction={loadCurrentProfilePage}
-            />
-          </li>
-          <li className={localStyles.buttonItem}>
-            <FancyButton
-              {...fancyButtonSizeProps}
-              activeColors={threeColorSets.set03}
-              contentType="text"
-              contentValue="Friends List" // "bx bxs-user-detail"
-            />
-          </li>
-          <li className={localStyles.buttonItem}>
-            <FancyButton
-              {...fancyButtonSizeProps}
-              activeColors={threeColorSets.set04}
-              contentType="text"
-              contentValue="Your Library"
             />
           </li>
         </ul>

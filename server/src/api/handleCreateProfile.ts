@@ -103,28 +103,6 @@ function validatePassword(password: string | undefined): ValidationResult {
   }
 }
 
-function validateAccountID(accountID: string | undefined): ValidationResult {
-  try {
-    logger.attempt("Validating Account ID")
-    if (typeof accountID === "undefined") {
-      const serverMessage: string = "Account ID is Undefined"
-      const clientMessage: string = "Account ID is Required"
-      logger.warning(serverMessage)
-      logger.failure(failureMessage)
-      return { success: false, message: clientMessage }
-    }
-    logger.success("Account ID is Valid")
-    return { success: true }
-  }
-  catch (object: unknown) {
-    const error = object as Error
-    logger.failure("Error Validating Account ID")
-    logger.error(error)
-    logger.trace(error)
-    throw error
-  }
-}
-
 function validateBody(body: CreateProfileRawBody): CreateProfileHelperResult {
   try {
     logger.attempt("Validating Body")
@@ -136,8 +114,6 @@ function validateBody(body: CreateProfileRawBody): CreateProfileHelperResult {
     result = validateUsername(body.username)
     results.push(result)
     result = validatePassword(body.password)
-    results.push(result)
-    result = validateAccountID(body.accountID)
     results.push(result)
 
     const validationsResult: ValidationsResult = processValidationResults(results)
@@ -173,13 +149,25 @@ export default async function handleCreateProfile(request: Request, response: Re
   try {
     logger.attempt(attemptMessage)
 
+    // Get Account ID
+    const accountID = request.headers["x-account-id"]
+    if (typeof accountID === "undefined") {
+      const serverMessage: string = "X-Account-ID is Undefined"
+      const clientMessage: string = "Please Sign Into Your Account"
+      logger.warning(serverMessage)
+      logger.failure(failureMessage)
+      responseData = { type: "failure", message: clientMessage }
+      return response.status(400).json(responseData)
+    }
+    if (Array.isArray(accountID)) { throw new Error("X-Account-ID has been Defined Multiple Times") }
+
     // Validate Body
     helperResult = validateBody(request.body)
     if (helperResult.respond) { return response.status(helperResult.status).json(helperResult.data) }
     const body = helperResult.data as CreateProfileValidBody
 
     // Get Account Tokens
-    const accountTokenKeys: AccountTokenKeys = generateAccountTokenKeys(body.accountID)
+    const accountTokenKeys: AccountTokenKeys = generateAccountTokenKeys(accountID)
     const accountAccessToken: string | undefined = getAccountAccessToken(request, accountTokenKeys.accountAccessTokenKey)
     if (typeof accountAccessToken === "undefined") {
       const serverMessage: string = "Account Access Token is Undefined"
@@ -226,7 +214,7 @@ export default async function handleCreateProfile(request: Request, response: Re
     const hashedPassword: string = await hashPassword(body.password)
 
     // Register Profile
-    await registerProfile(body.name, body.username, hashedPassword, body.accountID)
+    await registerProfile(body.name, body.username, hashedPassword, accountID)
 
     // Return Successful Response
     logger.success(successMessage)

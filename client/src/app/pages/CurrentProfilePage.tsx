@@ -3,7 +3,7 @@
 import { useContext } from "react"
 import { CurrentProfileContext, CurrentProfileContextType } from "@/app/context/CurrentProfileContext"
 
-// import LoggedInProfilePage from "@/app/pages/LoggedInProfilePage"
+import LoggedInProfilePage from "@/app/pages/LoggedInProfilePage"
 import SignInProfilePage from "@/app/pages/SignInProfilePage"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -15,7 +15,7 @@ export default function CurrentProfilePage() {
     if (typeof currentProfile === "undefined") { throw new Error("Missing Current Profile Provider") }
 
     // Return Content
-    if (currentProfile.getID) { return <></>}
+    if (currentProfile.getID) { return <LoggedInProfilePage />}
     return <SignInProfilePage />
   }
   catch (object: unknown) {

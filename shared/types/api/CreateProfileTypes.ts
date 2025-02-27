@@ -4,14 +4,12 @@ export type CreateProfileRawBody = {
   name?: string
   username?: string
   password?: string
-  accountID?: string
 }
 
 export type CreateProfileValidBody = {
   name: string
   username: string
   password: string
-  accountID: string
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
