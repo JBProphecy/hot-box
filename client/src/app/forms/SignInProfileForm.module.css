@@ -1,15 +1,14 @@
 /**********************************************************************************************************************/
 
 .form {
-  width: 100%;
-  height: max-content;
+  width: auto;
   display: flex;
   flex-direction: column;
   gap: 4rem;
 }
 
 .buttons {
-  height: max-content;
+  width: auto;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;

@@ -20,18 +20,26 @@
 
 /**********************************************************************************************************************/
 
-.container {
+.button {
+  --setWidth: "";
   --setHeight: "";
+  --totalWidth: "";
   --totalHeight: "";
+
   --borderWidth: "";
   --borderRadius: "";
 
+  --contentWidth: calc(var(--totalWidth) - (2 * var(--borderWidth)));
   --contentHeight: calc(var(--totalHeight) - (2 * var(--borderWidth)));
 
-  --fontSizeMultiplier: 2/3;
-  --fontSize: calc(var(--fontSizeMultiplier) * var(--contentHeight));
-  --horizontalPaddingMultiplier: calc(1 * (1 - var(--fontSizeMultiplier)));
-  --horizontalPadding: calc(var(--horizontalPaddingMultiplier) * var(--fontSize));
+  --fontSizeRatio: 2/3;
+  --freeSpaceRatio: calc(1 - var(--fontSizeRatio));
+
+  --fontSize: calc(var(--fontSizeRatio) * var(--contentHeight));
+  --freeSpace: calc(var(--freeSpaceRatio) * var(--contentHeight));
+  --lineHeight: calc(var(--fontSize) + (1/3 * var(--freeSpace)));
+  --hPadding: calc(1/2 * var(--freeSpace));
+
   --fontWeight: bold;
   --colorOpacity: 0.7;
   --backgroundOpacity: 0.85;
@@ -47,27 +55,32 @@
   --gradientColor3: var(--normalColor3);
 }
 
-.container {
-  cursor: pointer;
+/**********************************************************************************************************************/
+
+.button {
+  width: var(--setWidth, 0);
+  height: var(--setHeight, 0);
   position: relative;
-  height: var(--setHeight);
   display: grid;
   place-items: center;
+  cursor: pointer;
   border-radius: var(--borderRadius);
   background-color: black;
 }
 
-.container:hover, .container:focus, .container:active, .container.pressed {
+/**********************************************************************************************************************/
+
+.button:hover, .button:focus, .button:active, .button.pressed {
   --gradientColor1: var(--activeColor1);
   --gradientColor2: var(--activeColor2);
   --gradientColor3: var(--activeColor3);
   --backgroundOpacity: 0.7;
 }
 
-.container:hover, .container:focus {
+.button:hover, .button:focus {
   --colorOpacity: 1;
 }
-.container:active, .container.pressed {
+.button:active, .button.pressed {
   --colorOpacity: 0.5;
 }
 
@@ -89,40 +102,41 @@
     --gradientColor1 100ms ease-in-out,
     --gradientColor2 300ms ease-in-out,
     --gradientColor3 500ms ease-in-out,
-    opacity 200ms ease-in-out;
+    opacity 100ms ease-in-out;
 }
 
-/* Background Layer */
+/* Bakcground Layer */
 .layer:nth-of-type(2) {
   position: relative;
-  padding: 0 var(--horizontalPadding);
+  padding: 0 var(--hPadding);
   border: var(--borderWidth) solid transparent;
   background-color: black;
   background-clip: padding-box;
   display: grid;
   place-items: center;
   opacity: var(--backgroundOpacity);
-  transition: opacity 200ms ease-in-out;
+  transition: opacity 100ms ease-in-out;
+  overflow: hidden;
 }
 
-/* Text */
-.layer:nth-of-type(2) > span {
+/* Content */
+.layer:nth-of-type(2) > i, .layer:nth-of-type(2) > span {
   width: 100%;
   background: linear-gradient(var(--gradientDirection), var(--gradientColor1), var(--gradientColor2), var(--gradientColor3));
   background-clip: text;
   color: transparent;
-  font-size: var(--fontSize);
-  font-weight: var(--fontWeight);
-  line-height: 1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-size: var(--fontSize);
+  font-weight: var(--fontWeight);
+  line-height: var(--lineHeight);
   opacity: var(--colorOpacity);
   transition:
     --gradientColor1 100ms ease-in-out,
     --gradientColor2 300ms ease-in-out,
     --gradientColor3 500ms ease-in-out,
-    opacity 200ms ease-in-out;
+    opacity 100ms ease-in-out;
 }
 
 /**********************************************************************************************************************/

@@ -1,24 +1,30 @@
 /**********************************************************************************************************************/
 
 .page {
-  --itemWidth: "";
   width: 100%;
   height: 100%;
+  padding: 2rem;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 2rem;
+  gap: 4rem;
   opacity: 0;
   transition: opacity 200ms ease-in-out;
+  overflow: hidden;
 }
 
 .visible { opacity: 1; }
 
 /**********************************************************************************************************************/
 
-.container {
-  width: 300px;
-  height: 300px;
+.formContainer {
+  max-width: 600px;
+  height: 80%;
+  overflow: hidden;
+  overflow-y: auto;
 }
+
+.formContainer::-webkit-scrollbar { display: none; }
 
 /**********************************************************************************************************************/

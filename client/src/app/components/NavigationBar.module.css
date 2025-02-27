@@ -2,8 +2,7 @@
 
 .navigationBar {
   --navigationBarHeight: "";
-}
-.navigationBar {
+
   width: 100%;
   height: var(--navigationBarHeight);
   display: flex;
@@ -21,3 +20,5 @@
   padding: 0.5rem;
   gap: 0.5rem;
 }
+
+/**********************************************************************************************************************/

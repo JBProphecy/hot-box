@@ -12,12 +12,19 @@ import { useContext, useEffect, useRef } from "react"
 import useDimensions, { Dimensions } from "@/app/hooks/useDimensions"
 
 import threeColorSets from "../library/threeColorSets"
-import TextButton from "@/app/components/buttons/TextButton"
+
+import FancyButton, { FancyButtonSizeProps} from "../components/FancyButton"
+
+import { NavigateFunction, useNavigate } from "react-router-dom"
+import routes from "@/config/routes"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export default function LoggedInAccountPage() {
   try {
+    // Navigation
+    const navigate: NavigateFunction = useNavigate()
+
     // Current Account
     const currentAccount: CurrentAccountContextType | undefined = useContext(CurrentAccountContext)
     if (typeof currentAccount === "undefined") { throw new Error("Missing Current Account Provider") }
@@ -44,9 +51,18 @@ export default function LoggedInAccountPage() {
       "--headerTotalHeight": toRemString(headerTotalHeight)
     }
 
+    // Handle Create Account
+    const loadCreateProfilePage = () => { navigate(routes.createProfilePage) }
+
     // Handle Log Out
     const handleLogOut = () => {
       currentAccount.setID(null)
+    }
+
+    // Fancy Button Size Props
+    const fancyButtonSizeProps: FancyButtonSizeProps = {
+      width: { type: "intrinsic" },
+      height: { type: "relative", percent: 100 }
     }
 
     // Return Content
@@ -61,10 +77,22 @@ export default function LoggedInAccountPage() {
             <span>Hello {currentAccount.getName}!</span>
           </div>
           <div className={styles.iconBox}>
-            <TextButton
-              text="Log Out"
-              height={headerContentHeight}
-              unit="rem"
+            <FancyButton
+              {...fancyButtonSizeProps}
+              contentType="text"
+              contentValue="Create Profile"
+              pressedAction={loadCreateProfilePage}
+              normalColors={{
+                color1: "rgb(176, 176, 0)",
+                color2: "rgb(200, 128, 0)",
+                color3: "rgb(200, 200, 200)"
+              }}
+              activeColors={threeColorSets.gold}
+            />
+            <FancyButton
+              {...fancyButtonSizeProps}
+              contentType="text"
+              contentValue="Log Out"
               pressedAction={handleLogOut}
               normalColors={{
                 color1: "hsl(0, 100%, 40%)",

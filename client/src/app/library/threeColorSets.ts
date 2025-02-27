@@ -74,10 +74,16 @@ const set03: ThreeColorSet = {
   color3: "rgb(80, 255, 150)"
 }
 
+const set04: ThreeColorSet = {
+  color1: "rgb(128, 128, 255)",
+  color2: "rgb(0, 200, 200)",
+  color3: "rgb(0, 255, 255)"
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const threeColorSets = {
-  set01, set02, set03,
+  set01, set02, set03, set04,
   black, gray20, gray40, gray50, gray60, gray80, white,
   gold
 }

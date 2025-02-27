@@ -30,7 +30,7 @@ import CreateAccountPage from "@/app/pages/CreateAccountPage"
 import DeviceProfilesPage from "@/app/temp/pages/DeviceProfilesPage"
 //import AddProfilePage from "@/app/AddProfilePage"
 
-import CurrentProfilePage from "@/app/temp/pages/CurrentProfilePage"
+import CurrentProfilePage from "@/app/pages/CurrentProfilePage"
 //import CreateProfilePage from "@/app/CreateProfilePage"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

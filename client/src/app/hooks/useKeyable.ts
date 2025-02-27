@@ -41,7 +41,7 @@ export default function useKeyable(props: UseKeyableProps): UseKeyableFunctions 
   }}
   const lockState = () => {
     setIsStateLocked(true)
-    setTimeout(() => { setIsStateLocked(false) }, 300)
+    setTimeout(() => { setIsStateLocked(false) }, 250)
   }
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {

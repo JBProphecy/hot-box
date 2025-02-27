@@ -1,14 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import localStyles from "./NavigationBar.module.css"
-
-import { NavigateFunction, useNavigate } from "react-router-dom"
 import { VariableStyles, toPixelString } from "@/app/utils/styles/types/VariableStyles"
 
 import routes from "@/config/routes"
+import { NavigateFunction, useNavigate } from "react-router-dom"
 
-import TextButton, { TextButtonProps } from "@/app/components/buttons/TextButton"
-import IconButton, { IconButtonProps } from "@/app/components/buttons/IconButton"
+import FancyButton, { FancyButtonSizeProps } from "@/app/components/FancyButton"
 import threeColorSets from "@/app/library/threeColorSets"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -31,40 +29,63 @@ export default function NavigationBar(props: NavigationBarProps) {
       "--navigationBarHeight": toPixelString(props.height)
     }
 
-    const sharedIconButtonProps: IconButtonProps = {
-      activeColors: threeColorSets.gold
+    const fancyButtonSizeProps: FancyButtonSizeProps = {
+      width: { type: "intrinsic" },
+      height: { type: "relative", percent: 100 },
     }
 
     return (
       <div className={localStyles.navigationBar} style={variableStyles}>
         <ul className={localStyles.buttonList}>
           <li className={localStyles.buttonItem}>
-            <IconButton
-              {...sharedIconButtonProps}
-              icon="bx bxs-cog"
+            <FancyButton
+              {...fancyButtonSizeProps}
+              activeColors={threeColorSets.gray60}
+              contentType="text"
+              contentValue="Test Page" // "bx bxs-cog"
               pressedAction={loadTestPage}
             />
           </li>
           <li className={localStyles.buttonItem}>
-            <IconButton
-              {...sharedIconButtonProps}
+            <FancyButton
+              {...fancyButtonSizeProps}
+              activeColors={threeColorSets.gold}
+              contentType="text"
+              contentValue="Home Page"
+            />
+          </li>
+          <li className={localStyles.buttonItem}>
+            <FancyButton
+              {...fancyButtonSizeProps}
               activeColors={threeColorSets.set01}
-              icon="bx bxs-user"
+              contentType="text"
+              contentValue="Account Page" // "bx bxs-user"
               pressedAction={loadCurrentAccountPage}
             />
           </li>
           <li className={localStyles.buttonItem}>
-            <IconButton
-              {...sharedIconButtonProps}
+            <FancyButton
+              {...fancyButtonSizeProps}
               activeColors={threeColorSets.set02}
-              icon="bx bx-user-circle"
+              contentType="text"
+              contentValue="Profile Page"
+              pressedAction={loadCurrentProfilePage}
             />
           </li>
           <li className={localStyles.buttonItem}>
-            <IconButton
-              {...sharedIconButtonProps}
+            <FancyButton
+              {...fancyButtonSizeProps}
               activeColors={threeColorSets.set03}
-              icon="bx bxs-user-detail"
+              contentType="text"
+              contentValue="Friends List" // "bx bxs-user-detail"
+            />
+          </li>
+          <li className={localStyles.buttonItem}>
+            <FancyButton
+              {...fancyButtonSizeProps}
+              activeColors={threeColorSets.set04}
+              contentType="text"
+              contentValue="Your Library"
             />
           </li>
         </ul>

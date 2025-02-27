@@ -14,7 +14,7 @@ import requestCreateAccount, { CreateAccountResult } from "@/api/requestCreateAc
 import FancyInput, { FancyInputProps } from "@/app/components/FancyInput"
 import threeColorSets from "@/app/library/threeColorSets"
 
-import TextButton, { TextButtonProps } from "@/app/components/buttons/TextButton"
+import FancyButton, { FancyButtonSizeProps } from "../components/FancyButton"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -107,9 +107,9 @@ export default function CreateAccountForm() {
     }
 
     // Shared Text Button Styles
-    const sharedTextButtonProps: TextButtonProps = {
-      height: 5,
-      unit: "rem",
+    const fancyButtonSizeProps: FancyButtonSizeProps = {
+      width: { type: "intrinsic" },
+      height: { type: "absolute", value: 5, units: "rem" }
     }
 
     // Return Content
@@ -152,15 +152,17 @@ export default function CreateAccountForm() {
           placeholder="Confirm Password"
         />
         <div className={styles.buttons}>
-          <TextButton
-            {...sharedTextButtonProps}
-            text="Go Back"
+          <FancyButton
+            {...fancyButtonSizeProps}
+            contentType="text"
+            contentValue="Go Back"
             pressedAction={loadCurrentAccountPage}
             activeColors={threeColorSets.set01}
           />
-          <TextButton
-            {...sharedTextButtonProps}
-            text="Create Account"
+          <FancyButton
+            {...fancyButtonSizeProps}
+            contentType="text"
+            contentValue="Create Account"
             pressedAction={() => formRef.current?.requestSubmit()}
             activeColors={threeColorSets.set03}
           />
