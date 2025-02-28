@@ -33,6 +33,8 @@ import AddProfilePage from "@/app/pages/AddProfilePage"
 import CurrentProfilePage from "@/app/pages/CurrentProfilePage"
 import CreateProfilePage from "@/app/pages/CreateProfilePage"
 
+import Visualizer from "@/app/pages/02/Visualizer"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Router
@@ -41,6 +43,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<RootLayout />}>
       <Route path="test" element={<DevPage />} />
+      <Route path="music" element={<Visualizer />} />
       <Route path="accounts">
         <Route index element={<Navigate to={"current-account"} />} />
         <Route path="create-account" element={<CreateAccountPage />} />

@@ -22,6 +22,7 @@ export default function NavigationBar(props: NavigationBarProps) {
   const loadDeviceProfilesPage = () => { navigate(routes.deviceProfilesPage) }
   const loadCurrentAccountPage = () => { navigate(routes.currentAccountPage) }
   const loadCurrentProfilePage = () => { navigate(routes.currentProfilePage) }
+  const loadMusicVisualizerPage = () => { navigate(routes.musicVisualizerPage) }
 
   try {
     // Variable Styles
@@ -79,6 +80,15 @@ export default function NavigationBar(props: NavigationBarProps) {
               contentType="text"
               contentValue="Profile Page"
               pressedAction={loadCurrentProfilePage}
+            />
+          </li>
+          <li className={localStyles.buttonItem}>
+            <FancyButton
+              {...fancyButtonSizeProps}
+              activeColors={threeColorSets.set01}
+              contentType="text"
+              contentValue="Music Player"
+              pressedAction={loadMusicVisualizerPage}
             />
           </li>
         </ul>
