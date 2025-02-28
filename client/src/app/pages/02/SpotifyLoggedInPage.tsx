@@ -57,11 +57,6 @@ export default function SpotifyLoggedInPage() {
         contentType="text"
         contentValue="Log Out"
         pressedAction={handleLogOut}
-        normalColors={{
-          color1: "hsl(0, 100%, 40%)",
-          color2: "hsl(0, 100%, 40%)",
-          color3: "hsl(0, 100%, 60%)"
-        }}
         activeColors={{
           color1: "hsl(20, 100%, 50%)",
           color2: "hsl(10, 100%, 50%)",

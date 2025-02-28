@@ -1,6 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import * as THREE from "three"
+import { OrbitControls } from "three/examples/jsm/Addons.js"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -144,7 +145,20 @@ export default function Visualizer() {
         antialias: true
       })
       renderer.setSize(width, height)
-      camera.position.z = 2.5
+      camera.position.z = 3
+
+      // Add orbit controls
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;           // Adds inertia to the movement
+      controls.dampingFactor = 0.25;          // Control damping factor for smooth stop after zoom
+      controls.screenSpacePanning = false;    // Don't allow panning in screen space
+      controls.maxDistance = 10;              // Maximum zoom out
+      controls.minDistance = 2;               // Minimum zoom in
+      controls.maxPolarAngle = Math.PI / 2;   // Limit the vertical rotation (can't rotate past the horizon)
+      controls.minPolarAngle = 0;             // Prevent camera from rotating below the horizon
+      controls.rotateSpeed = 0.8;             // Set the rotation speed
+      controls.zoomSpeed = 1.2;               // Set the zoom speed
+      controls.panSpeed = 0.5;                // Set the pan speed
 
       contentRef.current.appendChild(renderer.domElement)
 
@@ -169,7 +183,7 @@ export default function Visualizer() {
       const geometry = new THREE.BoxGeometry(2, 2, 0.05)
 
       const sideMaterial = new THREE.MeshStandardMaterial({ map: goldTexture })
-      const goldMaterial = new THREE.MeshStandardMaterial({ map: goldTexture, metalness: 0.5, roughness: 0.5 })
+      const goldMaterial = new THREE.MeshStandardMaterial({ map: goldTexture, metalness: 1, roughness: 0.5 })
       const imageMaterial = new THREE.MeshStandardMaterial({ map: imageTexture, roughness: 1, metalness: 1 })
 
       const materials = [
@@ -190,9 +204,29 @@ export default function Visualizer() {
       const ambientLight = new THREE.AmbientLight(0xffffff, 0.25)
       scene.add(ambientLight)
 
-      const pointLight = new THREE.PointLight(0xffffff, 500)
-      pointLight.position.set(0, 0, 7)
-      scene.add(pointLight)
+      const frontLight = new THREE.PointLight(0xffffff, 500)
+      frontLight.position.set(0, 0, 7)
+      scene.add(frontLight)
+
+      const backLight = new THREE.PointLight(0xffffff, 300)
+      backLight.position.set(0, 0, -7)
+      scene.add(backLight)
+
+      const leftLight = new THREE.PointLight(0xffcc00, 500)
+      leftLight.position.set(-7, 0, 0)
+      scene.add(leftLight)
+
+      const rightLight = new THREE.PointLight(0xffcc00, 500)
+      rightLight.position.set(7, 0, 0)
+      scene.add(rightLight)
+
+      const topLight = new THREE.PointLight(0xffcc00, 500)
+      topLight.position.set(0, 7, 0)
+      scene.add(topLight)
+
+      const bottomLight = new THREE.PointLight(0xffcc00, 500)
+      bottomLight.position.set(0, -7, 0)
+      scene.add(bottomLight)
 
       // ANIMATION VARIABLES
       let currentFrame: number = 0
