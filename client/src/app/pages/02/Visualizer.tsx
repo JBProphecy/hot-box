@@ -4,9 +4,12 @@ import * as THREE from "three"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { useEffect, useRef } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import styles from "./Visualizer.module.css"
 import useBezierCurve, { BezierCurveProps } from "./useBezierCurve"
+
+import { requestCurrentlyPlayingData } from "@/api/spotify"
+import { SpotifyContext, SpotifyContextType } from "@/app/context/SpotifyContext"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -89,13 +92,47 @@ export default function Visualizer() {
   const contentRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const animationFrameID = useRef<number | null>(null)
+  const cubeRef = useRef<THREE.Mesh | null>(null)
 
-  // Page Effects
+  // Effects
   useEffect(() => { setTimeout(() => { pageRef.current?.classList.add(styles.visible) }, 150) }, [])
+
+  // Spotify
+  const spotify: SpotifyContextType | undefined = useContext(SpotifyContext)
+  if (typeof spotify === "undefined") { throw new Error("Missing Current Account Provider") }
+  const [currentlyPlayingData, setCurrentlyPlayingData] = useState<any>(null)
+  const [currentCover, setCurrentCover] = useState<string>("")
+
+  const getCurrentlyPlayingData = async () => {
+    if (!spotify.accessToken) { setCurrentlyPlayingData(null); return }
+    const data = await requestCurrentlyPlayingData(spotify.accessToken)
+    setCurrentlyPlayingData(data)
+    if (data?.item?.album?.images[0]?.url) { setCurrentCover(data.item.album.images[0]?.url) }
+    else { setCurrentCover("") }
+  }
+
+  useEffect(() => {
+    getCurrentlyPlayingData()
+    const interval = setInterval(() => { getCurrentlyPlayingData(); console.log("sent") }, 5000)
+    return () => { clearInterval(interval) }
+  }, [])
+
+  useEffect(() => {
+    if (cubeRef.current && Array.isArray(cubeRef.current.material)) {
+      const textureLoader = new THREE.TextureLoader()
+      const imageTexture = textureLoader.load(currentCover)
+      const imageMaterial = cubeRef.current.material[4]
+      if (imageMaterial instanceof THREE.MeshStandardMaterial) {
+        imageMaterial.map = imageTexture
+        imageMaterial.needsUpdate = true
+      }
+    }
+  }, [currentCover])
 
   // THREE
   useEffect(() => {
     if (contentRef.current && canvasRef.current) {
+      // Initialize Scene
       const width: number = contentRef.current.offsetWidth
       const height: number = contentRef.current.offsetHeight
   
@@ -107,7 +144,7 @@ export default function Visualizer() {
         antialias: true
       })
       renderer.setSize(width, height)
-      camera.position.z = 3
+      camera.position.z = 2.5
 
       contentRef.current.appendChild(renderer.domElement)
 
@@ -126,8 +163,8 @@ export default function Visualizer() {
       // Texture
 
       const textureLoader = new THREE.TextureLoader()
-      const goldTexture = textureLoader.load("public/textures/gold-screen.jpg")
-      const imageTexture = textureLoader.load("public/weed.jpg")
+      const goldTexture = textureLoader.load("/textures/gold-screen.jpg")
+      const imageTexture = textureLoader.load("/weed.jpg")
 
       const geometry = new THREE.BoxGeometry(2, 2, 0.05)
 
@@ -145,6 +182,7 @@ export default function Visualizer() {
       ]
 
       const cube = new THREE.Mesh(geometry, materials)
+      cubeRef.current = cube
       scene.add(cube)
 
       // Lights
@@ -301,7 +339,7 @@ export default function Visualizer() {
     <div ref={pageRef} className={styles.page}>
       <div className={styles.background}>
         <video autoPlay loop muted>
-          <source src="public/videos/smoke-saber.mp4" />
+          <source src="/videos/smoke-saber.mp4" />
         </video>
       </div>
       <div ref={contentRef} className={styles.content}>

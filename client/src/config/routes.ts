@@ -7,7 +7,8 @@ const routes = {
   currentAccountPage: "/accounts/current-account",
   createProfilePage: "/accounts/current-account/create-profile",
   currentProfilePage: "/profiles/current-profile",
-  musicVisualizerPage: "/music"
+  musicVisualizerPage: "/music",
+  spotifyPage: "/spotify"
 }
 
 export default routes

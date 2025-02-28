@@ -25,7 +25,7 @@
   },
   "include": [
     "src/**/*",
-    "../shared/**/*"
-, "../server/src/library/network.ts"  ],
+    "../shared/**/*",
+  ],
   "exclude": ["node_modules"]
 }

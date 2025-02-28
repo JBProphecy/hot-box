@@ -9,6 +9,7 @@ import { createBrowserRouter, createRoutesFromElements, Navigate, RouterProvider
 
 import CurrentAccountProvider from "@/app/context/CurrentAccountProvider"
 import CurrentProfileProvider from "@/app/context/CurrentProfileProvider"
+import SpotifyProvider from "@/app/context/SpotifyProvider"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -34,6 +35,7 @@ import CurrentProfilePage from "@/app/pages/CurrentProfilePage"
 import CreateProfilePage from "@/app/pages/CreateProfilePage"
 
 import Visualizer from "@/app/pages/02/Visualizer"
+import SpotifyPage from "@/app/pages/02/SpotifyPage"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -44,6 +46,7 @@ const router = createBrowserRouter(
     <Route path="/" element={<RootLayout />}>
       <Route path="test" element={<DevPage />} />
       <Route path="music" element={<Visualizer />} />
+      <Route path="spotify" element={<SpotifyPage />} />
       <Route path="accounts">
         <Route index element={<Navigate to={"current-account"} />} />
         <Route path="create-account" element={<CreateAccountPage />} />
@@ -74,7 +77,9 @@ export default function App() {
     return (
       <CurrentAccountProvider>
         <CurrentProfileProvider>
-          <RouterProvider router={router} />
+          <SpotifyProvider>
+            <RouterProvider router={router} />
+          </SpotifyProvider>
         </CurrentProfileProvider>
       </CurrentAccountProvider>
     )

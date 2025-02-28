@@ -1,0 +1,20 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import { createContext, Dispatch, SetStateAction } from "react"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type SpotifyContextType = {
+  requestAuthorization: () => Promise<void>
+  requestTokens: () => void
+  codeVerifier: string | null
+  accessToken: string | null
+  refreshToken: string | null
+  setCodeVerifier: Dispatch<SetStateAction<string | null>>
+  setAccessToken: Dispatch<SetStateAction<string | null>>
+  setRefreshToken: Dispatch<SetStateAction<string | null>>
+}
+
+export const SpotifyContext = createContext<SpotifyContextType | undefined>(undefined)
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

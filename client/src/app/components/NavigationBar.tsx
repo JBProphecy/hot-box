@@ -23,6 +23,7 @@ export default function NavigationBar(props: NavigationBarProps) {
   const loadCurrentAccountPage = () => { navigate(routes.currentAccountPage) }
   const loadCurrentProfilePage = () => { navigate(routes.currentProfilePage) }
   const loadMusicVisualizerPage = () => { navigate(routes.musicVisualizerPage) }
+  const loadSpotifyPage = () => { navigate(routes.spotifyPage) }
 
   try {
     // Variable Styles
@@ -87,8 +88,17 @@ export default function NavigationBar(props: NavigationBarProps) {
               {...fancyButtonSizeProps}
               activeColors={threeColorSets.set01}
               contentType="text"
-              contentValue="Music Player"
+              contentValue="Visualizer"
               pressedAction={loadMusicVisualizerPage}
+            />
+          </li>
+          <li className={localStyles.buttonItem}>
+            <FancyButton
+              {...fancyButtonSizeProps}
+              activeColors={threeColorSets.set03}
+              contentType="text"
+              contentValue="Spotify"
+              pressedAction={loadSpotifyPage}
             />
           </li>
         </ul>
